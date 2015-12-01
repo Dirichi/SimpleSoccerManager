@@ -1,7 +1,7 @@
 
 "use strict";
 class Game{
-	constructor(xPos,yPos,_width,_length){
+	constructor(xPos,yPos,_width,_length,mode){
 		this.field=new Field(xPos,yPos,_width,_length);
 		this.ball=this.field.ball;
 		this.teamA=this.field.teamA;
@@ -10,7 +10,9 @@ class Game{
 		this.gameTime=0;
 		this.allPlayers=this.field.allPlayers;
 		this.winner="";
-		this.lastPlayerInPossession;
+		this.yval=[];
+		this.xval=[];
+		//this.lastPlayerInPossession;
 		this.gameStatus="event";
 		this.animationTime=0;
 		this.state="KICKOFF";
@@ -22,6 +24,7 @@ class Game{
 		this.teamA.objectives=["attack"];
 		this.lastTimeBeforeGameEvent=0;
 		this.halfTimeHappened=false;
+		this.mode=mode;
 		//this.teamB.setState("kickoff");
 		//this.teamA.setState("kickoff");
 
@@ -33,8 +36,9 @@ class Game{
 	}
 	animate(){
 		//var waitTime;
+		//this.getTeamARatings();
 		push();
-		fill(0,0,0);
+		fill(128,0,50);
 		stroke(0);
 		strokeWeight(2);
 		rect(this.field.xPos-this.field._length/20,this.field.yPos-this.field._length/20,this.field._width+this.field._length/10,11*this.field._length/10);
@@ -76,15 +80,17 @@ class Game{
 		this.displayScore();
 		this.displayTime();
 		this.displayFocusPlayers();
-		if (this.getLastPlayerInPossession()!=1) {
-			this.lastPlayerInPossession=this.getLastPlayerInPossession();
-		};
+
+		//this.lastPlayerInPossession=this.field.lastPlayerInPossession;
+		
 		//console.log(this.teamA.isInKickOffPosition())
 		
 		//this.teamA.attack();
 
 
 		this.updateTeamMorale();
+		//this.teamA.getAllPositionRatings();
+		//console.log(this.teamA.getBestPositionRating(),this.teamB.getBestPositionRating() );
 
 	}
 
@@ -129,7 +135,8 @@ class Game{
 		if (this.gameEvent()) {
 			this.ball.stop();
 			this.displayGameStatus();
-			this.restartGameFromState();			
+			this.restartGameFromState();
+
 		}
 		else if(!this.isFullTime()){
 			this.animationTime=0;
@@ -167,34 +174,36 @@ class Game{
 	}
 	isCorner(){
 		return this.isleftCorner()||this.isRightCorner();
+
 	}
 	isleftCorner(){
-		return this.ball.xPos>this.field.xPos+this.field._width && this.lastPlayerInPossession.side=="right";	
+		return this.ball.xPos>this.field.xPos+this.field._width && this.field.lastPlayerInPossession.side=="right";	
 
 	}
 	isRightCorner(){
-		return this.ball.xPos<this.field.xPos && this.lastPlayerInPossession.side=="left";		
+		return this.ball.xPos<this.field.xPos && this.field.lastPlayerInPossession.side=="left";		
 	}
 	isThrowing(){
+	//	console.log(this.field.lastPlayerInPossession);
 		return (this.ball.yPos<this.field.yPos || this.ball.yPos>this.field.yPos+this.field._length)||this.teamA.state=="ownthrowing"||this.teamA.state=="oppthrowing";
 	}
 	isRightThrowing(){
-		return this.isThrowing() && this.lastPlayerInPossession.side=="left";
+		return this.isThrowing() && this.field.lastPlayerInPossession.side=="left";
 
 	}
 	isLeftThrowing(){
-		return this.isThrowing() && this.lastPlayerInPossession.side=="right";
+		return this.isThrowing() && this.field.lastPlayerInPossession.side=="right";
 	}
 	isGoalKick(){
 		return this.isLeftGoalKick()||this.isRightGoalKick()
 
 	}
 	isLeftGoalKick(){
-		return this.ball.xPos<this.field.xPos && this.lastPlayerInPossession.side=="right";
+		return this.ball.xPos<this.field.xPos && this.field.lastPlayerInPossession.side=="right";
 
 	}
 	isRightGoalKick(){
-		return this.ball.xPos>this.field.xPos+this.field._width && this.lastPlayerInPossession.side=="left";
+		return this.ball.xPos>this.field.xPos+this.field._width && this.field.lastPlayerInPossession.side=="left";
 
 	}
 	isHalfTime(){
@@ -216,6 +225,8 @@ class Game{
 
 
 	end(){
+		 this.y=this.teamA.posRatings;
+		 this.x=this.teamA.posFrequencies;
 		this.setTeamsToNeutral();
 		this.gameTime=90;
 		this.ball.stop();
@@ -267,7 +278,7 @@ class Game{
 
 	}	
 	gameEvent(){
-		return this.isFullTime()||this.isThrowing()||this.isCorner()||this.isHalfTime()||this.goalScored()||this.isStarting()||this.state=="KICKOFF"||this.isGoalKick();
+		return this.isFullTime()||this.isThrowing()||this.isCorner()||this.isHalfTime()||this.goalScored()||this.isStarting()||this.state=="KICKOFF"||this.isGoalKick()||this.isPaused();
 	}
 
 	setTeamsToNeutral(){
@@ -282,7 +293,7 @@ class Game{
 	restartGameFromThrowing(){
 		var teamToRestart;
 		this.ball.stop();
-		if (this.lastPlayerInPossession.side=="right") {
+		if (this.field.lastPlayerInPossession.side=="right") {
 			teamToRestart=this.teamA;
 			this.setTeamStates("ownthrowing","oppthrowing");
 			
@@ -356,7 +367,7 @@ class Game{
 				this.ball.xPos=this.field.midx;
 				this.ball.yPos=this.field.midy;
 				this.setTeamsToPlay();
-				console.log("start playing now");
+				//console.log("start playing now");
 				if (this.state=="HALF TIME") {
 					this.halfTimeHappened=true;
 
@@ -388,7 +399,7 @@ class Game{
 			
 		}
 		else{
-			console.log(this.state+" state is not recognized");
+			//console.log(this.state+" state is not recognized");
 		}
 		//this.setState("PLAY");
 		//this.setTeamsToPlay();
@@ -469,10 +480,14 @@ class Game{
 	}
 
 	pause(){
+		this.setState("PAUSED")
 		this.setTeamStates("neutral","neutral");
 		this.ball.storeVelocity();
 		this.ball.stop();
 
+	}
+	isPaused(){
+		this.state=="PAUSED";
 	}
 
 	play(){
@@ -527,6 +542,18 @@ class Game{
 		var start=this.mostRecentEventTimeStart;
 		var stop=this.mostRecentEventTimeStop;
 		return stop-start;
+	}
+
+	getTeamARatings(){
+		if (this.gameTime<=88) {
+			this.yval=this.teamA.posRatings;
+			this.xval=this.teamA.posFrequencies;
+		};
+	}
+
+	sortTeamRatings(){
+
+
 	}
 
 }

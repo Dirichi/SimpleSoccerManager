@@ -16,6 +16,18 @@ app.set('view engine', 'html');
 //Add connection to the public folder for css & js files
 app.use(express.static(__dirname + '/public'));
 
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
+
+//  function corsEnable(function(req, res, next) {
+//    res.header("Access-Control-Allow-Origin", "*");
+//    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//    next();
+// });
+
 app.get("/", function(req, res){
 	// var dataForThePage = {
 	// 	message: "Try adding a forward slash plus a word to the url",
@@ -40,5 +52,6 @@ app.get("/select", function(req, res){
 	res.render('select');
 });
 
-app.listen(3000);
+var port=process.env.PORT||3000;
+app.listen(port);
 

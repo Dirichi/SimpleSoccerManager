@@ -42,7 +42,7 @@ class Field {
 	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost);
 	 	this.teamA.mode="voice";
 	 	this.teamB.mode="computer";
-	 	this.lastPlayerInPossesion=this.teamA.players[10];
+	 	this.lastPlayerInPossession=this.teamA.players[10];
 	 	this.assignOpposition();
 	 	this.allPlayers=[];
 	 	for (var i = this.teamA.players.length - 1; i >= 0; i--) {
@@ -73,7 +73,7 @@ class Field {
  		this.teamA.animate();
  		this.teamB.animate();
  		this.ball.animate();
- 		this.setLastPlayerInPossesion(this.getLastPlayerInPossession());
+ 		this.setLastPlayerInPossession(this.getLastPlayerInPossession());
 
  		
  		
@@ -180,9 +180,9 @@ class Field {
 		return 1;
 	}
 
-	setLastPlayerInPossesion(player){
+	setLastPlayerInPossession(player){
 		if (player!=1) {
-			this.lastPlayerInPossesion=player;
+			this.lastPlayerInPossession=player;
 		};
 
 	}

@@ -1,4 +1,63 @@
+#titleDiv{
+	display: block;
+	color: #000;
+
+	/*width: 100%;*/
+	/*background: #F44336;*/
+
+	}
+
 #title{
+	display: block;
+	width: 50%;
+	margin: 0 auto;
+	font-size: 40px;
+
+}
+
+#actionDiv{
+	display: block;
+	color: #000;
+	margin-top: 5%;
+
+
+}
+
+#action{
+	display: block;
+	width: 50%;
+	margin: 0 auto;
+	font-size: 30px;
+
+
+}
+
+body{
+	font-family: 'Open Sans', serif;
+	background: #F44336;
+	background: white;
+	color: black;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*#title{
 	display: block;
 	color: #000;
 	width: 50%;
@@ -95,7 +154,7 @@ body{
 	background: #F44336;
 	background: white;
 	color: black;
-	/*background: #29B6F6;*/
+	/*background: #29B6F6;
 }
 
 
@@ -114,3 +173,4 @@ a{
 	margin: 50px auto;
 
 }
+*/

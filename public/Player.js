@@ -359,13 +359,23 @@ class Player extends Moveable{
 		this.updateMid();
 		this.updatePosition();
 		push();
-		fill(colors[0],colors[1],colors[2]);
+		if (this.isWaiting()) {
+			fill(colors[0],colors[1],colors[2]);
+
+		}
+		else{
+			fill(colors[0]/2,colors[1]/2,colors[2]/2);
+		}
+		
 		ellipse(this.xPos,this.yPos,this._length,this._length);
 		fill(0);
 		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
 		pop();
 		if (this.isOutOfBounds()) {
 			this.moveToDefaultPosition();
+		};
+		if (this.isColliding()) {
+			this.spread();
 		};
 
 	}
@@ -381,10 +391,10 @@ class Player extends Moveable{
 
 	passTo(player){
 
-		if(this.hasBall()){
+		if(this.hasBall()&&this.state!="passer"&&this.state!="shooter"){
 			this.messageTeammate("neutral", player);
 			this.messageTeammatesWithException("n/a",[player]);
-			this.setState("n/a");
+			this.setState("passer");
 			this.updateRecentPasses(player);
 
 
@@ -420,7 +430,9 @@ shoot(){
 	//add angle difficulty
 	//add hitting off the bar
 	this.messageTeammates("n/a");
-	if(this.hasBall()){
+	
+	if(this.hasBall()&&this.state!="shooter"&&this.state!="passer"){
+		this.setState("shooter");
 		this.kickSound.play();
 		var randomPosY=random(-this.field.rightPost._length/2,this.field.rightPost._length/2);
 		var distanceToGoal=this.distanceToGoal();
@@ -443,9 +455,11 @@ shoot(){
 dribble(){
 	if (this.hasBall()) {
 		//sort out orientation
+		this.messageTeammates("n/a");
 		this.ball.dx=this.dx;
 		this.ball.dy=this.dy;
 		this.moveForward();
+		this.setState("n/a");
 	};
 
 }
@@ -498,62 +512,37 @@ setInDefaultPosition(){
 	this.xPos=this.defaultFieldRegion.midx;
 	this.yPos=this.defaultFieldRegion.midy;
 	this.stop();
+	this.setState("neutral");
 }
 
 moveToDefensivePosition(){
 	var defendProbability=random(0,1);
-	if (defendProbability>this.defendTendency){
+	if (this.position=="K") {
+		this.keeperDefenseMechanism();		
+	}
+	else if (defendProbability>this.defendTendency||this.isWaiting()){
 		this.stop();
+		//this.setState("neutral");
 	}
 	else{
-		if (this.position=="K") {
-			if (this.team.ballIsInTeamThird()) {
-				this.keeperMovement();
-
-			}else{
-				this.stopAtDefaultRegion();
+		if (!this.isBehindBall()&&(this.isOutOfDefensivePosition()||this.isDefender())) {
+			this.moveBackward();
 			}
-
-		};
-		if (!this.isBehindBall()) {
-			if (this.xPos*this.direction>(this.defaultFieldRegion.midx-this.field._width/6*this.direction)*this.direction) {
-				if (this.position!="K") {
-					this.moveBackward();
-				}
-				else{
-					this.stop();
-				}
-			}
-			else{
-				if (this.position=="CB"||this.position=="RCB"||this.position=="LCB"||this.position=="LB"||this.position=="RB") {
-					this.moveBackward();
-				}
-				else{
-					if (this.position=="K") {
-						this.keeperMovement();
-					}
-					else{
-						this.stop();
-					}
-				}
-
-			}
-
-		}
 		else{
-			if (this.position!="K") {
-				this.moveTo(this.defaultFieldRegion.midx-this.field._width/6*this.direction, this.defaultFieldRegion.midy);	
-			};
-
+			this.stop();
+			//this.setState("neutral");
 		}
+
+		}	
 	}
-
-}
-
 moveToAttackingPosition(){
 	var attackProbability=random(0,1);
 	if (this.position=="K") {
 		this.stopAtDefaultRegion();
+	}
+	else if (this.isWaiting()) {
+		this.stop();
+		//this.setState("neutral")
 	}
 	else if (attackProbability<this.attackTendency) {
 			if (this.isBehindBall()) {
@@ -570,7 +559,7 @@ isBehindAttackingPosition(){
 }
 
 isOutOfDefensivePosition(){
-	return this.direction*this.xPos>this.direction*this.defaultFieldRegion.midx-(this.field._width/18*this.direction);
+	return this.xPos*this.direction>(this.defaultFieldRegion.midx-this.field._width/6*this.direction)*this.direction;
 
 }
 
@@ -593,8 +582,7 @@ processMessages(){
 
 
 moveTo(xval,yval){
-
-	if (this.state=="neutral") {
+	if (this.isWaiting()) {
 		this.stop();
 	}
 	else{
@@ -682,7 +670,7 @@ getAttackingPositionRating(){
 
 		if (this!=teamFocus) {
 			var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
-			rating-=10*numPassesFromFocus;
+			rating-=20*numPassesFromFocus;
 
 		};
 
@@ -916,47 +904,51 @@ probabilityShoot(){
 	}
 
 	moveLeft(){
-		if (this.state!="neutral") {
+		if (!this.isWaiting()) {
 			super.moveLeft();
 		}
 		else{
 			this.stop();
+			//this.setState("neutral");
 		}
 
 	}
 
 	moveRight(){
-		if (this.state!="neutral") {
+		if (!this.isWaiting()) {
 			super.moveRight();
 		}
 		else{
 			this.stop();
+			//this.setState("neutral");
 		}
 
 	}
 
 	moveBackward(){
-		if (this.state!="neutral") {
+		if (!this.isWaiting()) {
 			super.moveBackward();
 		}
 		else{
 			this.stop();
+			//this.setState("neutral");
 		}
 
 	}
 
 	moveForward(){
-		if (this.state!="neutral") {
+		if (!this.isWaiting()) {
 			super.moveForward();
 		}
 		else{
 			this.stop();
+			//this.setState("neutral");
 		}
 
 	}
 
 	inContactWith(moveable){
-		return this.distanceTo(moveable.xPos,moveable.yPos)<this._length;
+		return this.distanceTo(moveable.xPos,moveable.yPos)<((this._length/2)+(moveable._length/2));
 	}
 
 	stopAtDefaultRegion(){
@@ -966,6 +958,11 @@ probabilityShoot(){
 		}
 		else{
 			this.stop();
+			if (!this.isWaiting()) {
+				this.setState("neutral");
+
+			};
+			
 
 		}
 
@@ -981,10 +978,31 @@ probabilityShoot(){
 		}
 		else{
 			this.stop();
+			if (!this.isWaiting()) {
+				this.setState("neutral");
+
+			};
 		}
 		}
 
-	
+isDefender(){
+	return this.position=="CB"||this.position=="RCB"||this.position=="LCB"||this.position=="LB"||this.position=="RB";
+
+}
+
+keeperDefenseMechanism(){
+	if (this.team.ballIsInTeamThird()) {
+			this.keeperMovement();
+		}
+		else{
+			this.stopAtDefaultRegion();
+		}
+
+}
+
+isWaiting(){
+	return this.state=="neutral"||this.state=="shooter"||this.state=="passer";
+}
 
 
 }

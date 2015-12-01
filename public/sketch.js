@@ -4,7 +4,7 @@ var game;
 var latestCommand="Say 'team [x]'; x='attack','defend','you're awesome'... etc";
 
 function preload(){
-	mySound = loadSound('data/punch.mp3');
+	mySound = loadSound('data/kick.wav');
 	mySound.setVolume(0.05);
 
 }
@@ -17,7 +17,7 @@ function setup() {
 
 		
 		//game=new Game(width/5,height/5,3*width/5,3*height/5);
-		game=new Game(width/10,height/10,0.8*width,0.8*height);
+		game=new Game(width/10,height/10,0.8*width,0.8*height,"human");
   		if (annyang) {
   		//i can totally add the team and player names here
 		 var commands = {
@@ -32,7 +32,7 @@ function setup() {
   annyang.addCommands(commands);
   annyang.addCallback('result',function(userSaid){
 
-  	console.log(userSaid);
+  	//console.log(userSaid);
   	latestCommand=userSaid[0];
   	//console.log(commandText);
   	//console.log(phrases);
@@ -173,6 +173,8 @@ function setup() {
 
 
 	}
+
+
 
 	
 

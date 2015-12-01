@@ -1,3 +1,20 @@
+var state=0;
+
+function moveBack(){
+	state--;
+}
+
+function moveFoward(){
+	state++;
+}
+
+if (state==0) {
+	$('#action').text("Select A Team")
+
+};
+
+
+
 $("#selectTeam").click(function () {
 	$(".selectTeam").width("100%");
 	$('#selectTeam').hide();

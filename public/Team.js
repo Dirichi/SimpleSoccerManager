@@ -15,6 +15,8 @@ class Team{
 		this.mindset="";
 
 		this.opposition;
+		this.posRatings=[];
+		this.posFrequencies=[];
 
 		this.mode;
 		this.state="";
@@ -69,6 +71,7 @@ class Team{
 				this.attack();
 		}
 		else{
+			this.setAllPlayerStates();
 			for (var i = this.players.length - 1; i >= 0; i--) {
 
 				if (this.nearestPlayerToBall()!=this.players[i]) {
@@ -239,7 +242,7 @@ class Team{
 	}
 
 	inPossession(){
-		return (this.hasBall()||(!this.oppositionhasBall()&&this.field.lastPlayerInPossesion.side==this.side));
+		return (this.hasBall()||(!this.oppositionhasBall()&&this.field.lastPlayerInPossession.side==this.side));
 	}
 
 	ballIsInTeamThird(){
@@ -354,9 +357,76 @@ class Team{
 
    setAllPlayerStates(val){
    	for (var i = this.players.length - 1; i >= 0; i--) {
-   		if (this.players[i].state=="neutral") {
+   		if (this.players[i].isWaiting()) {
    			this.players[i].state=val;
    		};	
    	}
    }
+
+   getBestPositionRating(){
+   	var best=this.players[0];
+   	for (var i = this.players.length - 1; i >= 0; i--) {
+   		if(this.players[i].getAttackingPositionRating()>best.getAttackingPositionRating()){
+   			best=this.players[i];
+   		}
+   	};
+   	return Math.floor(best.getAttackingPositionRating());
+
+   }
+
+   getWorstPositionRating(){
+   	var worst=this.players[0];
+   	for (var i = this.players.length - 1; i >= 0; i--) {
+   		if(this.players[i].getAttackingPositionRating()<best.getAttackingPositionRating()){
+   			worst=this.players[i];
+   		}
+   	};
+   	return Math.floor(best.getAttackingPositionRating());
+
+   }
+
+   getAllPositionRatings(){
+   	for (var i = this.players.length - 1; i >= 0; i--) {
+   		var rating=this.players[i].getAttackingPositionRating();
+   		rating=Math.floor(rating);
+   		rating=10*Math.floor(rating/10)
+   		if (numOccurencesInArray(rating,this.posRatings)==0) {
+   			this.posRatings.push(rating);
+   			this.posFrequencies.push(1);
+   		}
+   		else{
+   			var index=getIndex(rating, this.posRatings);
+   			this.posFrequencies[index]++;
+
+   		}
+   	};
+
+   }
+
+ 
+}
+
+function numOccurencesInArray(val, array){
+
+	if (array.length==0) {
+		return 0;
+	};
+	var count=0;
+	for (var i = array.length - 1; i >= 0; i--) {
+		if(array[i]==val){
+			count++;
+		}
+	};
+	return count;
+
+}
+
+function getIndex(val,array){
+	for (var i = array.length - 1; i >= 0; i--) {
+		if(array[i]==val){
+			return i;
+		}
+	};
+	return -1;
+
 }
