@@ -71,17 +71,13 @@ class Team{
 				this.attack();
 		}
 		else{
-			this.setAllPlayerStates();
+			this.setAllPlayerStates("n/a");
+			this.nearestOutFieldPlayerToBall().chaseBall();
 			for (var i = this.players.length - 1; i >= 0; i--) {
 
-				if (this.nearestPlayerToBall()!=this.players[i]) {
+				if (this.nearestOutFieldPlayerToBall()!=this.players[i]) {
 					this.players[i].moveToDefensivePosition();
 				}
-				else{
-					if (this.players[i].position!="K") {
-						this.players[i].chaseBall();
-
-					};
 
 				}
 				
@@ -91,7 +87,7 @@ class Team{
 	
 
 
-	}
+	
 	attack(){
 		this.mindset="attacking";
 		if (!this.inPossession()) {

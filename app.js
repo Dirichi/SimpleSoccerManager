@@ -69,6 +69,22 @@ app.get("/teams/:leagueCode", function(req,res){
 
 });
 
+// app.get("/game/:gameCode", function(req,res){
+// 	res.header('Access-Control-Allow-Origin', "*");
+// 	var leagueCode=req.params.leagueCode;
+// 	var requestURL='http://api.football-data.org/v1/soccerseasons/'+leagueCode+'/teams';
+
+// 		Request(requestURL, function (error, response, body) {
+// 		if (!error && response.statusCode == 200) {
+// 			//console.log(body);
+// 			var teams = JSON.parse(body);
+// 			//console.log(teams);
+// 			res.json(teams);
+// 		}
+// 	});
+
+// });
+
 var port=process.env.PORT||3000;
 app.listen(port);
 

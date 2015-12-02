@@ -38,10 +38,10 @@ class Game{
 		//var waitTime;
 		//this.getTeamARatings();
 		push();
-		fill(128,0,50);
-		stroke(0);
-		strokeWeight(2);
-		rect(this.field.xPos-this.field._length/20,this.field.yPos-this.field._length/20,this.field._width+this.field._length/10,11*this.field._length/10);
+		//fill(48,63,159);
+		//stroke(0);
+		//strokeWeight(2);
+		//rect(this.field.xPos-this.field._length/20,this.field.yPos-this.field._length/20,this.field._width+this.field._length/10,11*this.field._length/10);
 		pop();
 		this.timeElapsed=millis();
 
@@ -97,7 +97,7 @@ class Game{
 
 	displayScore(){
 		push();
-		fill(0);
+		fill(255);
 		var scoreString=this.teamA.nm+" "+this.teamA.score+" : "+this.teamB.score+" "+this.teamB.nm;
 		//var scoreString="Not for now"
 		textSize(width/40);
@@ -107,7 +107,7 @@ class Game{
 
 	displayTime(){
 		push();
-		fill(0);
+		fill(255);
 		
 		textSize(width/40);
 		var timeString=this.gameTime+":00"

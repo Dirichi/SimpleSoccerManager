@@ -14,7 +14,8 @@ class Player extends Moveable{
 		this.ball=this.field.ball;
 
 		this.messages=[];
-		this.kickSound;
+		this.passSound;
+		this.shootSound;
 		this.state="n/a";
 		this.teammates=[];
 
@@ -359,24 +360,24 @@ class Player extends Moveable{
 		this.updateMid();
 		this.updatePosition();
 		push();
-		if (this.isWaiting()) {
-			fill(colors[0],colors[1],colors[2]);
-
-		}
-		else{
-			fill(colors[0]/2,colors[1]/2,colors[2]/2);
-		}
+		fill(colors[0],colors[1],colors[2]);
+	
 		
 		ellipse(this.xPos,this.yPos,this._length,this._length);
-		fill(0);
+		fill((this.morale-1)*-255,this.morale*255,0);
 		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
+		fill(255);
+		textAlign(CENTER);
+		textFont("Helvetica");
+		text(this.state,this.xPos,this.yPos-this._width);
 		pop();
 		if (this.isOutOfBounds()) {
 			this.moveToDefaultPosition();
 		};
-		if (this.isColliding()) {
-			this.spread();
-		};
+		// if (this.isColliding()) {
+		// 	this.spread();
+		// };
+
 
 	}
 
@@ -396,6 +397,7 @@ class Player extends Moveable{
 			this.messageTeammatesWithException("n/a",[player]);
 			this.setState("passer");
 			this.updateRecentPasses(player);
+			this.passSound.play();
 
 
 
@@ -408,7 +410,7 @@ class Player extends Moveable{
 		
 
 	}
-	if (player.distanceToBall()<2*this._width) {
+	if (player.distanceToBall()<5*this._width) {
 		player.chaseBall();
 	};
 	if(player.hasBall()){
@@ -429,11 +431,12 @@ shoot(){
 	//add distance error
 	//add angle difficulty
 	//add hitting off the bar
-	this.messageTeammates("n/a");
+	
 	
 	if(this.hasBall()&&this.state!="shooter"&&this.state!="passer"){
+		this.messageTeammates("n/a");
 		this.setState("shooter");
-		this.kickSound.play();
+		this.shootSound.play();
 		var randomPosY=random(-this.field.rightPost._length/2,this.field.rightPost._length/2);
 		var distanceToGoal=this.distanceToGoal();
 		distanceToGoal=map(distanceToGoal,0,this.field._width,1,3);
@@ -459,7 +462,7 @@ dribble(){
 		this.ball.dx=this.dx;
 		this.ball.dy=this.dy;
 		this.moveForward();
-		this.setState("n/a");
+		this.setState("dribbling");
 	};
 
 }
@@ -484,8 +487,7 @@ chaseBall(){
 
 	}
 	else{
-		this.dx=0;
-		this.dy=0;
+		this.stop();
 	}
 	
 
@@ -520,7 +522,7 @@ moveToDefensivePosition(){
 	if (this.position=="K") {
 		this.keeperDefenseMechanism();		
 	}
-	else if (defendProbability>this.defendTendency||this.isWaiting()){
+	else if (this.isWaiting()){
 		this.stop();
 		//this.setState("neutral");
 	}
@@ -543,7 +545,7 @@ moveToAttackingPosition(){
 		this.stop();
 		//this.setState("neutral")
 	}
-	else if (attackProbability<this.attackTendency) {
+	else {
 			if (this.isBehindBall()) {
 				this.stopAtAttackingPosition();	
 			}
@@ -551,6 +553,7 @@ moveToAttackingPosition(){
 				this.stopAtDefaultRegion();
 				}
 	}
+
 }
 
 isBehindAttackingPosition(){
@@ -784,7 +787,7 @@ choiceInPossession(){
 probabilityShoot(){
 	var distanceToGoal=this.distanceToGoal();
 	var obstruction=this.numOpponentsObstruction();
-	if (distanceToGoal<this.field._width/5) {
+	if ((distanceToGoal<this.field._width/5)||(this.team.opposition.ballIsInTeamThird()&&this.isStriker())) {
 		return 0.9;
 	};
 	var maxDistance=(this.field._width*this.field._width)+(this.field._length*this.field._length);
@@ -801,6 +804,9 @@ probabilityShoot(){
 		return bestChoiceRating;
 	}
 	probabilityDribble(){
+		if (this.position=="K") {
+			return 0;
+		};
 
 		return 1-(this.probabilityPass()+this.probabilityShoot())/2;
 	}
@@ -989,6 +995,14 @@ isDefender(){
 
 }
 
+isMidFielder(){
+	return this.position=="DM"||this.position=="AM"||this.position=="LCM"||this.position=="RCM"||this.position=="LM"||this.position=="RM"||this.position=="CM"
+}
+
+isStriker(){
+	return this.position=="CF"||this.position=="LCF"||this.position=="RCF"||this.position=="LF"||this.position=="RF";
+}
+
 keeperDefenseMechanism(){
 	if (this.team.ballIsInTeamThird()) {
 			this.keeperMovement();
@@ -1002,6 +1016,8 @@ keeperDefenseMechanism(){
 isWaiting(){
 	return this.state=="neutral"||this.state=="shooter"||this.state=="passer";
 }
+
+
 
 
 }

@@ -4,8 +4,10 @@ var game;
 var latestCommand="Say 'team [x]'; x='attack','defend','you're awesome'... etc";
 
 function preload(){
-	mySound = loadSound('data/kick.wav');
-	mySound.setVolume(0.05);
+	passSound = loadSound('data/kick.wav');
+	passSound.setVolume(0.1);
+	shootSound=loadSound('data/kick.wav');
+	shootSound.setVolume(0.3);
 
 }
 
@@ -17,12 +19,16 @@ function setup() {
 
 		
 		//game=new Game(width/5,height/5,3*width/5,3*height/5);
-		game=new Game(width/10,height/10,0.8*width,0.8*height,"human");
+		game=new Game(0,0,width,height);
+
+		//game=new Game(width/10,height/10,0.8*width,0.8*height,"human");
   		if (annyang) {
   		//i can totally add the team and player names here
 		 var commands = {
   		'team *command': parseResult,
-  		'game *command': parseGameCommand};
+  		'game *command': parseGameCommand,
+  		'play *command': parsePlayerCommand
+  		};
   	}
   	else{
   		console.log("no annyang");
@@ -32,8 +38,8 @@ function setup() {
   annyang.addCommands(commands);
   annyang.addCallback('result',function(userSaid){
 
-  	//console.log(userSaid);
-  	latestCommand=userSaid[0];
+  	console.log(userSaid);
+  	//latestCommand=userSaid[0];
   	//console.log(commandText);
   	//console.log(phrases);
 
@@ -41,7 +47,8 @@ function setup() {
   annyang.start();
 
   for (var i = game.allPlayers.length - 1; i >= 0; i--) {
-  	game.allPlayers[i].kickSound=mySound;
+  	game.allPlayers[i].passSound=passSound;
+  	game.allPlayers[i].shootSound=shootSound;
   };
 }
 	
@@ -50,7 +57,7 @@ function setup() {
 	function draw() {
 		background(255); 
 		game.stateMachine();
-		//displayLatestCommand();
+		displayLatestCommand();
 		//showTeamMorales();
 		//console.log(game.field.lastPlayerInPossession.position||true);
 
@@ -89,7 +96,33 @@ function setup() {
 
 	}
 
+	function parsePlayerCommand(term){
+		latestCommand='play '+term;
+		if (term=="forward") {
+			game.teamA.players[0].setState("n/a");
+			game.teamA.players[0].moveForward();
+		}
+		if (term=="backward") {
+			game.teamA.players[0].setState("n/a");
+			game.teamA.players[0].moveBackward();
+		}
+		if (term=="left") {
+			game.teamA.players[0].setState("n/a");
+			game.teamA.players[0].moveLeft();
+		}
+		if (term=="right") {
+			game.teamA.players[0].setState("n/a");
+			game.teamA.players[0].moveRight();
+		}
+		if (term=="chase") {
+			game.teamA.players[0].setState("n/a");
+			game.teamA.players[0].chaseBall();
+		}
+
+	}
+
 	function parseGameCommand(term){
+		latestCommand='game '+term;
 		if (term=="pause") {
 			game.pause();
 		};
@@ -101,9 +134,9 @@ function setup() {
 		//put this function in game class
 
 		push();
-		fill(255);
+		fill(255,255,255,0);
 		rect(width/2-width/6,height/20-height/40,width/3,height/20);
-		fill(127,127,130);
+		fill(0,0,0);
 		textSize(width/80);
 		textAlign(CENTER);
 		text(latestCommand, width/2, height/20);
@@ -173,6 +206,14 @@ function setup() {
 
 
 	}
+
+$(document).ready(
+	function(){	
+	alert(OBJ.val)
+
+	
+});
+
 
 
 
