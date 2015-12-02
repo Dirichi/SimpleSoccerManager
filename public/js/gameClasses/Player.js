@@ -530,7 +530,6 @@ moveToDefensivePosition(){
 			}
 		else{
 			this.stop();
-			//this.setState("neutral");
 		}
 
 		}	

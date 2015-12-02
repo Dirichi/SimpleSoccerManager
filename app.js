@@ -16,6 +16,7 @@ app.set('view engine', 'html');
 //Add connection to the public folder for css & js files
 app.use(express.static(__dirname + '/public'));
 
+
 // app.use(function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -50,6 +51,22 @@ app.get("/select", function(req, res){
 	// 	search: false
 	// };
 	res.render('select');
+});
+
+app.get("/teams/:leagueCode", function(req,res){
+	res.header('Access-Control-Allow-Origin', "*");
+	var leagueCode=req.params.leagueCode;
+	var requestURL='http://api.football-data.org/v1/soccerseasons/'+leagueCode+'/teams';
+
+		Request(requestURL, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			//console.log(body);
+			var teams = JSON.parse(body);
+			//console.log(teams);
+			res.json(teams);
+		}
+	});
+
 });
 
 var port=process.env.PORT||3000;

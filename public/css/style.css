@@ -18,26 +18,63 @@
 #actionDiv{
 	display: block;
 	color: #000;
-	margin-top: 5%;
+	margin-top: 2%;
+	margin-bottom: 5%;
+	border: 3px solid #000000;
+	padding: 1%;
+
+}
+
+.action{
+	display: inline;
+	width: 50%;
+	margin: 0 auto;
+	font-size: 30px;
+	margin-left: 10%;
 
 
 }
 
-#action{
-	display: block;
-	width: 50%;
-	margin: 0 auto;
-	font-size: 30px;
+#selectTeam{
+	background: #000;
+	color: white;
+	padding: 1%;
 
+}
+#activityAreaDiv{
+	display: block;
+	width: 70%;
+	margin:0 auto;
+	overflow: auto;
+	/*background: #29B6F6;*/
 
 }
 
 body{
 	font-family: 'Open Sans', serif;
-	background: #F44336;
-	background: white;
 	color: black;
 
+}
+
+.teamDiv{
+	width: 20%;
+	float: left;
+
+}
+
+.teamName{
+	
+
+
+}
+
+.teamCrest{
+
+}
+
+.bottomButtons{
+	display: block;
+	float: below;
 }
 
 
