@@ -457,7 +457,7 @@ socket.on('news', function (data) {
 });
 
 function gameChanged(){
-  if (globalGameCounter%100==0) {
+  if (globalGameCounter%10==0) {
     return true;
   };
   return false;
