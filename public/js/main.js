@@ -203,13 +203,16 @@ function setup() {
   
 
   function draw() {
-    //globalGameCounter++;
+    globalGameCounter++;
+    if (gameChanged()) {
+      grabDataAndSend();
+    };
     background(255); 
     game.stateMachine();
     displayLatestCommand();
     //showTeamMorales();
     //console.log(game.field.lastPlayerInPossession.position||true);
-    grabDataAndSend();
+    
 
   }
 
@@ -417,6 +420,13 @@ socket.on('news', function (data) {
   //console.log(data);
   drawPlayers(data.players);
 });
+
+function gameChanged(){
+  if (globalGameCounter%100==0) {
+    return true;
+  };
+  return false;
+}
 
 
 
