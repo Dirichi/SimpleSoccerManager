@@ -105,6 +105,6 @@ io.on('connection', function (socket) {
  x++;
 	socket.on('changing', function (data) {
 		socket.broadcast.emit('news', data);
-		console.log(data);
+		// console.log(data);
   });
 });

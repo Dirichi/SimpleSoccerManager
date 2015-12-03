@@ -366,9 +366,10 @@ function setup() {
 /*-------------------------------------------------------------------------------------*/
 
 function drawPlayers(players){
-  for (var i = this.players.length - 1; i >= 0; i--) {
-    drawPlayer(this.players[i]);
-  }
+  // for (var i = this.players.length - 1; i >= 0; i--) {
+  //   drawPlayer(this.players[i]);
+  // }
+  console.log(players)
 }
 
 function drawPlayer(player){
