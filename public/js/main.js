@@ -389,9 +389,9 @@ function drawPlayer(player){
 
 }
 
-function drawPlayers(){
-  for (var i = this.players.length - 1; i >= 0; i--) {
-    drawPlayer(this.players[i]);
+function drawPlayers(players){
+  for (var i = players.length - 1; i >= 0; i--) {
+    drawPlayer(players[i]);
   }
 
 }
