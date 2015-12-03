@@ -37,10 +37,10 @@ function getDataFromURL(url, resultType){
         if (resultType=="players") {
           result=data.players;
           for (var i = result.length - 1; i >= 0; i--) {
-            playerObjs[i]=createPlayerObj(result[i]);
+            //playerObjs[i]=createPlayerObj(result[i]);
           };
         };
-        console.log(playerObjs);
+        //console.log(playerObjs);
       }
     })
 
@@ -384,7 +384,9 @@ function capturePlayer(player){
 function drawPlayer(player){
    push();
   fill(player.colors[0],player.colors[1],player.colors[2],128);
-  ellipse(player.xPos,player.yPos,game.teamA.players[0]._width,game.teamA.players[0]._width);
+  var playerXPos=(player.corrXPos*game.field._width)+game.field.xPos;
+  var playerYPos=(player.corrYPos*game.field._length)+game.field.yPos;
+  ellipse(playerXPos,playerYPos,game.teamA.players[0]._width,game.teamA.players[0]._width);
   pop();
 
 }
@@ -399,9 +401,13 @@ function drawPlayers(players){
 function drawBall(){}
 
 function createPlayerObj(playerObj){
+
+  var correctedXPos=map(playerObj.xPos,game.field.xPos,game.field.xPos+game.field._width,0,1);
+  var correctedYPos=map(playerObj.yPos,game.field.yPos,game.field.yPos+game.field._length,0,1);
+
   var player={
-    xPos: playerObj.xPos,
-    yPos: playerObj.yPos,
+    corrXPos: correctedXPos,
+    corrYPos: correctedYPos,
     state: playerObj.state,
     morale: playerObj.morale,
     position: playerObj.position,
