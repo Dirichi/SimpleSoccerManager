@@ -212,6 +212,10 @@ function setup() {
     displayLatestCommand();
     //showTeamMorales();
     //console.log(game.field.lastPlayerInPossession.position||true);
+    if (receivedPlayers.length>0) {
+      drawPlayers(receivedPlayers);  
+    };
+    
     
 
   }
@@ -365,19 +369,30 @@ function setup() {
 
 /*-------------------------------------------------------------------------------------*/
 
-function drawPlayers(players){
-  // for (var i = this.players.length - 1; i >= 0; i--) {
-  //   drawPlayer(this.players[i]);
-  // }
-  console.log(players)
+var receivedPlayers=[];
+
+function capturePlayers(players){
+  
+ receivedPlayers=players;
+}
+
+function capturePlayer(player){
+
+ 
 }
 
 function drawPlayer(player){
-  push();
+   push();
   fill(player.colors[0],player.colors[1],player.colors[2],128);
   ellipse(player.xPos,player.yPos,game.teamA.players[0]._width,game.teamA.players[0]._width);
   pop();
 
+}
+
+function drawPlayers(){
+  for (var i = this.players.length - 1; i >= 0; i--) {
+    drawPlayer(this.players[i]);
+  }
 
 }
 
@@ -419,7 +434,7 @@ function computeGameSpeed(){
 
 socket.on('news', function (data) {
   //console.log(data);
-  drawPlayers(data.players);
+  capturePlayers(data.players);
 });
 
 function gameChanged(){
