@@ -14,6 +14,9 @@ class Team{
 		this.post=post;
 		this.mindset="";
 
+		this.humanControlledPlayer;
+		//this.computerControlledPlayers=[];
+
 		this.opposition;
 		this.posRatings=[];
 		this.posFrequencies=[];

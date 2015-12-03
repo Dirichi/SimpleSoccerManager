@@ -388,13 +388,22 @@ function drawPlayer(player){
   var playerYPos=(player.corrYPos*game.field._length)+game.field.yPos;
   ellipse(playerXPos,playerYPos,game.teamA.players[0]._width,game.teamA.players[0]._width);
   pop();
+  movePlayer(player);
 
 }
 
 function drawPlayers(players){
   for (var i = players.length - 1; i >= 0; i--) {
     drawPlayer(players[i]);
+
   }
+
+}
+
+function movePlayer(player){
+  player.corrXPos+=player.corrDx;
+  player.corrYPos+=player.corrDy;
+
 
 }
 
@@ -404,10 +413,14 @@ function createPlayerObj(playerObj){
 
   var correctedXPos=map(playerObj.xPos,game.field.xPos,game.field.xPos+game.field._width,0,1);
   var correctedYPos=map(playerObj.yPos,game.field.yPos,game.field.yPos+game.field._length,0,1);
+  var correctedDx=map(playerObj.dx,game.field.dx,game.field.xPos+game.field._width,0,1);
+   var correctedDy=map(playerObj.dy,game.field.dy,game.field.yPos+game.field._length,0,1);
 
   var player={
     corrXPos: correctedXPos,
     corrYPos: correctedYPos,
+    corrDx: correctedDx,
+    corrDy: correctedDy,
     state: playerObj.state,
     morale: playerObj.morale,
     position: playerObj.position,
@@ -450,8 +463,31 @@ function gameChanged(){
   return false;
 }
 
+var direction=[0,0];
+var playerSpeed=1;
 
+$(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: // left
+        direction=[-playerSpeed,0];
+        break;
 
+        case 38: // up
+        direction=[0,-playerSpeed];
+        break;
+
+        case 39: // right
+        direction=[playerSpeed,0];
+        break;
+
+        case 40: // down
+        direction=[0,playerSpeed];
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
 
 
 
