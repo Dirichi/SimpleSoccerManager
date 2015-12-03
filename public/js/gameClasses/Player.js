@@ -463,7 +463,11 @@ dribble(){
 		this.ball.dy=this.dy;
 		this.moveForward();
 		this.setState("dribbling");
-	};
+	}
+	else{
+		this.messageTeammates("n/a");
+		this.setState("neutral");
+	}
 
 }
 
@@ -1015,6 +1019,15 @@ keeperDefenseMechanism(){
 
 isWaiting(){
 	return this.state=="neutral"||this.state=="shooter"||this.state=="passer";
+}
+
+moveAwayFromPlayer(player){
+	//this.dx=player.dx;
+
+}
+
+findOpponentsInVicinity(){
+	//return list of opponents close by or in the same field region
 }
 
 

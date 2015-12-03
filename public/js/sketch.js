@@ -207,12 +207,8 @@ function setup() {
 
 	}
 
-$(document).ready(
-	function(){	
-	alert(OBJ.val)
 
 	
-});
 
 
 

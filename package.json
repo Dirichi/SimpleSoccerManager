@@ -12,6 +12,7 @@
     "ejs": "*",
     "express": "4.x",
     "morgan": "~1.0.0",
-    "request": "^2.47.0"
+    "request": "^2.47.0",
+    "socket.io": "^1.2.1"
   }
 }

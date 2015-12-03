@@ -1,3 +1,4 @@
+var x=1;
 var express = require("express");
 var logger = require('morgan');
 var Request = require('request');
@@ -85,6 +86,25 @@ app.get("/teams/:leagueCode", function(req,res){
 
 // });
 
-var port=process.env.PORT||3000;
-app.listen(port);
+function generateGameCode(){
+ //generated game code will be used as socket room or namespace
+}
 
+function submitGameCodeToDb(){}
+
+
+
+
+var port=process.env.PORT||3000;
+var server=app.listen(port);
+var io = require('socket.io')(server);
+console.log('Express started on port ' + port);
+
+io.on('connection', function (socket) {
+ console.log('a user connected',x);
+ x++;
+	socket.on('changing', function (data) {
+		socket.broadcast.emit('news', data);
+		console.log(data);
+  });
+});

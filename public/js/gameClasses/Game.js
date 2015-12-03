@@ -557,3 +557,5 @@ class Game{
 	}
 
 }
+
+function computeGameSpeed(){}
