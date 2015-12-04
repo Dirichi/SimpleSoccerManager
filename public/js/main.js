@@ -242,10 +242,10 @@ function setup() {
 
   function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
-    game.field._width=3*width/5;
-    game.field._length=3*height/5;
-    game.field.xPos=width/5;
-    game.field.yPos=height/5;
+    game.field._width=width;
+    game.field._length=height;
+    game.field.xPos=width;
+    game.field.yPos=height;
   }
 
   
@@ -260,7 +260,7 @@ function setup() {
 
     }
     else{
-      getSentiment(term);
+      getAlchemySentiment(latestCommand);
     }
 
   }
@@ -349,32 +349,32 @@ function setup() {
   }
 
 
-  function getSentiment(command){
-    var searchTermSend = encodeURIComponent(command);
-    var sentiURL="http://www.sentiment140.com/api/classify?text=team+"+command+"&query=team";
-    
+  function getAlchemySentiment (phrase) {
+  // body...
     $.ajax({
-      url: sentiURL,
-      dataType: 'jsonp',
-      type: 'GET',
-      error: function(data){
-        console.log("There is a problem bruv!");
-        console.log(data);
-        return -1;
+    url: 'https://gateway-a.watsonplatform.net/calls/text/TextGetTargetedSentiment',
+    dataType: 'json',
+    //jsonp: 'jsonp',
+    type: 'POST',
+    data: {
+      apikey: "aecc0ecac7927df0133924a891a4d05072af19dd",
+      text: phrase,
+      targets: "team",
+      outputMode: 'json'
+
     },
-      success: function(data){
-        console.log(data);
-        sentimentPositivity=data["results"]["polarity"];
-        console.log(sentimentPositivity);
-        sentimentPositivity=map(sentimentPositivity,0,4,-0.2,0.1);
-        game.teamA.incrementTeamMorale(sentimentPositivity);
-        //return sentimentPositivity;
-      }
-    })
-    
+    error: function (data) {
+      //console.log('alchemy ajax call error');
+    },
+    success: function (data) {
+     // console.log('alchemy ajax call success');
 
-
-  }
+      //alchemyConcept = data;
+      var sentimentScore=data.results[0].sentiment.score;
+      game.teamA.incrementTeamMorale(sentimentScore*0.2)
+    }
+  })
+}
 
 
   
