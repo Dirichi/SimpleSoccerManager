@@ -165,7 +165,7 @@ function preload(){
 
 
 function setup() {
-  if (windowWidth<windowHeight) {
+  if (windowWidth>windowHeight) {
     createCanvas(windowWidth,windowHeight);
 
   }
