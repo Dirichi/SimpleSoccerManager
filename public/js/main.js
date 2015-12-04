@@ -170,7 +170,7 @@ function setup() {
 
   }
   else{
-    createCanvas(windowWidth,windowHeight);
+    createCanvas(windowHeight,windowWidth);
 
   }
   
