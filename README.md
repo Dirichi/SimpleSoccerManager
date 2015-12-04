@@ -21,6 +21,6 @@ determined to be negative will reduce team morale and performance as well.
    
   
 
--  Current prototype here: simplesoccermanagers.herokuapp.com/game
+-  Current prototype here: https://simplesoccermanagers.herokuapp.com/game
 
 
