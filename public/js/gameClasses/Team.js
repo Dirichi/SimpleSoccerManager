@@ -14,7 +14,6 @@ class Team{
 		this.post=post;
 		this.mindset="";
 
-		this.humanControlledPlayer;
 		//this.computerControlledPlayers=[];
 
 		this.opposition;
@@ -49,16 +48,17 @@ class Team{
 		}
 
 		this.outfieldplayers=this.getOutFieldPlayers();
+		this.humanControlledPlayer=this.players[10];
 
 	}
-	animate(){
+	animate(instructions){
 		for (var i = this.players.length - 1; i >= 0; i--) {
 			this.players[i].animate(this.colors);
 		};
 		for (var i = this.subs.length - 1; i >= 0; i--) {
 			//subs[i].animate(this.colors);
 		};
-		this.executeObjective();
+		this.executeObjective(instructions);
 
 	}
 	press(){
@@ -85,11 +85,8 @@ class Team{
 				}
 				
 			};
+			
 		}
-		
-	
-
-
 	
 	attack(){
 		this.mindset="attacking";
@@ -97,19 +94,26 @@ class Team{
 				this.defend();
 		}
 
-		else if (this.focusPlayer()!=1) {
+		else if (this.focusPlayer()!=1&&this.focusPlayer()!=this.humanControlledPlayer) {
 		
 			this.focusPlayer().choiceInPossession();
 			for (var i = this.players.length - 1; i >= 0; i--) {
-				if(this.focusPlayer()!=this.players[i]){
+				if(this.players[i]!=this.focusPlayer()&&this.players[i]!=this.humanControlledPlayer){
 					this.players[i].moveToAttackingPosition();
 				}
 			};
 
 			
-		}	
+		}
+
+			
 
 		}
+
+	receiveHumanInstructions(instructions){
+		this.humanControlledPlayer.humanControl(instructions);
+
+	}
 		
 
 		
@@ -140,17 +144,19 @@ class Team{
 		return nearestOutFieldPlayerToBall;
 	}
 
-	executeObjective(){
+	executeObjective(instructions){
 
 		if (this.state=="play") {
 
 			if(this.objectives.indexOf("attack")!==-1){
 				this.attack();
+				this.receiveHumanInstructions(instructions);
 
 			}
 
 			else if(this.objectives.indexOf("defend")!==-1){
 				this.defend();
+				this.receiveHumanInstructions(instructions);
 
 			}
 

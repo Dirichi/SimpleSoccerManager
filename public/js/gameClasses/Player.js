@@ -360,7 +360,12 @@ class Player extends Moveable{
 		this.updateMid();
 		this.updatePosition();
 		push();
+
 		fill(colors[0],colors[1],colors[2]);
+		if (this.isHumanControlled()&&this.side=="left") {
+			fill(255);
+			
+		};
 	
 		
 		ellipse(this.xPos,this.yPos,this._length,this._length);
@@ -452,6 +457,41 @@ shoot(){
 
 	}
 
+}
+
+dribbleForward(){
+	//if (this.hasBall()) {
+	this.messageTeammates("n/a");
+	this.ball.dx=this.dx;
+	this.ball.dy=this.dy;
+	this.moveForward();
+	this.setState("dribbling");
+	//}
+
+}
+
+dribbleBackward(){
+	this.messageTeammates("n/a");
+	this.ball.dx=this.dx;
+	this.ball.dy=this.dy;
+	this.moveBackward();
+	this.setState("dribbling");
+}
+
+dribbleRight(){
+	this.messageTeammates("n/a");
+	this.ball.dx=this.dx;
+	this.ball.dy=this.dy;
+	this.moveRight();
+	this.setState("dribbling");
+
+}
+dribbleLeft(){
+	this.messageTeammates("n/a");
+	this.ball.dx=this.dx;
+	this.ball.dy=this.dy;
+	this.moveLeft();
+	this.setState("dribbling");
 }
 
 
@@ -1028,6 +1068,70 @@ moveAwayFromPlayer(player){
 
 findOpponentsInVicinity(){
 	//return list of opponents close by or in the same field region
+}
+
+humanControl(instruction){
+	 switch(instruction) {
+        case "forward": // left
+        if (this.hasBall()) {
+        	this.dribbleForward();
+        }
+        else{
+        	this.moveForward();
+         }
+        
+        break;
+
+        case "backward": // up
+        if (this.hasBall()) {
+        	this.dribbleBackward();
+        }
+        else{
+        	this.moveBackward();
+         }
+        
+        break;
+
+        case "left": // right
+        if (this.hasBall()) {
+        	this.dribbleLeft();
+        }
+        else{
+        	this.moveLeft();
+         }
+        
+        break;
+
+        case "right": // down
+        if (this.hasBall()) {
+        	this.dribbleRight();
+        }
+        else{
+        	this.moveRight();
+         }
+        
+        break;
+
+        case "pass":
+        this.passToBestOption();
+        break;
+
+        case "shoot":
+        this.shoot();
+        break;
+
+        case "chase":
+        this.chaseBall();
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+
+}
+
+isHumanControlled(){
+	return this==this.team.humanControlledPlayer;
+
 }
 
 

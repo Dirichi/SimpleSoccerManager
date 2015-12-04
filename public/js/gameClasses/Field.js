@@ -6,7 +6,7 @@ class Field {
 		this._length=_length;
 	 	this._width=_width;
 	 	this.margin=_length/100;
-	 		 	
+	 	// this.gameInstructions=gameInstructions;
 
 
 	 	this.midx=xPos+_width/2;
@@ -42,7 +42,9 @@ class Field {
 	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost);
 	 	this.teamA.mode="voice";
 	 	this.teamB.mode="computer";
+
 	 	this.lastPlayerInPossession=this.teamA.players[10];
+	 	this.teamA.humanControlledPlayer=this.teamA.players[10];
 	 	this.assignOpposition();
 	 	this.allPlayers=[];
 	 	for (var i = this.teamA.players.length - 1; i >= 0; i--) {
@@ -62,7 +64,7 @@ class Field {
  	
 
 
- 	animate(){
+ 	animate(gameInstructions){
 
  		this.createField();
  		this.createCenterLine();
@@ -70,8 +72,8 @@ class Field {
  		this.createFieldMargin();
  		this.createPosts(); 
  		this.createBoxes();
- 		this.teamA.animate();
- 		this.teamB.animate();
+ 		this.teamA.animate(gameInstructions);
+ 		this.teamB.animate("");
  		this.ball.animate();
  		this.setLastPlayerInPossession(this.getLastPlayerInPossession());
 

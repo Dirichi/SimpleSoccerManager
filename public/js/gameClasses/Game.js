@@ -34,7 +34,7 @@ class Game{
 
 
 	}
-	animate(){
+	animate(gamInstructions){
 		//var waitTime;
 		//this.getTeamARatings();
 		push();
@@ -76,7 +76,7 @@ class Game{
 		
 		
 		
-		this.field.animate();
+		this.field.animate(gamInstructions);
 		this.displayScore();
 		this.displayTime();
 		this.displayFocusPlayers();
@@ -127,11 +127,11 @@ class Game{
 		pop();
 	}
 
-	stateMachine(){
+	stateMachine(gameInstructions){
 		this.updateState();
 		this.updateScores();
 		
-		this.animate();
+		this.animate(gameInstructions);
 		if (this.gameEvent()) {
 			this.ball.stop();
 			this.displayGameStatus();

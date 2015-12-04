@@ -146,6 +146,8 @@ $("#next").click(
 
 var globalGameCounter=0;
 
+var humanInstruction="";
+
 var allowedCommands=["attack","defend"];
 var mySound;
 var game;
@@ -208,7 +210,7 @@ function setup() {
       grabDataAndSend();
     };
     background(255); 
-    game.stateMachine();
+    game.stateMachine(humanInstruction);
     displayLatestCommand();
     //showTeamMorales();
     //console.log(game.field.lastPlayerInPossession.position||true);
@@ -463,26 +465,39 @@ function gameChanged(){
   return false;
 }
 
-var direction=[0,0];
-var playerSpeed=1;
+// var direction=[0,0];
+// var playerSpeed=1;
 
 $(document).keydown(function(e) {
     switch(e.which) {
         case 37: // left
-        direction=[-playerSpeed,0];
+        humanInstruction="backward";
         break;
 
         case 38: // up
-        direction=[0,-playerSpeed];
+        humanInstruction="left";
         break;
 
         case 39: // right
-        direction=[playerSpeed,0];
+        humanInstruction="forward";
         break;
 
         case 40: // down
-        direction=[0,playerSpeed];
+        humanInstruction="right";
         break;
+
+        case 65:
+        humanInstruction="pass";
+        break;
+
+        case 83:
+        humanInstruction="shoot";
+        break;
+
+        case 90:
+        humanInstruction="chase";
+        break;
+
 
         default: return; // exit this handler for other keys
     }
