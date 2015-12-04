@@ -16,8 +16,9 @@ determined to be negative will reduce team morale and performance as well.
    -  cd to the directory where it's stored
    -  run npm install
    -  if no errors, run node app.js
-   -  direct your browser to localhost:3000
+   -  direct your chrome browser to localhost:3000
    -  get crackalacking!
+   -  ##### NB: this game currently only works on chrome, and is not really enable for mobile
    
   
 
