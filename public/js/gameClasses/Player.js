@@ -1124,6 +1124,12 @@ humanControl(instruction){
         this.chaseBall();
         break;
 
+        case "none":
+        if (this.side=="left") {
+        	this.stop();
+        };
+        break;
+
         default: return; // exit this handler for other keys
     }
 
@@ -1132,6 +1138,10 @@ humanControl(instruction){
 isHumanControlled(){
 	return this==this.team.humanControlledPlayer;
 
+}
+
+callForBall(){
+	
 }
 
 

@@ -217,6 +217,8 @@ function setup() {
     if (receivedPlayers.length>0) {
       drawPlayers(receivedPlayers);  
     };
+
+    //resetInstructions();
     
     
 
@@ -503,6 +505,17 @@ $(document).keydown(function(e) {
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });
+
+$(document).keyup( function(e){
+  //if (humanInstruction!="pass"&&humanInstruction!="shoot") {
+    humanInstruction="none";
+  //}
+  
+})
+
+function resetInstructions(){
+  humanInstruction="none";
+}
 
 
 
