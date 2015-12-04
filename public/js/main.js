@@ -165,7 +165,15 @@ function preload(){
 
 
 function setup() {
-  createCanvas(windowWidth,windowHeight);
+  if (windowWidth<windowHeight) {
+    createCanvas(windowWidth,windowHeight);
+
+  }
+  else{
+    createCanvas(windowWidth,windowHeight);
+
+  }
+  
 
     
     //game=new Game(width/5,height/5,3*width/5,3*height/5);

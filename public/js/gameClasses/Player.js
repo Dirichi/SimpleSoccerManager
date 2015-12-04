@@ -1141,7 +1141,9 @@ isHumanControlled(){
 }
 
 callForBall(){
-	
+	if (this.team.hasBall()) {
+		
+	};
 }
 
 
