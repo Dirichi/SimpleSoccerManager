@@ -889,19 +889,26 @@ probabilityShoot(){
 
 
 	keeperMovement(){
-		
-		if (this.keeperDirection==0) {
-			this.moveLeft();
+		if (this.distanceToBall()<2*this._length) {
+			this.chaseBall();
 		}
 		else{
+			if (this.keeperDirection==0) {
+			this.moveLeft();
+			}
+			else{
 			this.moveRight();
-		}
-		if (this.yPos>=this.team.post.yPos+this.team.post._length) {
+			}
+			if (this.yPos>=this.team.post.yPos+this.team.post._length) {
 			this.keeperDirection=0;
-		}
-		else if (this.yPos<=this.team.post.yPos) {
+			}
+			else if (this.yPos<=this.team.post.yPos) {
 			this.keeperDirection=1;
+			}
+
 		}
+		
+		
 		
 
 	}
