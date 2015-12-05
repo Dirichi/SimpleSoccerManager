@@ -752,7 +752,7 @@ getAttackingPositionRating(){
 
 		
 	};
-	return 0;
+	return -500;
 
 }
 

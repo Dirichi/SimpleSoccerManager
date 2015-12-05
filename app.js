@@ -92,6 +92,15 @@ function generateGameCode(){
 
 function submitGameCodeToDb(){}
 
+var CLOUDANT_USERNAME="dirichi206";
+// The name of your database
+var CLOUDANT_DATABASE="soccer_multiverse";
+// These two are generated from your Cloudant dashboard of the above database.
+var CLOUDANT_KEY="theranedculdnewespontsee";
+var CLOUDANT_PASSWORD="66b5a759d0e32870a80f6194a6888b80d4059bdc";
+
+var CLOUDANT_URL = "https://" + CLOUDANT_USERNAME + ".cloudant.com/" + CLOUDANT_DATABASE;
+
 
 
 
