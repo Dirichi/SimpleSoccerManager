@@ -347,11 +347,14 @@ class Player extends Moveable{
 		}
 
 		this.kickOffPositionY=this.defaultFieldRegion.midy;
+		this.uniqueColor=255;
+		this.pulseColor=0;
 
 		// this.xPos=this.field.xPos;
 		// this.yPos=this.field.yPos;
 		this.attackingPositionX=this.defaultFieldRegion.midx+(this.direction*this.field._width/6);
 		this.defendingPositionX=this.defaultFieldRegion.midx-(this.field._width/6*this.direction);
+
 		
 	}
 
@@ -363,7 +366,14 @@ class Player extends Moveable{
 
 		fill(colors[0],colors[1],colors[2]);
 		if (this.isHumanControlled()&&this.side=="left") {
-			fill(255);
+			if (this.state=="calling") {
+				fill(this.pulseColor)
+			}
+			else{
+				fill(this.uniqueColor);
+
+			}
+			
 			
 		};
 	
@@ -696,6 +706,7 @@ messageTeammatesWithException(newState,exceptions){
 getAttackingPositionRating(){
 	var currRegion=this.currentFieldRegion();
 	var rating=50;
+
 	if (currRegion!=1) {
 		rating=rating-10*currRegion.congestionWith(this.team.opposition);
 		rating=rating-2.5*currRegion.congestion();
@@ -712,13 +723,20 @@ getAttackingPositionRating(){
 			rating+=availableSupportCoeff;
 
 		};
-		var teamFocus=this.team.nearestPlayerToBall();
-
-		if (this!=teamFocus) {
-			var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
-			rating-=20*numPassesFromFocus;
+		if (this.team.hasBall()) {
+			var teamFocus=this.team.focusPlayer();
+				if (this!=teamFocus) {
+				var numCallsToFocus=numOccurencesInArray(this,teamFocus.messages)
+				var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
+				rating-=20*numPassesFromFocus;
+				rating+=50*numCallsToFocus;
 
 		};
+
+
+		};
+
+	
 
 		var distanceToGoalCoeff2=map(distanceToGoal,0,this.field._width,0,50);
 		rating=rating-distanceToGoalCoeff2;
@@ -794,11 +812,15 @@ angleToBall(){
 
 findBestPositionedPlayer(){
 	var bestChoice=this.teammates[0];
+
 	for (var i = this.teammates.length - 1; i >= 0; i--) {
+		
+
 		if(this.teammates[i].getAttackingPositionRating()>bestChoice.getAttackingPositionRating()){
 			bestChoice=this.teammates[i];
 		}
 	};
+	this.messages=[];
 	return bestChoice;
 }
 
@@ -1110,21 +1132,29 @@ humanControl(instruction){
         break;
 
         case "right": // down
-        if (this.hasBall()) {
-        	this.dribbleRight();
-        }
-        else{
-        	this.moveRight();
-         }
+	        if (this.hasBall()) {
+	        	this.dribbleRight();
+	        }
+	        else{
+	        	this.moveRight();
+	         }
         
         break;
 
         case "pass":
-        this.passToBestOption();
+	        if (this.hasBall()) {
+	        	 this.passToBestOption();
+
+	        }
+
+	        else if(this.team.hasBall()){
+	        	this.callForBall();
+	        }
         break;
 
         case "shoot":
         this.shoot();
+        
         break;
 
         case "chase":
@@ -1149,8 +1179,11 @@ isHumanControlled(){
 
 callForBall(){
 	if (this.team.hasBall()) {
+		this.team.focusPlayer().messages.push(this);
+		
 		
 	};
+	this.state="calling";
 }
 
 incrementMorale(morale){
@@ -1161,6 +1194,22 @@ incrementMorale(morale){
 	
 
 }
+
+pulse(){
+	var color=random(0,1);
+	if(color>0.5){
+		this.pulseColor=255;
+
+	}
+	else{
+		this.pulseColor=0;
+	}
+	
+
+
+}
+
+
 
 
 

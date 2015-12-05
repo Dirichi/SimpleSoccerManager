@@ -48,7 +48,8 @@ class Team{
 		}
 
 		this.outfieldplayers=this.getOutFieldPlayers();
-		this.humanControlledPlayer=this.players[10];
+		this.humanControlledPlayer=this.players[6];
+		this.humanControlledPlayer.speed=this.humanControlledPlayer._width/3;
 
 	}
 	animate(instructions){
