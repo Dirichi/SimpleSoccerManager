@@ -327,7 +327,7 @@ class Team{
 
    incrementTeamMorale(increment){
    	for (var i = this.players.length - 1; i >= 0; i--) {
-   		this.players[i].morale+=increment;
+   		this.players[i].incrementMorale(increment);
    	};
 
    }

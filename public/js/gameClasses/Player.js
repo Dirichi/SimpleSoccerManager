@@ -1058,7 +1058,7 @@ keeperDefenseMechanism(){
 }
 
 isWaiting(){
-	return this.state=="neutral"||this.state=="shooter"||this.state=="passer";
+	return this.state=="neutral"||this.state=="shooter"||this.state=="passer"&!this.isHumanControlled();
 }
 
 moveAwayFromPlayer(player){
@@ -1144,6 +1144,15 @@ callForBall(){
 	if (this.team.hasBall()) {
 		
 	};
+}
+
+incrementMorale(morale){
+	if (this.morale+morale>0) {
+		this.morale+=morale;
+
+	};
+	
+
 }
 
 
