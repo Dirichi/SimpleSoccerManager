@@ -14,6 +14,8 @@ class Team{
 		this.post=post;
 		this.mindset="";
 
+		this.callers=[];
+
 		//this.computerControlledPlayers=[];
 
 		this.opposition;
@@ -411,9 +413,8 @@ class Team{
    }
 
    clearTeamMessages(){
-   	for (var i = this.players.length - 1; i >= 0; i--) {
-   		this.players[i].clearMessages();
-   	};
+   	//list of players who call for the ball is emptied
+   this.callers=[];
    }
 
  

@@ -726,15 +726,16 @@ getAttackingPositionRating(){
 		if (this.team.inPossession()) {
 			var teamFocus=this.team.nearestPlayerToBall();
 				if (this!=teamFocus) {
-				var numCallsToFocus=numOccurencesInArray(this,teamFocus.messages)
 				var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
 				rating-=20*numPassesFromFocus;
-				rating+=110*numCallsToFocus;
 
 		};
 
 
+
 		};
+		var numCalls=numOccurencesInArray(this,this.team.callers);
+		rating+=numCalls*20;
 
 	
 
@@ -1181,8 +1182,7 @@ isHumanControlled(){
 
 callForBall(){
 	if (this.team.inPossession()) {
-		this.team.nearestPlayerToBall().messages.push(this);
-		
+		this.team.callers.push(this);
 		
 	};
 	this.state="calling";
@@ -1191,10 +1191,8 @@ callForBall(){
 incrementMorale(morale){
 	if (this.morale+morale>0) {
 		this.morale+=morale;
-
 	};
 	
-
 }
 
 pulse(){
