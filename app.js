@@ -100,7 +100,7 @@ app.get("/allgames", function(request,response){
 
 app.get("game/:code", function(request, response){
 	console.log("trying to join game "+request.params.code);
-	
+
 
 })
 
@@ -153,6 +153,7 @@ io.on('connection', function (socket) {
  console.log('a user connected',x);
  x++;
 	socket.on('changing', function (data) {
+		console.log(data.speed);
 		socket.broadcast.emit('news', data);
 		// console.log(data);
   });

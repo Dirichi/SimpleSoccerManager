@@ -1,9 +1,15 @@
+const DELTA_TIME=20;
 var teamName;
 var playerObjs=[];
 var formation;
 var teamNames=[];
 var teamplayersURL="";
 var socket = io();
+var time=0;
+var oldTime=0;
+var oldCount=0;
+var newCount=0;
+var gameSpeed=0;
 
 var state=0;
 
@@ -213,6 +219,7 @@ function setup() {
   
 
   function draw() {
+    time=millis();
     globalGameCounter++;
     if (gameChanged()) {
       grabDataAndSend();
@@ -225,6 +232,9 @@ function setup() {
     if (receivedPlayers.length>0) {
       drawPlayers(receivedPlayers);  
     };
+
+    computeGameSpeed();
+    console.log(gameSpeed);
 
     //resetInstructions();
     
@@ -450,7 +460,7 @@ function grabDataAndSend(){
     allPlayers.push(player);
   };
   theData={
-    speed: 0,
+    speed: gameSpeed,
     players: allPlayers,
     state: game.state
   };
@@ -460,6 +470,16 @@ function grabDataAndSend(){
 }
 
 function computeGameSpeed(){
+  if (time-oldTime>DELTA_TIME) {
+    gameSpeed=globalGameCounter-oldCount;
+    oldTime=time;
+    oldCount=globalGameCounter;
+
+
+  };
+
+  
+
 
 }
 
