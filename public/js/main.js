@@ -486,6 +486,7 @@ function computeGameSpeed(){
 socket.on('news', function (data) {
   //console.log(data);
   capturePlayers(data.players);
+  console.log(data.speed);
 });
 
 function gameChanged(){
