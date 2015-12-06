@@ -45,31 +45,36 @@ class Game{
 		pop();
 		this.timeElapsed=millis();
 
-		if (this.gameEvent()) {
-			
-			if(this.isFullTime()){
-				this.gameTime=90;
-				this.lastTimeBeforeGameEvent=90;
-
-			}
-			else if(this.isHalfTime()){
-				this.lastTimeBeforeGameEvent=45;
-				this.gameTime=45;
-			}
-
-			else{
-				this.gameTime=this.lastTimeBeforeGameEvent;
-
-			}
-			
-			this.delayUpdated=false;
+		if (this.isFullTime()) {
+			this.gameTime=90;
+			this.lastTimeBeforeGameEvent=90;
+			this.end();
 		}
 		else{
-			this.updateCumulativeDelay();
-			this.gameTime=Math.floor(this.timeElapsed/1000)-Math.floor(this.cumulativeTimeDelay/1000);
-			this.delayUpdated=true;
+			if (this.gameEvent()) {
+			
+				if(this.isHalfTime()){
+					this.lastTimeBeforeGameEvent=45;
+					this.gameTime=45;
+				}
+
+				else{
+					this.gameTime=this.lastTimeBeforeGameEvent;
+
+				}
+				
+				this.delayUpdated=false;
+		}
+			else{
+				this.updateCumulativeDelay();
+				this.gameTime=Math.floor(this.timeElapsed/1000)-Math.floor(this.cumulativeTimeDelay/1000);
+				this.delayUpdated=true;
+
+			}
 
 		}
+
+	
 		this.updateLastTimeBeforeGameEvent();		
 		this.getMostRecentEventTimeStart();
 		this.getMostRecentEventTimeStop();
@@ -223,12 +228,17 @@ class Game{
 
 	}
 
+	erasePlayerStates(){
+		for (var i = this.allPlayers.length - 1; i >= 0; i--) {
+			this.allPlayers[i].setState("");
+		};
+	}
 
 	end(){
-		 this.y=this.teamA.posRatings;
-		 this.x=this.teamA.posFrequencies;
+		 // this.y=this.teamA.posRatings;
+		 // this.x=this.teamA.posFrequencies;
+		this.erasePlayerStates();
 		this.setTeamsToNeutral();
-		this.gameTime=90;
 		this.ball.stop();
 		 if (this.teamA.score>this.teamB.score) {
 		 		this.winner=this.teamA;
