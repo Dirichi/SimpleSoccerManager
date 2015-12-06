@@ -139,9 +139,47 @@ function generateGameCode(){
 
 function submitGameCodeToDb(){}
 
+function getSlowestUser(socketObjs){
+	var slowest=socketObjs[0];
+	for (var i = socketObjs.length - 1; i >= 0; i--) {
+		if (socketObjs[i].speed<slowest.speed) {
+			slowest=socketObjs[i];
+		};
+		
+	};
+	return slowest;
+
+
+}
+
+function updateSocketObj(socketObj, socketObjArray){
+	// console.log("array length: ",socketObjArray.length);
+	for (var i = socketObjArray.length - 1; i >= 0; i--) {
+
+		// console.log(socketObj.soc.id,socketObjArray[i].soc.id);
+		if (socketObjArray[i].soc==socketObj.soc) {
+			socketObjArray[i]=socketObj;
+			// console.log("socket found")
+			return 1; //success code
+
+		};
+		
+	};
+	// console.log("error, socket not found in array");
+	socketObjArray.push(socketObj);
+	// console.log("added to the array");
+	// console.log("-------------------------------------------------------------")
+	//console.log(socketObj.id, socketObjArray)
+	return 0; //error code
+
+}
 
 
 
+var allUsers=[];
+var socketObjs=[];
+var slowestUser;
+// var numUsers=0
 
 
 var port=process.env.PORT||3000;
@@ -150,11 +188,30 @@ var io = require('socket.io')(server);
 console.log('Express started on port ' + port);
 
 io.on('connection', function (socket) {
- console.log('a user connected',x);
- x++;
+	allUsers.push(socket);
+ 	console.log('a user connected',allUsers.length);
 	socket.on('changing', function (data) {
-		console.log(data.speed);
-		socket.broadcast.emit('news', data);
+		// console.log(data.speed);
+		var socketObj={
+			soc: socket,
+			speed: data.speed
+		};
+
+		updateSocketObj(socketObj,socketObjs);		
+
+		if (allUsers.length>1) {
+			//console.log("getting slowest user");
+
+			slowestUser=getSlowestUser(socketObjs);
+			//console.log(slowestUser.soc.id);
+			if (socket==slowestUser.soc) {
+				console.log("slowest is ",socket.id);
+				console.log("------------------------------------------------------");
+				socket.broadcast.emit('news', data);
+			}
+
+		}
+		
 		// console.log(data);
   });
 });
