@@ -75,6 +75,7 @@ class Team{
 				this.attack();
 		}
 		else{
+			this.clearTeamMessages();
 			this.setAllPlayerStates("n/a");
 			this.nearestOutFieldPlayerToBall().chaseBall();
 			for (var i = this.players.length - 1; i >= 0; i--) {
@@ -407,6 +408,12 @@ class Team{
    		}
    	};
 
+   }
+
+   clearTeamMessages(){
+   	for (var i = this.players.length - 1; i >= 0; i--) {
+   		this.players[i].clearMessages();
+   	};
    }
 
  

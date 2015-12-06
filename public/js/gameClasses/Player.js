@@ -729,7 +729,7 @@ getAttackingPositionRating(){
 				var numCallsToFocus=numOccurencesInArray(this,teamFocus.messages)
 				var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
 				rating-=20*numPassesFromFocus;
-				rating+=10*numCallsToFocus;
+				rating+=110*numCallsToFocus;
 
 		};
 
@@ -820,7 +820,7 @@ findBestPositionedPlayer(){
 			bestChoice=this.teammates[i];
 		}
 	};
-	this.messages=[];
+	// this.messages=[];
 	return bestChoice;
 }
 
@@ -1201,9 +1201,10 @@ pulse(){
 	var color=random(0,255);
 	this.uniqueColor=color;
 	
-	
+}
 
-
+clearMessages(){
+	this.messages=[];
 }
 
 
