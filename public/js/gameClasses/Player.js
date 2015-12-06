@@ -366,13 +366,13 @@ class Player extends Moveable{
 
 		fill(colors[0],colors[1],colors[2]);
 		if (this.isHumanControlled()&&this.side=="left") {
-			if (this.state=="calling") {
-				fill(this.pulseColor)
-			}
-			else{
+			//if (this.state=="calling") {
+				//fill(this.pulseColor)
+			//}
+			//else{
 				fill(this.uniqueColor);
 
-			}
+			//}
 			
 			
 		};
@@ -729,7 +729,7 @@ getAttackingPositionRating(){
 				var numCallsToFocus=numOccurencesInArray(this,teamFocus.messages)
 				var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
 				rating-=20*numPassesFromFocus;
-				rating+=50*numCallsToFocus;
+				rating+=10*numCallsToFocus;
 
 		};
 
@@ -1149,6 +1149,7 @@ humanControl(instruction){
 
 	        else if(this.team.hasBall()){
 	        	this.callForBall();
+	        	this.pulse();
 	        }
         break;
 
@@ -1164,6 +1165,7 @@ humanControl(instruction){
         case "none":
         if (this.side=="left") {
         	this.stop();
+        	this.uniqueColor=255;
         };
         break;
 
@@ -1178,8 +1180,8 @@ isHumanControlled(){
 }
 
 callForBall(){
-	if (this.team.hasBall()) {
-		this.team.focusPlayer().messages.push(this);
+	if (this.team.inPossession()) {
+		this.team.nearestPlayerToBall().messages.push(this);
 		
 		
 	};
@@ -1196,14 +1198,9 @@ incrementMorale(morale){
 }
 
 pulse(){
-	var color=random(0,1);
-	if(color>0.5){
-		this.pulseColor=255;
-
-	}
-	else{
-		this.pulseColor=0;
-	}
+	var color=random(0,255);
+	this.uniqueColor=color;
+	
 	
 
 
