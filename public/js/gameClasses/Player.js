@@ -723,8 +723,8 @@ getAttackingPositionRating(){
 			rating+=availableSupportCoeff;
 
 		};
-		if (this.team.hasBall()) {
-			var teamFocus=this.team.focusPlayer();
+		if (this.team.inPossession()) {
+			var teamFocus=this.team.nearestPlayerToBall();
 				if (this!=teamFocus) {
 				var numCallsToFocus=numOccurencesInArray(this,teamFocus.messages)
 				var numPassesFromFocus=this.numRecentPassesFrom(teamFocus);
@@ -746,7 +746,7 @@ getAttackingPositionRating(){
 		rating=rating-defaultPositionDistance;
 		ballXDistance=map(ballXDistance,-this.field._width,this.field._width,-50,50);
 		rating=rating+ballXDistance;
-		rating=rating+(1-this.oppositionInterceptionProbability()*50);
+		rating=rating+((1-this.oppositionInterceptionProbability())*50);
 		var distanceToBall=this.distanceToBall();
 
 		if (distanceToBall<5*this._width) {
