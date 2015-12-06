@@ -1,4 +1,4 @@
-const DELTA_TIME=20;
+const DELTA_TIME=1000;
 var teamName;
 var playerObjs=[];
 var formation;
