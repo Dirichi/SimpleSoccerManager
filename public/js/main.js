@@ -1,5 +1,5 @@
-const DESIRED_SPEED=25;
-const DELTA_TIME=1000;
+const DESIRED_SPEED=2.7;
+const DELTA_TIME=100;
 var teamName;
 var playerObjs=[];
 var formation;
