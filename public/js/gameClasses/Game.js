@@ -566,6 +566,13 @@ class Game{
 
 	}
 
+	updateSpeedFactor(speedFactor){
+		for (var i = this.allPlayers.length - 1; i >= 0; i--) {
+			this.allPlayers[i].updateSpeedFactor(speedFactor);
+		};
+		this.ball.updateSpeedFactor(speedFactor);
+	}
+
 }
 
 function computeGameSpeed(){}

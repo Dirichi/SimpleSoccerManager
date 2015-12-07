@@ -1,3 +1,4 @@
+const DESIRED_SPEED=25;
 const DELTA_TIME=1000;
 var teamName;
 var playerObjs=[];
@@ -10,6 +11,10 @@ var oldTime=0;
 var oldCount=0;
 var newCount=0;
 var gameSpeed=0;
+
+var gameSpeedFactor=1;
+
+var augmentedGameSpeed;
 
 var state=0;
 
@@ -234,6 +239,7 @@ function setup() {
     };
 
     computeGameSpeed();
+    game.updateSpeedFactor(DESIRED_SPEED/gameSpeed);
     //console.log(gameSpeed);
 
     //resetInstructions();

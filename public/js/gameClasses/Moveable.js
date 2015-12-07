@@ -11,6 +11,7 @@ constructor(xPos,yPos,_width,_length,field){
   this.field=field;
   this.sprite; 
   this.morale=1;
+  this.speedFactor=1;
 }
 
 
@@ -63,26 +64,26 @@ stop(){
 }
 
 moveForward(){
-  this.dx=this.speed*this.direction*this.morale;
+  this.dx=this.speed*this.direction*this.morale*this.speedFactor;
   this.dy=0;
 }
 moveBackward(){
-  this.dx=-this.speed*this.direction*this.morale;
+  this.dx=-this.speed*this.direction*this.morale*this.speedFactor;
   this.dy=0;
 
 }
 moveLeft(){
-  this.dy=-this.speed*this.morale;
+  this.dy=-this.speed*this.morale*this.speedFactor;
   this.dx=0;
 }
 moveRight(){
-  this.dy=this.speed*this.morale;
+  this.dy=this.speed*this.morale*this.speedFactor;
   this.dx=0;
 }
 
 moveAtAngle(angle){
-  this.dx=cos(angle)*this.speed*this.morale;
-  this.dy=sin(angle)*this.speed*this.morale;
+  this.dx=cos(angle)*this.speed*this.morale*this.speedFactor;
+  this.dy=sin(angle)*this.speed*this.morale*this.speedFactor;
 
 }
 
@@ -94,6 +95,11 @@ updateMid(){
 updatePosition(){
   this.xPos+=this.dx;
   this.yPos+=this.dy;
+
+}
+
+updateSpeedFactor(speedFactor){
+  this.speedFactor=speedFactor;
 
 }
 
