@@ -234,7 +234,7 @@ function setup() {
     };
 
     computeGameSpeed();
-    console.log(gameSpeed);
+    //console.log(gameSpeed);
 
     //resetInstructions();
     
@@ -490,7 +490,7 @@ socket.on('news', function (data) {
   var d= new Date();
   var time=d.getTime();
 
-  console.log("I am not the slowest as of ", time);
+  console.log("my speed is ",gameSpeed, " and I am not the slowest as of ", time);
 });
 
 function gameChanged(){

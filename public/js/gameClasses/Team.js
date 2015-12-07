@@ -110,8 +110,6 @@ class Team{
 			
 		}
 
-			
-
 		}
 
 	receiveHumanInstructions(instructions){

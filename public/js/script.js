@@ -79,14 +79,6 @@ function joinGame(gameCode){
 
 }
 
-// function setup(){
-//   var inp = createInput('');
-//   inp.input(myInputEvent);
-// }
-
-// function myInputEvent(){
-//   console.log('you are typing: ', this.value());
-// }
 
 
 function generateUniqueKey(){
