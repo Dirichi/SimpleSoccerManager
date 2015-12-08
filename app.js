@@ -185,7 +185,19 @@ io = require('socket.io')(server);
 			console.log("latest player has been given the go to join as guest");
 			//console.log(data);
 			socket.broadcast.emit("joinAsGuest",data);
-		})
+		});
+
+		 socket.on('disconnect', function() {
+      	 	console.log('Got disconnect!');
+      		var i = allUsers.indexOf(socket);
+      		// if (socket==host) {
+      			//special case
+      		// };
+      		allUsers.splice(i, 1);
+
+   });
+
+
 
 		}
 	
