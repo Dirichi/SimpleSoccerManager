@@ -120,35 +120,38 @@ class Game{
 	}
 
 	stateMachine(gameInstructions, animationObjs){
-		this.updateState();
-		this.updateScores();
+		
 
 		if (this.isHost) {
 			this.animate(gameInstructions);
+			this.updateState();
+			this.updateScores();
+
+				if (this.gameEvent()) {
+					this.ball.stop();
+					this.displayGameStatus();
+					this.restartGameFromState();
+
+					}
+				else if(!this.isFullTime()){
+					this.animationTime=0;
+			
+			
+					}
+
+				else{
+
+
+				this.end();
+				}
 
 		}
 		else{
 			this.dumbAnimate(gameInstructions,animationObjs);
 		}
 		
+	
 		
-		if (this.gameEvent()) {
-			this.ball.stop();
-			this.displayGameStatus();
-			this.restartGameFromState();
-
-		}
-		else if(!this.isFullTime()){
-			this.animationTime=0;
-			
-			
-			}
-
-		else{
-
-
-			this.end();
-		}
 
 		
 
@@ -157,12 +160,9 @@ class Game{
 	displaySubs(){
 
 	}
-
 	
 	goalScored(){
-		return this.leftGoalScored()||this.rightGoalScored();
-
-		
+		return this.leftGoalScored()||this.rightGoalScored();	
 	}
 	leftGoalScored(){
 		return this.field.leftPost.contains(this.ball.xPos,this.ball.yPos);

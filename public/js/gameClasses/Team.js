@@ -67,7 +67,7 @@ class Team{
 
 	dumbAnimate(instructions,animationObjs,init){
 		for (var i = this.players.length - 1; i >= 0; i--) {
-			this.players[i].dumbAnimate(animationObjs,init);
+			this.players[i].dumbAnimate(animationObjs[i],init);
 		};
 
 	}

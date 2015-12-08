@@ -24,7 +24,9 @@ class Ball extends Moveable{
 			this.yPos=animationObj.yPos;
 		}
 		else{
-			this.moveTo(animationObj.xPos,animationObj.yPos);
+			//this.moveTo(animationObj.xPos,animationObj.yPos);
+			this.xPos=animationObj.xPos;
+			this.yPos=animationObj.yPos;
 		}
 		ellipse(this.xPos,this.yPos,this._width,this._length);		
 		this.storeGivenVelocity(animationObj.dx,animationObj.dy);

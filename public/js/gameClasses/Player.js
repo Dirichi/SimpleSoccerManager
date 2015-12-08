@@ -383,6 +383,7 @@ class Player extends Moveable{
 	}
 
 	dumbAnimate(animationObj,init){
+		//console.log(animationObj.position, " is being drawn");
 		push();
 		fill(animationObj.colors[0],animationObj.colors[1],animationObj.colors[2]);
 		//fill(255);
@@ -396,13 +397,20 @@ class Player extends Moveable{
 		}
 		else{
 			if (!this.initialized) {
-				this.moveTo(animationObj.xPos,animationObj.yPos);
+				//this.moveTo(animationObj.xPos,animationObj.yPos);
+				// var vector=createVector(this.xPos,this.yPos);
+				// vector.lerp(animationObj.xPos,animationObj.yPos,0.5);
+				// this.xPos=vector.x;
+				// this.yPos=vector.y;
+				this.xPos=animationObj.xPos;
+				this.yPos=animationObj.yPos;
 
 			};
 			
 		}
+		this.morale=animationObj.morale;
 		ellipse(this.xPos,this.yPos,this._length,this._length);
-		//fill((this.morale-1)*-255,this.morale*255,0);
+		fill((this.morale-1)*-255,this.morale*255,0);
 		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
 		pop();
 		this.moveTo(animationObj.xPos,animationObj.yPos);
