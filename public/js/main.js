@@ -11,162 +11,18 @@ var oldTime=0;
 var oldCount=0;
 var newCount=0;
 var gameSpeed=0;
-
 var tempAnimationObjs;
-
-var animationObjs;
-var correctedAnimationObjs;
-
+var animationObjs="none";
 var readyToStart=false;
-
+var joined=false;
 var gameSpeedFactor=1;
-
 var augmentedGameSpeed;
-
-var state=0;
-
-function moveBack(){
-	state--;
-}
-
-function moveFoward(){
-	state++;
-}
-
-// if (state==0) {
-// 	$('#action').text("Select A Team")
-
-// };
-
-function getDataFromURL(url, resultType){
-   var soccerAPIURL=url;
-  $.ajax({
-      headers: { 'X-Auth-Token': 'ce9c0231018b49bbb409699476f2b638' },
-      url: soccerAPIURL,
-      dataType: 'json',
-      type: 'GET',
-      error: function(data){
-        console.log("error");
-        console.log(data);
-      },
-      success: function(data){
-        //console.log(data);
-        var result;
-        if (resultType=="players") {
-          result=data.players;
-          for (var i = result.length - 1; i >= 0; i--) {
-            //playerObjs[i]=createPlayerObj(result[i]);
-          };
-        };
-        //console.log(playerObjs);
-      }
-    })
-
-
-}
-
-function getTeamPlayers(teamCode){
-	 var soccerAPIURL='http://api.football-data.org/v1/teams/'+teamCode+'/players';
-	$.ajax({
-  		headers: { 'X-Auth-Token': 'ce9c0231018b49bbb409699476f2b638' },
-  		url: soccerAPIURL,
-  		dataType: 'json',
-  		type: 'GET',
-  		error: function(data){
-  			console.log("error");
-  			console.log(data);
-  		},
-  		success: function(data){
-  			console.log(data);
-  		}
-		})
-	}
-
-function getTeams(leagueCode){
-	 var soccerAPIURL='http://api.football-data.org/v1/soccerseasons/'+leagueCode+'/teams';
-	$.ajax({
-  		headers: { 'X-Auth-Token': 'ce9c0231018b49bbb409699476f2b638' },
-  		url: soccerAPIURL,
-  		dataType: 'json',
-  		type: 'GET',
-  		error: function(data){
-  			console.log("error");
-  			console.log(data);
-  		},
-  		success: function(data){
-  			console.log(data)
-  			var numTeams=data.teams.length;
-  			for (var i = numTeams - 1; i >= 0; i--) {
-  				makeTeamDivs(data.teams[i],i);
-  			};
-    
-  		}
-		})
-}
-
-
-function getLeagues(year){
-	 var soccerAPIURL='http://api.football-data.org/v1/soccerseasons/?season='+year;
-	$.ajax({
-  		headers: { 'X-Auth-Token': 'ce9c0231018b49bbb409699476f2b638' },
-  		url: soccerAPIURL,
-  		dataType: 'json',
-  		type: 'GET',
-  		error: function(data){
-  			console.log("error");
-  			console.log(data);
-  		},
-  		success: function(data){
-  			console.log(data);
-  		}
-		})
-}
-
-
-function makeTeamDivs(teamObj, id){
-  teamNames[id]=teamObj.name;
-	var teamDivHTML="";
-	teamDivHTML+="<div class='teamDiv'>";
-	teamDivHTML+="<button id='"+id+"'class='teamButton' value='"+teamObj._links.players.href+"'>";
-	teamDivHTML+="<div class='teamCrest'>";
-	teamDivHTML+="<img src='"+teamObj.crestUrl+"' width=35%/>";
-	teamDivHTML+="</div>";
-	teamDivHTML+="</button>";
-	teamDivHTML+="</div>";
-  var idVal="#"+id;
-
-	$("#activityAreaDiv").append(teamDivHTML);
-      $(idVal).click(
-        function(){
-          teamName=teamNames[id];
-          teamplayersURL=$(idVal).val();
-        });
-
-  }
-
-
-$("#next").click(
-   function(){
-    if (teamplayersURL!="") {
-      getDataFromURL(teamplayersURL,"players");
-
-    }
-    else{
-      // tell them to choose a team first
-    }
-     
-    });
-
-
-
+var initialized=false;
 
 /*------------------------------------------------------------------------------------------------------------------------------*/
 
 var globalGameCounter=0;
-
-
 var humanInstruction="";
-
 var allowedCommands=["attack","defend"];
 var mySound;
 var game;
@@ -177,82 +33,10 @@ function preload(){
   passSound.setVolume(0.1);
   shootSound=loadSound('data/kick.wav');
   shootSound.setVolume(0.3);
-
 }
 
 
-
-
-function setup() {
-      if (annyang) {
-      //i can totally add the team and player names here
-     var commands = {
-      'team *command': parseResult,
-      'game *command': parseGameCommand,
-      'play *command': parsePlayerCommand
-      };
-    }
-    else{
-      console.log("no annyang");
-    }
-
- 
-  annyang.addCommands(commands);
-  annyang.addCallback('result',function(userSaid){
-
-    console.log(userSaid);
-    //latestCommand=userSaid[0];
-    //console.log(commandText);
-    //console.log(phrases);
-
-  });
-  annyang.start();
-
-
-}
-  
-  
-
-  function draw() {
-   
-    if(readyToStart){
-      time=millis();
-      globalGameCounter++;
-      background(255); 
-      game.stateMachine(humanInstruction,animationObjs);
-      displayLatestCommand();
-      // if (receivedPlayers.length>0) {
-      //   drawPlayers(receivedPlayers);  
-      // };
-
-      computeGameSpeed();
-      game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
-      if (gameChanged()) {
-        grabDataAndSend();
-      }; 
-
-    }
-    else{
-
-    }
-      
-
-  }
-
-  function windowResized(){
-    resizeCanvas(windowWidth, windowHeight);
-    game.field._width=width;
-    game.field._length=height;
-    game.field.xPos=width;
-    game.field.yPos=height;
-  }
-
-  
-
-
-  function parseResult(term)
-  {
-    
+  function parseResult(term){
     latestCommand='team '+term;
     if (allowedCommands.indexOf(term)!=-1) {
       game.teamA.objectives[0]=term;
@@ -311,11 +95,9 @@ function setup() {
 
 
   function getAlchemySentiment (phrase) {
-  // body...
     $.ajax({
     url: 'https://gateway-a.watsonplatform.net/calls/text/TextGetTargetedSentiment',
     dataType: 'json',
-    //jsonp: 'jsonp',
     type: 'POST',
     data: {
       apikey: "aecc0ecac7927df0133924a891a4d05072af19dd",
@@ -325,47 +107,16 @@ function setup() {
 
     },
     error: function (data) {
-      //console.log('alchemy ajax call error');
+      console.log("error");
     },
     success: function (data) {
-     // console.log('alchemy ajax call success');
-
-      //alchemyConcept = data;
       var sentimentScore=data.results[0].sentiment.score;
       game.teamA.incrementTeamMorale(sentimentScore*0.2)
     }
   })
 }
 
-
-  
-
 /*-------------------------------------------------------------------------------------*/
-
-var receivedPlayers=[];
-
-
-function capturePlayers(players){
-  
- receivedPlayers=players;
-}
-
-function capturePlayer(player){
-
- 
-}
-
-function drawPlayer(player){
-   push();
-  fill(player.colors[0],player.colors[1],player.colors[2],128);
-  var playerXPos=(player.corrXPos*game.field._width)+game.field.xPos;
-  var playerYPos=(player.corrYPos*game.field._length)+game.field.yPos;
-  ellipse(playerXPos,playerYPos,game.teamA.players[0]._width,game.teamA.players[0]._width);
-  pop();
-  movePlayer(player);
-
-}
-
 function scaleAnimationObjToField(animationObj){
   //console.log(animationObj);
   var xPos=(animationObj.corrXPos*game.field._width)+game.field.xPos;
@@ -376,7 +127,6 @@ function scaleAnimationObjToField(animationObj){
   animationObj.yPos=yPos;
   animationObj.dx=dx;
   animationObj.dy=dy;
-  //return [xPos,yPos,dx,dy];
 }
 
 
@@ -386,7 +136,6 @@ function correctAnimationObjs(animationObjs){
   };
 
   for (var i = animationObjs.teamB.length - 1; i >= 0; i--) {
-    //console.log(tempAnimationObjs.teamB[i]);
     scaleAnimationObjToField(animationObjs.teamB[i]);
   };
 
@@ -395,20 +144,6 @@ function correctAnimationObjs(animationObjs){
   return animationObjs;
 }
 
-function drawPlayers(players){
-  for (var i = players.length - 1; i >= 0; i--) {
-    drawPlayer(players[i]);
-
-  }
-
-}
-
-function movePlayer(player){
-  player.corrXPos+=player.corrDx;
-  player.corrYPos+=player.corrDy;
-
-
-}
 
 function createPlayerObj(playerObj){
   var correctedXPos=map(playerObj.xPos,game.field.xPos,game.field.xPos+game.field._width,0,1);
@@ -473,9 +208,6 @@ function createGameData(){
 
 }
 
-
-
-
 function grabDataAndSend(){
   var theData=createGameData();
   theData.init=false;
@@ -492,35 +224,26 @@ function computeGameSpeed(){
 }
 
 
-
 socket.on('news', function (data) {
-  if (readyToStart&&!game.isHost) {
+  if (joined&&!game.isHost) {
     tempAnimationObjs=data;
     animationObjs=correctAnimationObjs(tempAnimationObjs);
+    readyToStart=true;
    
   };
-  //console.log(data.speed);
-  var d= new Date();
-  var time=d.getTime();
-
-  //console.log("my speed is ",gameSpeed, " and I am not the slowest as of ", time);
 });
 
 socket.on('startAsHost', function (data) {
   createCanvas(windowWidth,windowHeight);
   game=new Game(0,0,width,height,true);
-  //game.isHost=true;
     for (var i = game.allPlayers.length - 1; i >= 0; i--) {
-    game.allPlayers[i].passSound=passSound;
-    game.allPlayers[i].shootSound=shootSound;
+      game.allPlayers[i].passSound=passSound;
+      game.allPlayers[i].shootSound=shootSound;
   };
-  readyToStart=true;
-
- 
+  readyToStart=true; 
 });
 
 socket.on('joinAsGuest', function (data) {
-  if (!readyToStart) {
      createCanvas(windowWidth,windowHeight);
      game=new Game(0,0,width,height,false);
     for (var i = game.allPlayers.length - 1; i >= 0; i--) {
@@ -529,10 +252,8 @@ socket.on('joinAsGuest', function (data) {
   };
      tempAnimationObjs=data;
      animationObjs=correctAnimationObjs(tempAnimationObjs);
-     readyToStart=true;
-
-
-  };
+     console.log("init value is ",animationObjs.init);
+     //joined=true;
 });
 
 socket.on("newPlayerJoined", function(data){
@@ -541,20 +262,16 @@ socket.on("newPlayerJoined", function(data){
     theData.init=true;
     socket.emit('joinAsGuest',theData);
   };
-
 });
 
 
 
 function gameChanged(){
-  if (globalGameCounter%10==0) {
+  if (globalGameCounter%2==0) {
     return true;
   };
   return false;
 }
-
-// var direction=[0,0];
-// var playerSpeed=1;
 
 $(document).keydown(function(e) {
     switch(e.which) {
@@ -593,19 +310,71 @@ $(document).keydown(function(e) {
 });
 
 $(document).keyup( function(e){
-  //if (humanInstruction!="pass"&&humanInstruction!="shoot") {
     humanInstruction="none";
-  //}
-  
-})
+});
 
 function resetInstructions(){
   humanInstruction="none";
 }
 
 
+/---------------------------------------------------------------------------------------------------------------------------/ 
+function setup() {
+      if (annyang) {
+      //i can totally add the team and player names here
+     var commands = {
+      'team *command': parseResult,
+      'game *command': parseGameCommand,
+      'play *command': parsePlayerCommand
+      };
+    }
+    else{
+      console.log("no annyang");
+    }
 
+ 
+  annyang.addCommands(commands);
+  annyang.addCallback('result',function(userSaid){
 
+    console.log(userSaid);
+    //latestCommand=userSaid[0];
+    //console.log(commandText);
+    //console.log(phrases);
+
+  });
+  annyang.start();
+}
+  
+  
+
+  function draw() {
+  globalGameCounter++;  
+
+    if(readyToStart){
+      time=millis();
+      background(255);
+      game.stateMachine(humanInstruction,animationObjs);
+      displayLatestCommand();
+      computeGameSpeed();
+      game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
+      if (gameChanged()) {
+        grabDataAndSend();
+      }; 
+    }
+    if (!joined&&animationObjs.init) {
+      console.log("changing joined from ",joined," to ",animationObjs.init);
+      game.stateMachine(humanInstruction,animationObjs);
+      joined=true;
+    };
+   }
+
+  function windowResized(){
+    // resizeCanvas(windowWidth, windowHeight);
+    // game.field._width=width;
+    // game.field._length=height;
+    // game.field.xPos=width;
+    // game.field.yPos=height;
+  }
   
 
 

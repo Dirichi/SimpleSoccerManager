@@ -391,12 +391,14 @@ class Player extends Moveable{
 		 		fill(this.uniqueColor);	
 		};
 		if (init) {
+			console.log("it's about to get init");
 			this.xPos=animationObj.xPos;
 			this.yPos=animationObj.yPos;
 			this.initialized=true;
 		}
 		else{
-			if (!this.initialized) {
+			//console.log("no longer initing")
+			if (this.initialized) {
 				//this.moveTo(animationObj.xPos,animationObj.yPos);
 				// var vector=createVector(this.xPos,this.yPos);
 				// vector.lerp(animationObj.xPos,animationObj.yPos,0.5);
@@ -404,6 +406,7 @@ class Player extends Moveable{
 				// this.yPos=vector.y;
 				this.xPos=animationObj.xPos;
 				this.yPos=animationObj.yPos;
+				
 
 			};
 			
@@ -415,6 +418,7 @@ class Player extends Moveable{
 		pop();
 		this.moveTo(animationObj.xPos,animationObj.yPos);
 		this.storeGivenVelocity(animationObj.dx,animationObj.dy);
+		this.moveWithStoredVelocity();
 	}
 
 

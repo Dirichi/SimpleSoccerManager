@@ -197,19 +197,20 @@ io.on('connection', function (socket) {
 	}
 
 	else{
-		//host.broadcast.emit("joinAsGuest",1);
 		socket.broadcast.emit("newPlayerJoined",1);
 		console.log("a new user has joined ",allUsers.length);
+		//console.log();
 	}
  	
 	socket.on('changing', function (data) {
-		 //console.log("changing at ", data.speed);
 		if (socket==host && allUsers.length>1) {
-			console.log("the host about to spit fire");
+			//console.log("the host about to spit fire");
 			socket.broadcast.emit('news', data);
 		}
   });
 	socket.on("joinAsGuest",function(data){
+		console.log("latest player has been given the go to join as guest");
+		console.log(data);
 		socket.broadcast.emit("joinAsGuest",data);
 	})
 });

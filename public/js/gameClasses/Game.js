@@ -78,7 +78,9 @@ class Game{
 	dumbAnimate(gameInstructions,animationObjs){
 		 this.state=animationObjs.state;
 		 this.gameTime=animationObjs.gameTime;
+		 //console.log(animationObjs.init);
     	 var fieldAnimationObjs=[animationObjs.teamA,animationObjs.teamB,animationObjs.ball,animationObjs.init];
+
 
 		this.field.dumbAnimate(gameInstructions,fieldAnimationObjs);
 		this.displayScore();
@@ -148,6 +150,7 @@ class Game{
 		}
 		else{
 			this.dumbAnimate(gameInstructions,animationObjs);
+
 		}
 		
 	
