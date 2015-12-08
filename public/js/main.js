@@ -12,6 +12,13 @@ var oldCount=0;
 var newCount=0;
 var gameSpeed=0;
 
+var tempAnimationObjs;
+
+var animationObjs;
+var correctedAnimationObjs;
+
+var readyToStart=false;
+
 var gameSpeedFactor=1;
 
 var augmentedGameSpeed;
@@ -157,6 +164,7 @@ $("#next").click(
 
 var globalGameCounter=0;
 
+
 var humanInstruction="";
 
 var allowedCommands=["attack","defend"];
@@ -176,21 +184,6 @@ function preload(){
 
 
 function setup() {
-  if (windowWidth>windowHeight) {
-    createCanvas(windowWidth,windowHeight);
-
-  }
-  else{
-    createCanvas(windowHeight,windowWidth);
-
-  }
-  
-
-    
-    //game=new Game(width/5,height/5,3*width/5,3*height/5);
-    game=new Game(0,0,width,height);
-
-    //game=new Game(width/10,height/10,0.8*width,0.8*height,"human");
       if (annyang) {
       //i can totally add the team and player names here
      var commands = {
@@ -215,46 +208,36 @@ function setup() {
   });
   annyang.start();
 
-  for (var i = game.allPlayers.length - 1; i >= 0; i--) {
-    game.allPlayers[i].passSound=passSound;
-    game.allPlayers[i].shootSound=shootSound;
-  };
+
 }
   
   
 
   function draw() {
-    time=millis();
-    globalGameCounter++;
-    if (gameChanged()) {
-      grabDataAndSend();
-    };
-    background(255); 
-    game.stateMachine(humanInstruction);
-    displayLatestCommand();
-    //showTeamMorales();
-    //console.log(game.field.lastPlayerInPossession.position||true);
-    if (receivedPlayers.length>0) {
-      drawPlayers(receivedPlayers);  
-    };
+   
+    if(readyToStart){
+      time=millis();
+      globalGameCounter++;
+      background(255); 
+      game.stateMachine(humanInstruction,animationObjs);
+      displayLatestCommand();
+      // if (receivedPlayers.length>0) {
+      //   drawPlayers(receivedPlayers);  
+      // };
 
-    computeGameSpeed();
-    game.updateSpeedFactor(DESIRED_SPEED/gameSpeed);
-    //console.log(gameSpeed);
+      computeGameSpeed();
+      game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
+      if (gameChanged()) {
+        grabDataAndSend();
+      }; 
 
-    //resetInstructions();
-    
-    
+    }
+    else{
+
+    }
+      
 
   }
-
-  // function bestTeamAPassProb(){
-  //  best=game.tea
-  //  for (var i = game.teamA.players.length - 1; i >= 0; i--) {
-  //    Things[i]
-  //  };
-  // }
-
 
   function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
@@ -316,8 +299,6 @@ function setup() {
 
 
   function displayLatestCommand(){
-    //put this function in game class
-
     push();
     fill(255,255,255,0);
     rect(width/2-width/6,height/20-height/40,width/3,height/20);
@@ -325,42 +306,6 @@ function setup() {
     textSize(width/80);
     textAlign(CENTER);
     text(latestCommand, width/2, height/20);
-    pop();
-  }
-
-  function showTeamMorales(){
-    var xPos=0.5*width/5;
-    var yPos=0.25*height;
-    var currHeight=yPos;
-    var statHeight=0.5*height/11;
-    var statWidth=width/20;
-    push();
-    for (var i = this.game.teamA.players.length - 1; i >= 0; i--) {
-
-
-      
-      var morale=this.game.teamA.players[i].morale;
-      moraleWeighted=map(morale,0,1,0,statWidth);
-      fill(128,128,128);
-      rect(xPos,currHeight,statWidth,statHeight-5);
-      if (morale<=0.25) {
-        fill(255,0,0);
-      }
-      else if (morale>0.25&&morale<0.75) {
-        fill(255,255,0);
-      }
-      else{
-        fill(0,255,0);
-      }
-      rect(xPos,currHeight,moraleWeighted,statHeight-5);
-
-      currHeight+=statHeight;
-      fill(0);
-      textSize(width/90);
-      textAlign(CENTER);
-      text(this.game.teamA.players[i].position, 0.5*xPos, currHeight);
-      
-    };
     pop();
   }
 
@@ -399,6 +344,7 @@ function setup() {
 
 var receivedPlayers=[];
 
+
 function capturePlayers(players){
   
  receivedPlayers=players;
@@ -420,6 +366,35 @@ function drawPlayer(player){
 
 }
 
+function scaleAnimationObjToField(animationObj){
+  //console.log(animationObj);
+  var xPos=(animationObj.corrXPos*game.field._width)+game.field.xPos;
+  var yPos=(animationObj.corrYPos*game.field._length)+game.field.yPos;
+  var dx= (animationObj.corrDx*game.field._width)+game.field.xPos;
+  var dy=(animationObj.corrDy*game.field._length)+game.field.yPos;
+  animationObj.xPos=xPos;
+  animationObj.yPos=yPos;
+  animationObj.dx=dx;
+  animationObj.dy=dy;
+  //return [xPos,yPos,dx,dy];
+}
+
+
+function correctAnimationObjs(animationObjs){
+  for (var i = animationObjs.teamA.length - 1; i >= 0; i--) {
+    scaleAnimationObjToField(animationObjs.teamA[i]);
+  };
+
+  for (var i = animationObjs.teamB.length - 1; i >= 0; i--) {
+    //console.log(tempAnimationObjs.teamB[i]);
+    scaleAnimationObjToField(animationObjs.teamB[i]);
+  };
+
+  scaleAnimationObjToField(animationObjs.ball);
+
+  return animationObjs;
+}
+
 function drawPlayers(players){
   for (var i = players.length - 1; i >= 0; i--) {
     drawPlayer(players[i]);
@@ -435,15 +410,11 @@ function movePlayer(player){
 
 }
 
-function drawBall(){}
-
 function createPlayerObj(playerObj){
-
   var correctedXPos=map(playerObj.xPos,game.field.xPos,game.field.xPos+game.field._width,0,1);
   var correctedYPos=map(playerObj.yPos,game.field.yPos,game.field.yPos+game.field._length,0,1);
   var correctedDx=map(playerObj.dx,game.field.dx,game.field.xPos+game.field._width,0,1);
-   var correctedDy=map(playerObj.dy,game.field.dy,game.field.yPos+game.field._length,0,1);
-
+  var correctedDy=map(playerObj.dy,game.field.dy,game.field.yPos+game.field._length,0,1);
   var player={
     corrXPos: correctedXPos,
     corrYPos: correctedYPos,
@@ -452,25 +423,62 @@ function createPlayerObj(playerObj){
     state: playerObj.state,
     morale: playerObj.morale,
     position: playerObj.position,
-    colors: playerObj.team.colors
-  };
+    colors: playerObj.team.colors,
+    state: playerObj.state
 
+  };
   return player;
+}
+
+function createGameBallObj(ball){
+  var correctedXPos=map(ball.xPos,game.field.xPos,game.field.xPos+game.field._width,0,1);
+  var correctedYPos=map(ball.yPos,game.field.yPos,game.field.yPos+game.field._length,0,1);
+  var correctedDx=map(ball.dx,game.field.dx,game.field.xPos+game.field._width,0,1);
+  var correctedDy=map(ball.dy,game.field.dy,game.field.yPos+game.field._length,0,1);
+
+  var gameBall={
+    corrXPos: correctedXPos,
+    corrYPos: correctedYPos,
+    corrDx: correctedDx,
+    corrDy: correctedDy
+  }
+  return gameBall;
 
 }
 
-function grabDataAndSend(){
-  var allPlayers=[];
-  for (var i = 0; i < game.allPlayers.length; i++) {
-    var player=createPlayerObj(game.allPlayers[i]);
-    allPlayers.push(player);
+function createGameData(){
+  //var allPlayers=[];
+  var teamAPlayers=[];
+  var teamBPlayers=[];
+  var gameBall=createGameBallObj(game.ball);
+  for (var i = game.teamA.players.length - 1; i >= 0; i--) {
+    var player=createPlayerObj(game.teamA.players[i]);
+    teamAPlayers.push(player);
   };
-  theData={
-    speed: gameSpeed,
-    players: allPlayers,
-    state: game.state
+   for (var i = game.teamB.players.length - 1; i >= 0; i--) {
+    var player=createPlayerObj(game.teamB.players[i]);
+    teamBPlayers.push(player);
   };
 
+  theData={
+    speed: gameSpeed,
+    state: game.state,
+    teamA: teamAPlayers,
+    teamB: teamBPlayers,
+    ball: gameBall,
+    gameTime: game.gameTime
+  };
+
+  return theData;
+
+}
+
+
+
+
+function grabDataAndSend(){
+  var theData=createGameData();
+  theData.init=false;
   socket.emit("changing",theData);
 
 }
@@ -480,24 +488,63 @@ function computeGameSpeed(){
     gameSpeed=globalGameCounter-oldCount;
     oldTime=time;
     oldCount=globalGameCounter;
-
-
-  };
-
-  
-
-
+  }; 
 }
 
+
+
 socket.on('news', function (data) {
-  //console.log(data);
-  capturePlayers(data.players);
+  if (readyToStart&&!game.isHost) {
+    tempAnimationObjs=data;
+    animationObjs=correctAnimationObjs(tempAnimationObjs);
+   
+  };
   //console.log(data.speed);
   var d= new Date();
   var time=d.getTime();
 
-  console.log("my speed is ",gameSpeed, " and I am not the slowest as of ", time);
+  //console.log("my speed is ",gameSpeed, " and I am not the slowest as of ", time);
 });
+
+socket.on('startAsHost', function (data) {
+  createCanvas(windowWidth,windowHeight);
+  game=new Game(0,0,width,height,true);
+  //game.isHost=true;
+    for (var i = game.allPlayers.length - 1; i >= 0; i--) {
+    game.allPlayers[i].passSound=passSound;
+    game.allPlayers[i].shootSound=shootSound;
+  };
+  readyToStart=true;
+
+ 
+});
+
+socket.on('joinAsGuest', function (data) {
+  if (!readyToStart) {
+     createCanvas(windowWidth,windowHeight);
+     game=new Game(0,0,width,height,false);
+    for (var i = game.allPlayers.length - 1; i >= 0; i--) {
+    game.allPlayers[i].passSound=passSound;
+    game.allPlayers[i].shootSound=shootSound;
+  };
+     tempAnimationObjs=data;
+     animationObjs=correctAnimationObjs(tempAnimationObjs);
+     readyToStart=true;
+
+
+  };
+});
+
+socket.on("newPlayerJoined", function(data){
+  if (game.isHost) {
+    var theData=createGameData();
+    theData.init=true;
+    socket.emit('joinAsGuest',theData);
+  };
+
+});
+
+
 
 function gameChanged(){
   if (globalGameCounter%10==0) {

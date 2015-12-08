@@ -2,6 +2,8 @@
 class Player extends Moveable{
 	constructor(xPos,yPos,_width,_length,field,position,side,team) {
 		super(xPos,yPos,_width,_length,field);
+
+		this.initialized=false;
 		
 		
 		this.field=field;
@@ -363,21 +365,10 @@ class Player extends Moveable{
 		this.updateMid();
 		this.updatePosition();
 		push();
-
 		fill(colors[0],colors[1],colors[2]);
 		if (this.isHumanControlled()&&this.side=="left") {
-			//if (this.state=="calling") {
-				//fill(this.pulseColor)
-			//}
-			//else{
-				fill(this.uniqueColor);
-
-			//}
-			
-			
+				fill(this.uniqueColor);	
 		};
-	
-		
 		ellipse(this.xPos,this.yPos,this._length,this._length);
 		fill((this.morale-1)*-255,this.morale*255,0);
 		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
@@ -389,11 +380,33 @@ class Player extends Moveable{
 		if (this.isOutOfBounds()) {
 			this.moveToDefaultPosition();
 		};
-		// if (this.isColliding()) {
-		// 	this.spread();
-		// };
+	}
 
+	dumbAnimate(animationObj,init){
+		push();
+		fill(animationObj.colors[0],animationObj.colors[1],animationObj.colors[2]);
+		//fill(255);
+		 if (this.isHumanControlled()&&this.side=="left") {
+		 		fill(this.uniqueColor);	
+		};
+		if (init) {
+			this.xPos=animationObj.xPos;
+			this.yPos=animationObj.yPos;
+			this.initialized=true;
+		}
+		else{
+			if (!this.initialized) {
+				this.moveTo(animationObj.xPos,animationObj.yPos);
 
+			};
+			
+		}
+		ellipse(this.xPos,this.yPos,this._length,this._length);
+		//fill((this.morale-1)*-255,this.morale*255,0);
+		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
+		pop();
+		this.moveTo(animationObj.xPos,animationObj.yPos);
+		this.storeGivenVelocity(animationObj.dx,animationObj.dy);
 	}
 
 
@@ -1204,11 +1217,6 @@ pulse(){
 clearMessages(){
 	this.messages=[];
 }
-
-
-
-
-
 
 }
 

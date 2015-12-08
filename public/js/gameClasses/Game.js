@@ -1,7 +1,7 @@
 
 "use strict";
 class Game{
-	constructor(xPos,yPos,_width,_length,mode){
+	constructor(xPos,yPos,_width,_length,isHost){
 		this.field=new Field(xPos,yPos,_width,_length);
 		this.ball=this.field.ball;
 		this.teamA=this.field.teamA;
@@ -12,6 +12,7 @@ class Game{
 		this.winner="";
 		this.yval=[];
 		this.xval=[];
+		this.isHost=isHost;
 		//this.lastPlayerInPossession;
 		this.gameStatus="event";
 		this.animationTime=0;
@@ -24,7 +25,7 @@ class Game{
 		this.teamA.objectives=["attack"];
 		this.lastTimeBeforeGameEvent=0;
 		this.halfTimeHappened=false;
-		this.mode=mode;
+		//this.mode=mode;
 		//this.teamB.setState("kickoff");
 		//this.teamA.setState("kickoff");
 
@@ -34,15 +35,7 @@ class Game{
 
 
 	}
-	animate(gamInstructions){
-		//var waitTime;
-		//this.getTeamARatings();
-		push();
-		//fill(48,63,159);
-		//stroke(0);
-		//strokeWeight(2);
-		//rect(this.field.xPos-this.field._length/20,this.field.yPos-this.field._length/20,this.field._width+this.field._length/10,11*this.field._length/10);
-		pop();
+	animate(gameInstructions){
 		this.timeElapsed=millis();
 
 		if (this.isFullTime()) {
@@ -60,9 +53,7 @@ class Game{
 
 				else{
 					this.gameTime=this.lastTimeBeforeGameEvent;
-
 				}
-				
 				this.delayUpdated=false;
 		}
 			else{
@@ -71,31 +62,27 @@ class Game{
 				this.delayUpdated=true;
 
 			}
-
 		}
-
-	
+		
 		this.updateLastTimeBeforeGameEvent();		
 		this.getMostRecentEventTimeStart();
 		this.getMostRecentEventTimeStop();
 		
-		
-		
-		this.field.animate(gamInstructions);
+		this.field.animate(gameInstructions);
 		this.displayScore();
 		this.displayTime();
 		this.displayFocusPlayers();
-
-		//this.lastPlayerInPossession=this.field.lastPlayerInPossession;
-		
-		//console.log(this.teamA.isInKickOffPosition())
-		
-		//this.teamA.attack();
-
-
 		this.updateTeamMorale();
-		//this.teamA.getAllPositionRatings();
-		//console.log(this.teamA.getBestPositionRating(),this.teamB.getBestPositionRating() );
+		}
+
+	dumbAnimate(gameInstructions,animationObjs){
+		 this.state=animationObjs.state;
+		 this.gameTime=animationObjs.gameTime;
+    	 var fieldAnimationObjs=[animationObjs.teamA,animationObjs.teamB,animationObjs.ball,animationObjs.init];
+
+		this.field.dumbAnimate(gameInstructions,fieldAnimationObjs);
+		this.displayScore();
+		this.displayTime();
 
 	}
 
@@ -132,11 +119,19 @@ class Game{
 		pop();
 	}
 
-	stateMachine(gameInstructions){
+	stateMachine(gameInstructions, animationObjs){
 		this.updateState();
 		this.updateScores();
+
+		if (this.isHost) {
+			this.animate(gameInstructions);
+
+		}
+		else{
+			this.dumbAnimate(gameInstructions,animationObjs);
+		}
 		
-		this.animate(gameInstructions);
+		
 		if (this.gameEvent()) {
 			this.ball.stop();
 			this.displayGameStatus();
@@ -235,8 +230,6 @@ class Game{
 	}
 
 	end(){
-		 // this.y=this.teamA.posRatings;
-		 // this.x=this.teamA.posFrequencies;
 		this.erasePlayerStates();
 		this.setTeamsToNeutral();
 		this.ball.stop();

@@ -64,6 +64,13 @@ class Team{
 		this.executeObjective(instructions);
 
 	}
+
+	dumbAnimate(instructions,animationObjs,init){
+		for (var i = this.players.length - 1; i >= 0; i--) {
+			this.players[i].dumbAnimate(animationObjs,init);
+		};
+
+	}
 	press(){
 		var nearestPlayer=this.nearestPlayerToBall();
 		nearestPlayer.chaseBall();

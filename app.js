@@ -185,33 +185,31 @@ var slowestUser;
 var port=process.env.PORT||3000;
 var server=app.listen(port);
 var io = require('socket.io')(server);
+var host;
 console.log('Express started on port ' + port);
 
 io.on('connection', function (socket) {
 	allUsers.push(socket);
- 	console.log('a user connected',allUsers.length);
+	if (allUsers.length==1) {
+		host=socket;
+		socket.emit("startAsHost",0);
+		console.log(" host ",socket.id," is ready to start");
+	}
+
+	else{
+		//host.broadcast.emit("joinAsGuest",1);
+		socket.broadcast.emit("newPlayerJoined",1);
+		console.log("a new user has joined ",allUsers.length);
+	}
+ 	
 	socket.on('changing', function (data) {
-		// console.log(data.speed);
-		var socketObj={
-			soc: socket,
-			speed: data.speed
-		};
-
-		updateSocketObj(socketObj,socketObjs);		
-
-		if (allUsers.length>1) {
-			//console.log("getting slowest user");
-
-			slowestUser=getSlowestUser(socketObjs);
-			//console.log(slowestUser.soc.id);
-			if (socket==slowestUser.soc) {
-				console.log("slowest is ",socket.id);
-				console.log("------------------------------------------------------");
-				socket.broadcast.emit('news', data);
-			}
-
+		 //console.log("changing at ", data.speed);
+		if (socket==host && allUsers.length>1) {
+			console.log("the host about to spit fire");
+			socket.broadcast.emit('news', data);
 		}
-		
-		// console.log(data);
   });
+	socket.on("joinAsGuest",function(data){
+		socket.broadcast.emit("joinAsGuest",data);
+	})
 });

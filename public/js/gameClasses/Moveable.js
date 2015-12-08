@@ -7,6 +7,7 @@ constructor(xPos,yPos,_width,_length,field){
   this.dx=0;
   this.dy=0;
   this.speed=_width/5;
+  this.velocity=[];
   this.angle=0;
   this.field=field;
   this.sprite; 
@@ -25,7 +26,7 @@ inContactWith(moveableObject){
 
 }
 
-moveTo(xval,yval){
+moveTo(xval,yval){ 
   if(this.xPos!=xval||this.yPos!=yval){
     var angle=this.angleTo(xval,yval);
     this.angle=angle;
@@ -102,6 +103,20 @@ updateSpeedFactor(speedFactor){
   this.speedFactor=speedFactor;
 
 }
+
+storeVelocity(){
+    this.velocity[0]=this.dx;
+    this.velocity[1]=this.dy;
+
+  }
+storeGivenVelocity(dx,dy){
+    this.velocity[0]=dx;
+    this.velocity[1]=dy;
+  }
+moveWithStoredVelocity(){
+    this.dx=this.velocity[0];
+    this.dy=this.velocity[1];
+  }
 
 
 }

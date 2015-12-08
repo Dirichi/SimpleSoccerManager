@@ -85,6 +85,19 @@ class Field {
 
 	}
 
+	dumbAnimate(gameInstructions,animationObjs){
+		this.createField();
+ 		this.createCenterLine();
+ 		this.createCenterCircle();	
+ 		this.createFieldMargin();
+ 		this.createPosts(); 
+ 		this.createBoxes();
+ 		this.teamA.dumbAnimate(gameInstructions,animationObjs[0],animationObjs[3]);
+ 		this.teamB.dumbAnimate("",animationObjs[1],animationObjs[3]);
+ 		this.ball.dumbAnimate(animationObjs[2],animationObjs[3]);
+ 		//this.setLastPlayerInPossession(this.getLastPlayerInPossession());
+	}
+
 	createField(){
 		push();
 		fill(30,200,30);
