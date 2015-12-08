@@ -1,8 +1,8 @@
 
 "use strict";
 class Game{
-	constructor(xPos,yPos,_width,_length,isHost){
-		this.field=new Field(xPos,yPos,_width,_length);
+	constructor(xPos,yPos,_width,_length,isHost,humanPlayerIndex){
+		this.field=new Field(xPos,yPos,_width,_length, humanPlayerIndex);
 		this.ball=this.field.ball;
 		this.teamA=this.field.teamA;
 		this.teamB=this.field.teamB;
@@ -13,7 +13,6 @@ class Game{
 		this.yval=[];
 		this.xval=[];
 		this.isHost=isHost;
-		//this.lastPlayerInPossession;
 		this.gameStatus="event";
 		this.animationTime=0;
 		this.state="KICKOFF";
@@ -25,10 +24,6 @@ class Game{
 		this.teamA.objectives=["attack"];
 		this.lastTimeBeforeGameEvent=0;
 		this.halfTimeHappened=false;
-		//this.mode=mode;
-		//this.teamB.setState("kickoff");
-		//this.teamA.setState("kickoff");
-
 		this.mostRecentEventTimeStop=0;
 		this.mostRecentEventTimeStart=0;
 		
@@ -71,17 +66,13 @@ class Game{
 		this.field.animate(gameInstructions);
 		this.displayScore();
 		this.displayTime();
-		this.displayFocusPlayers();
 		this.updateTeamMorale();
 		}
 
 	dumbAnimate(gameInstructions,animationObjs){
 		 this.state=animationObjs.state;
 		 this.gameTime=animationObjs.gameTime;
-		 //console.log(animationObjs.init);
     	 var fieldAnimationObjs=[animationObjs.teamA,animationObjs.teamB,animationObjs.ball,animationObjs.init];
-
-
 		this.field.dumbAnimate(gameInstructions,fieldAnimationObjs);
 		this.displayScore();
 		this.displayTime();
@@ -109,17 +100,7 @@ class Game{
 		pop();
 
 	}
-	displayFocusPlayers(){
-		push();
-		fill(0);
-		textSize(width/50);
-		//text(this.teamA.mindset, width/5, 9*height/10);
-		//text(this.teamA.nearestPlayerToBall().position, width/5, 9*height/10);
-		// fill(this.teamB.colors);
-		//text(this.teamB.mindset, 3.8*width/5, 9*height/10)
-		//text(this.teamB.nearestPlayerToBall().position, 3.8*width/5, 9*height/10);
-		pop();
-	}
+
 
 	stateMachine(gameInstructions, animationObjs){
 		
@@ -133,32 +114,24 @@ class Game{
 					this.ball.stop();
 					this.displayGameStatus();
 					this.restartGameFromState();
-
 					}
 				else if(!this.isFullTime()){
 					this.animationTime=0;
-			
-			
 					}
 
 				else{
-
-
 				this.end();
 				}
 
 		}
 		else{
 			this.dumbAnimate(gameInstructions,animationObjs);
-
-		}
+			if (this.gameEvent()) {
+					this.displayGameStatus();
+					}
+							}
 		
-	
-		
-
-		
-
-	}
+			}
 
 	displaySubs(){
 
@@ -571,4 +544,3 @@ class Game{
 
 }
 
-function computeGameSpeed(){}

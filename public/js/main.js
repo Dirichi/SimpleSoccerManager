@@ -235,7 +235,8 @@ socket.on('news', function (data) {
 
 socket.on('startAsHost', function (data) {
   createCanvas(windowWidth,windowHeight);
-  game=new Game(0,0,width,height,true);
+  var playerID= data;
+  game=new Game(0,0,width,height,true,playerID);
     for (var i = game.allPlayers.length - 1; i >= 0; i--) {
       game.allPlayers[i].passSound=passSound;
       game.allPlayers[i].shootSound=shootSound;
@@ -244,25 +245,36 @@ socket.on('startAsHost', function (data) {
 });
 
 socket.on('joinAsGuest', function (data) {
-     createCanvas(windowWidth,windowHeight);
-     game=new Game(0,0,width,height,false);
+  if(!joined){
+    createCanvas(windowWidth,windowHeight);
+     var playerID=data.playerID;
+     console.log(playerID);
+     game=new Game(0,0,width,height,false,playerID);
     for (var i = game.allPlayers.length - 1; i >= 0; i--) {
     game.allPlayers[i].passSound=passSound;
     game.allPlayers[i].shootSound=shootSound;
-  };
+    };
      tempAnimationObjs=data;
      animationObjs=correctAnimationObjs(tempAnimationObjs);
-     console.log("init value is ",animationObjs.init);
+  }
+     
      //joined=true;
 });
 
 socket.on("newPlayerJoined", function(data){
+
   if (game.isHost) {
+    var playerID=data;
     var theData=createGameData();
     theData.init=true;
+    theData.playerID=playerID;
     socket.emit('joinAsGuest',theData);
   };
 });
+
+function sendInputDataToHost(){
+
+}
 
 
 
@@ -272,6 +284,8 @@ function gameChanged(){
   };
   return false;
 }
+
+
 
 $(document).keydown(function(e) {
     switch(e.which) {

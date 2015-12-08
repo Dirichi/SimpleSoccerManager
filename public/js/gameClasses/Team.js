@@ -1,6 +1,6 @@
 "use strict";
 class Team{
-	constructor(formation,field,name,side,colors,post){
+	constructor(formation,field,name,side,colors,post,humanPlayerIndex){
 		//this.formation=formation;
 		this.field=field;
 		this.ball=this.field.ball;
@@ -13,6 +13,7 @@ class Team{
 		this.focusPlayer;
 		this.post=post;
 		this.mindset="";
+		this.hasHumanController=false;
 
 		this.callers=[];
 
@@ -50,10 +51,16 @@ class Team{
 		}
 
 		this.outfieldplayers=this.getOutFieldPlayers();
-		this.humanControlledPlayer=this.players[10];
-		this.humanControlledPlayer.speed=this.humanControlledPlayer._width/3;
-
-	}
+		if (humanPlayerIndex!="none") {
+			this.humanControlledPlayer=this.players[humanPlayerIndex];
+			console.log("Team ",this.nm, " has human at ",this.humanControlledPlayer.position);
+			this.hasHumanController=true;
+		}
+		else{
+			this.humanControlledPlayer=0;
+		}
+		
+		}
 	animate(instructions){
 		for (var i = this.players.length - 1; i >= 0; i--) {
 			this.players[i].animate(this.colors);
@@ -120,7 +127,11 @@ class Team{
 		}
 
 	receiveHumanInstructions(instructions){
-		this.humanControlledPlayer.humanControl(instructions);
+		if (this.hasHumanController) {
+			this.humanControlledPlayer.humanControl(instructions);
+
+		};
+		
 
 	}
 		

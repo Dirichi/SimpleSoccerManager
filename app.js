@@ -1,8 +1,15 @@
-var x=1;
+var allUsers=[];
+var socketObjs=[];
+var host;
+var io;
+var playerID="";
+
+
 var express = require("express");
 var logger = require('morgan');
 var Request = require('request');
 var bodyParser = require('body-parser');
+var socketOpened=false;
 
 //Create an 'express' object
 var app = express();
@@ -51,22 +58,6 @@ app.get("/", function(req, res){
 	res.render('index');
 });
 
-app.get("/game", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
-	res.render('game');
-});
-
-app.get("/select", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
-	res.render('select');
-});
-
 app.get("/allgames", function(request,response){
 		console.log("getting all games");
 
@@ -97,6 +88,23 @@ app.get("/allgames", function(request,response){
 	});
 
 });
+
+app.get("/:playerID", function(req, res){
+	console.log("req param is ", req.params.playerID);
+	playerID="A"+" "+req.params.playerID;
+	//openSocket();	
+	//console.log('Express started on port ' + port);
+	res.render('game');
+	});
+
+app.get("/select", function(req, res){
+	// var dataForThePage = {
+	// 	message: "Try adding a forward slash plus a word to the url",
+	// 	search: false
+	// };
+	res.render('select');
+});
+
 
 app.get("game/:code", function(request, response){
 	console.log("trying to join game "+request.params.code);
@@ -139,78 +147,46 @@ function generateGameCode(){
 
 function submitGameCodeToDb(){}
 
-function getSlowestUser(socketObjs){
-	var slowest=socketObjs[0];
-	for (var i = socketObjs.length - 1; i >= 0; i--) {
-		if (socketObjs[i].speed<slowest.speed) {
-			slowest=socketObjs[i];
-		};
-		
-	};
-	return slowest;
+function openSocket(){
+	if (!socketOpened) {
+		io = require('socket.io')(server);
 
+	};
+	socketOpened=true;
 
 }
-
-function updateSocketObj(socketObj, socketObjArray){
-	// console.log("array length: ",socketObjArray.length);
-	for (var i = socketObjArray.length - 1; i >= 0; i--) {
-
-		// console.log(socketObj.soc.id,socketObjArray[i].soc.id);
-		if (socketObjArray[i].soc==socketObj.soc) {
-			socketObjArray[i]=socketObj;
-			// console.log("socket found")
-			return 1; //success code
-
-		};
-		
-	};
-	// console.log("error, socket not found in array");
-	socketObjArray.push(socketObj);
-	// console.log("added to the array");
-	// console.log("-------------------------------------------------------------")
-	//console.log(socketObj.id, socketObjArray)
-	return 0; //error code
-
-}
-
-
-
-var allUsers=[];
-var socketObjs=[];
-var slowestUser;
-// var numUsers=0
-
 
 var port=process.env.PORT||3000;
 var server=app.listen(port);
-var io = require('socket.io')(server);
-var host;
-console.log('Express started on port ' + port);
+io = require('socket.io')(server);
 
-io.on('connection', function (socket) {
-	allUsers.push(socket);
-	if (allUsers.length==1) {
-		host=socket;
-		socket.emit("startAsHost",0);
-		console.log(" host ",socket.id," is ready to start");
-	}
-
-	else{
-		socket.broadcast.emit("newPlayerJoined",1);
-		console.log("a new user has joined ",allUsers.length);
-		//console.log();
-	}
- 	
-	socket.on('changing', function (data) {
-		if (socket==host && allUsers.length>1) {
-			//console.log("the host about to spit fire");
-			socket.broadcast.emit('news', data);
+	io.on('connection', function (socket) {
+		if(playerID!=""){
+			allUsers.push(socket);
+		if (allUsers.length==1) {
+			host=socket;
+			socket.emit("startAsHost",playerID);
+			console.log(" host ",playerID," is ready to start");
 		}
-  });
-	socket.on("joinAsGuest",function(data){
-		console.log("latest player has been given the go to join as guest");
-		console.log(data);
-		socket.broadcast.emit("joinAsGuest",data);
-	})
-});
+
+		else{
+			socket.broadcast.emit("newPlayerJoined",playerID);
+			console.log(playerID," has joined ",allUsers.length);
+			//console.log();
+		}
+	 	
+		socket.on('changing', function (data) {
+			if (socket==host && allUsers.length>1) {
+				//console.log("the host about to spit fire");
+				socket.broadcast.emit('news', data);
+			}
+	  	});
+		socket.on("joinAsGuest",function(data){
+			console.log("latest player has been given the go to join as guest");
+			//console.log(data);
+			socket.broadcast.emit("joinAsGuest",data);
+		})
+
+		}
+	
+	});

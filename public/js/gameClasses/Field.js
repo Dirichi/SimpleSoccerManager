@@ -1,6 +1,6 @@
 "use strict";
 class Field {
-	constructor(xPos,yPos,_width,_length){
+	constructor(xPos,yPos,_width,_length,humanPlayerIndex){
 		this.xPos=xPos;
 		this.yPos=yPos;
 		this._length=_length;
@@ -35,16 +35,23 @@ class Field {
 	
 	 	//this.ball=new Ball(500, 200,_width/100, _width/100,this);
 	 	this.ball=new Ball(this.midx, this.midy,_width/100, _width/100,this);
-
-	 	
-
-	 	this.teamA=new Team(new Formation(new Array(4,5,1)),this,"BRA","left",new Array(255,255,0),this.leftPost);
-	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost);
-	 	this.teamA.mode="voice";
-	 	this.teamB.mode="computer";
+	 	var teamAhumanPlayerID;
+	 	var teamBhumanPlayerID;
+	 	if (humanPlayerIndex[0]=="A") {
+	 		var teamAhumanPlayerID=humanPlayerIndex.split(" ")[1];
+	 		var teamBhumanPlayerID="none";
+	 	}
+	 	else{
+	 		var teamBhumanPlayerID=humanPlayerIndex.split(" ")[1];
+	 		var teamAhumanPlayerID="none";
+	 	}
+	 	this.teamA=new Team(new Formation(new Array(4,5,1)),this,"BRA","left",new Array(255,255,0),this.leftPost,teamAhumanPlayerID);
+	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost,teamBhumanPlayerID);
+	 	// this.teamA.mode="voice";
+	 	// this.teamB.mode="computer";
 
 	 	this.lastPlayerInPossession=this.teamA.players[10];
-	 	this.teamA.humanControlledPlayer=this.teamA.players[10];
+	 	//this.teamA.humanControlledPlayer=this.teamA.players[10];
 	 	this.assignOpposition();
 	 	this.allPlayers=[];
 	 	for (var i = this.teamA.players.length - 1; i >= 0; i--) {
