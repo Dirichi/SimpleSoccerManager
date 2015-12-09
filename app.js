@@ -91,7 +91,7 @@ app.get("/allgames", function(request,response){
 
 app.get("/:playerID", function(req, res){
 	console.log("req param is ", req.params.playerID);
-	playerID="A"+" "+req.params.playerID;
+	playerID=req.params.playerID;
 	//openSocket();	
 	//console.log('Express started on port ' + port);
 	res.render('game');
