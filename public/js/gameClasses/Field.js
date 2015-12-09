@@ -1,13 +1,14 @@
 "use strict";
 class Field {
-	constructor(xPos,yPos,_width,_length,humanPlayerIndex){
+	constructor(xPos,yPos,_width,_length,humanPlayerIndex,passSound,shootSound,game){
 		this.xPos=xPos;
 		this.yPos=yPos;
 		this._length=_length;
 	 	this._width=_width;
 	 	this.margin=_length/100;
 	 	// this.gameInstructions=gameInstructions;
-
+	 	this.passSound=passSound;
+	 	this.shootSound=shootSound;
 
 	 	this.midx=xPos+_width/2;
 	 	this.midy=yPos+_length/2;
@@ -45,8 +46,8 @@ class Field {
 	 		var teamBhumanPlayerID=humanPlayerIndex.split(" ")[1];
 	 		var teamAhumanPlayerID="none";
 	 	}
-	 	this.teamA=new Team(new Formation(new Array(4,5,1)),this,"BRA","left",new Array(255,255,0),this.leftPost,teamAhumanPlayerID);
-	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost,teamBhumanPlayerID);
+	 	this.teamA=new Team(new Formation(new Array(4,5,1)),this,"BRA","left",new Array(255,255,0),this.leftPost,teamAhumanPlayerID,game);
+	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost,teamBhumanPlayerID,game);
 	 	// this.teamA.mode="voice";
 	 	// this.teamB.mode="computer";
 
@@ -99,9 +100,17 @@ class Field {
  		this.createFieldMargin();
  		this.createPosts(); 
  		this.createBoxes();
- 		this.teamA.dumbAnimate(gameInstructions,animationObjs[0],animationObjs[3]);
- 		this.teamB.dumbAnimate("",animationObjs[1],animationObjs[3]);
- 		this.ball.dumbAnimate(animationObjs[2],animationObjs[3]);
+ 		var teamAInstructions="";
+ 		var teamBInstructions="";
+ 		if (this.teamA.hasHumanController) {
+ 			teamAInstructions=gameInstructions;
+ 		};
+ 		if (this.teamB.hasHumanController) {
+ 			teamBInstructions=gameInstructions;
+ 		};
+ 		this.teamA.dumbAnimate(teamAInstructions,animationObjs.teamA,animationObjs.teamAState,animationObjs.init);
+ 		this.teamB.dumbAnimate(teamBInstructions,animationObjs.teamB,animationObjs.teamBState,animationObjs.init);
+ 		this.ball.dumbAnimate(animationObjs.ball,animationObjs.init);
  		//this.setLastPlayerInPossession(this.getLastPlayerInPossession());
 	}
 

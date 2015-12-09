@@ -366,7 +366,7 @@ class Player extends Moveable{
 		this.updatePosition();
 		push();
 		fill(colors[0],colors[1],colors[2]);
-		if (this.isHumanControlled()&&this.side=="left") {
+		if (this.isHumanControlled()) {
 				fill(this.uniqueColor);	
 		};
 		ellipse(this.xPos,this.yPos,this._length,this._length);
@@ -383,31 +383,30 @@ class Player extends Moveable{
 	}
 
 	dumbAnimate(animationObj,init){
+		this.updateMid();
 		//console.log(animationObj.position, " is being drawn");
+		this.setState(animationObj.state);
 		push();
 		fill(animationObj.colors[0],animationObj.colors[1],animationObj.colors[2]);
 		//fill(255);
-		 if (this.isHumanControlled()&&this.side=="left") {
+		 if (this.isHumanControlled()) {
 		 		fill(this.uniqueColor);	
 		};
 		if (init) {
-			console.log("it's about to get init");
+			//console.log("it's about to get init");
 			this.xPos=animationObj.xPos;
 			this.yPos=animationObj.yPos;
 			this.initialized=true;
 		}
 		else{
 			//console.log("no longer initing")
-			if (this.initialized) {
-				//this.moveTo(animationObj.xPos,animationObj.yPos);
-				// var vector=createVector(this.xPos,this.yPos);
-				// vector.lerp(animationObj.xPos,animationObj.yPos,0.5);
-				// this.xPos=vector.x;
-				// this.yPos=vector.y;
+			if (this.initialized && !this.isHumanControlled()) {
+				//console.log("should move");
 				this.xPos=animationObj.xPos;
 				this.yPos=animationObj.yPos;
+				this.storeGivenVelocity(animationObj.dx,animationObj.dy);
+				this.moveWithStoredVelocity();
 				
-
 			};
 			
 		}
@@ -416,9 +415,8 @@ class Player extends Moveable{
 		fill((this.morale-1)*-255,this.morale*255,0);
 		ellipse(this.xPos,this.yPos,this._length/2,this._length/2);	
 		pop();
-		this.moveTo(animationObj.xPos,animationObj.yPos);
-		this.storeGivenVelocity(animationObj.dx,animationObj.dy);
-		this.moveWithStoredVelocity();
+		//this.moveTo(animationObj.xPos,animationObj.yPos);
+		
 	}
 
 
@@ -437,7 +435,7 @@ class Player extends Moveable{
 			this.messageTeammatesWithException("n/a",[player]);
 			this.setState("passer");
 			this.updateRecentPasses(player);
-			this.passSound.play();
+			this.field.passSound.play();
 
 
 
@@ -476,7 +474,7 @@ shoot(){
 	if(this.hasBall()&&this.state!="shooter"&&this.state!="passer"){
 		this.messageTeammates("n/a");
 		this.setState("shooter");
-		this.shootSound.play();
+		this.field.shootSound.play();
 		var randomPosY=random(-this.field.rightPost._length/2,this.field.rightPost._length/2);
 		var distanceToGoal=this.distanceToGoal();
 		distanceToGoal=map(distanceToGoal,0,this.field._width,1,3);

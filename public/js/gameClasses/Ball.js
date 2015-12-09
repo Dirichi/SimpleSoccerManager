@@ -30,6 +30,7 @@ class Ball extends Moveable{
 		}
 		ellipse(this.xPos,this.yPos,this._width,this._length);		
 		this.storeGivenVelocity(animationObj.dx,animationObj.dy);
+		this.moveWithStoredVelocity();
 		pop();
 
 

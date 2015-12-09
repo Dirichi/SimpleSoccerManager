@@ -201,7 +201,9 @@ function createGameData(){
     teamA: teamAPlayers,
     teamB: teamBPlayers,
     ball: gameBall,
-    gameTime: game.gameTime
+    gameTime: game.gameTime,
+    teamAState: game.teamA.state,
+    teamBState: game.teamB.state
   };
 
   return theData;
@@ -236,11 +238,11 @@ socket.on('news', function (data) {
 socket.on('startAsHost', function (data) {
   createCanvas(windowWidth,windowHeight);
   var playerID= data;
-  game=new Game(0,0,width,height,true,playerID);
-    for (var i = game.allPlayers.length - 1; i >= 0; i--) {
-      game.allPlayers[i].passSound=passSound;
-      game.allPlayers[i].shootSound=shootSound;
-  };
+  game=new Game(0,0,width,height,true,playerID,passSound,shootSound);
+    //for (var i = game.allPlayers.length - 1; i >= 0; i--) {
+      
+  //};
+  joined=true;
   readyToStart=true; 
 });
 
@@ -262,9 +264,11 @@ socket.on('joinAsGuest', function (data) {
 });
 
 socket.on("newPlayerJoined", function(data){
+   var playerID=data;
+   game.remotePlayers.push(playerID);
 
   if (game.isHost) {
-    var playerID=data;
+   
     var theData=createGameData();
     theData.init=true;
     theData.playerID=playerID;

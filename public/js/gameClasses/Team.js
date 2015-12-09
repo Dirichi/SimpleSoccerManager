@@ -1,6 +1,6 @@
 "use strict";
 class Team{
-	constructor(formation,field,name,side,colors,post,humanPlayerIndex){
+	constructor(formation,field,name,side,colors,post,humanPlayerIndex,game){
 		//this.formation=formation;
 		this.field=field;
 		this.ball=this.field.ball;
@@ -14,6 +14,7 @@ class Team{
 		this.post=post;
 		this.mindset="";
 		this.hasHumanController=false;
+		this.game=game;
 
 		this.callers=[];
 
@@ -65,17 +66,21 @@ class Team{
 		for (var i = this.players.length - 1; i >= 0; i--) {
 			this.players[i].animate(this.colors);
 		};
-		for (var i = this.subs.length - 1; i >= 0; i--) {
-			//subs[i].animate(this.colors);
-		};
 		this.executeObjective(instructions);
 
 	}
 
-	dumbAnimate(instructions,animationObjs,init){
-		for (var i = this.players.length - 1; i >= 0; i--) {
-			this.players[i].dumbAnimate(animationObjs[i],init);
-		};
+	dumbAnimate(instructions,animationObjs,state,init){
+		this.setState(state);
+		 for (var i = this.players.length - 1; i >= 0; i--) {
+		 	//if (this.humanControlledPlayer!=this.players[i]) {
+		 		//console.log(animationObjs);
+		 		//console.log(this.players[i]);
+		 		this.players[i].dumbAnimate(animationObjs[this.players.length-i-1],init);
+		 };
+		 this.executeObjective(instructions);
+		 
+
 
 	}
 	press(){
@@ -161,7 +166,8 @@ class Team{
 
 	executeObjective(instructions){
 
-		if (this.state=="play") {
+		if (this.game.isHost) {
+			if (this.state=="play") {
 
 			if(this.objectives.indexOf("attack")!==-1){
 				this.attack();
@@ -215,11 +221,12 @@ class Team{
 		};
 
 
-
-
-
-
-
+		}
+		else{
+			if (this.state=="play") {
+				this.receiveHumanInstructions(instructions);
+			};
+		}
 
 	}
 	changeFormation(newFormation){

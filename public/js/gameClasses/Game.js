@@ -1,8 +1,8 @@
 
 "use strict";
 class Game{
-	constructor(xPos,yPos,_width,_length,isHost,humanPlayerIndex){
-		this.field=new Field(xPos,yPos,_width,_length, humanPlayerIndex);
+	constructor(xPos,yPos,_width,_length,isHost,humanPlayerIndex,passSound,shootSound){
+		this.field=new Field(xPos,yPos,_width,_length, humanPlayerIndex,passSound,shootSound,this);
 		this.ball=this.field.ball;
 		this.teamA=this.field.teamA;
 		this.teamB=this.field.teamB;
@@ -26,6 +26,7 @@ class Game{
 		this.halfTimeHappened=false;
 		this.mostRecentEventTimeStop=0;
 		this.mostRecentEventTimeStart=0;
+		this.remotePlayers=[];
 		
 
 
@@ -72,7 +73,15 @@ class Game{
 	dumbAnimate(gameInstructions,animationObjs){
 		 this.state=animationObjs.state;
 		 this.gameTime=animationObjs.gameTime;
-    	 var fieldAnimationObjs=[animationObjs.teamA,animationObjs.teamB,animationObjs.ball,animationObjs.init];
+    	 //var fieldAnimationObjs=[animationObjs.teamA,animationObjs.teamB,animationObjs.ball,animationObjs.init];
+    	 var fieldAnimationObjs={
+    	 	teamAState: animationObjs.teamAState,
+    	 	teamBState: animationObjs.teamBState,
+    	 	ball: animationObjs.ball,
+    	 	teamA: animationObjs.teamA,
+    	 	teamB: animationObjs.teamB,
+    	 	init: animationObjs.init
+    	 };
 		this.field.dumbAnimate(gameInstructions,fieldAnimationObjs);
 		this.displayScore();
 		this.displayTime();
@@ -112,7 +121,10 @@ class Game{
 
 				if (this.gameEvent()) {
 					this.ball.stop();
-					this.displayGameStatus();
+					//if (this.timeElapsed%500==0) {
+						this.displayGameStatus();
+					//};
+					
 					this.restartGameFromState();
 					}
 				else if(!this.isFullTime()){
@@ -126,7 +138,7 @@ class Game{
 		}
 		else{
 			this.dumbAnimate(gameInstructions,animationObjs);
-			if (this.gameEvent()) {
+			if (this.state!="PLAY") {
 					this.displayGameStatus();
 					}
 							}
@@ -247,12 +259,16 @@ class Game{
 
 
 	displayGameStatus(){
-
 		push();
-		fill(255);
-		textAlign(CENTER);
-		textSize(this.field._width/10);
-		text(this.state,this.field.midx,this.field.midy);		
+
+		//if (this.timeElapsed%2==1) {
+			fill(255);
+			textAlign(CENTER);
+			textSize(this.field._width/10);
+			text(this.state,this.field.midx,this.field.midy);
+
+		//};
+		
 		pop();
 
 	}	

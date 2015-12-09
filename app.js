@@ -3,6 +3,7 @@ var socketObjs=[];
 var host;
 var io;
 var playerID="";
+var humanControlledPlayers=[];
 
 
 var express = require("express");
@@ -91,7 +92,7 @@ app.get("/allgames", function(request,response){
 
 app.get("/:playerID", function(req, res){
 	console.log("req param is ", req.params.playerID);
-	playerID=req.params.playerID;
+	playerID=req.params.playerID[0]+" "+req.params.playerID.slice(1);
 	//openSocket();	
 	//console.log('Express started on port ' + port);
 	res.render('game');
@@ -162,6 +163,7 @@ io = require('socket.io')(server);
 
 	io.on('connection', function (socket) {
 		if(playerID!=""){
+			//humanControlledPlayers.push(playerID);
 			allUsers.push(socket);
 		if (allUsers.length==1) {
 			host=socket;
@@ -198,7 +200,7 @@ io = require('socket.io')(server);
    });
 
 
-
+		 playerID="";
 		}
 	
 	});
