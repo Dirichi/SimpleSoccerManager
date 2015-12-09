@@ -2,10 +2,7 @@
 class Player extends Moveable{
 	constructor(xPos,yPos,_width,_length,field,position,side,team) {
 		super(xPos,yPos,_width,_length,field);
-
-		this.initialized=false;
-		
-		
+		this.initialized=false;		
 		this.field=field;
 		this.leftlegLength;
 		this.rightLegLength;
@@ -389,27 +386,30 @@ class Player extends Moveable{
 		push();
 		fill(animationObj.colors[0],animationObj.colors[1],animationObj.colors[2]);
 		//fill(255);
-		 if (this.isHumanControlled()) {
-		 		fill(this.uniqueColor);	
-		};
+		
 		if (init) {
 			//console.log("it's about to get init");
 			this.xPos=animationObj.xPos;
 			this.yPos=animationObj.yPos;
 			this.initialized=true;
 		}
-		else{
-			//console.log("no longer initing")
-			if (this.initialized && !this.isHumanControlled()) {
+		else if (this.initialized) {
 				//console.log("should move");
-				this.xPos=animationObj.xPos;
-				this.yPos=animationObj.yPos;
-				this.storeGivenVelocity(animationObj.dx,animationObj.dy);
-				this.moveWithStoredVelocity();
-				
-			};
-			
-		}
+				//this.moveTo(animationObj.xPos,animationObj.yPos);
+
+				 this.xPos=animationObj.xPos;
+				 this.yPos=animationObj.yPos;
+				//this.storeGivenVelocity(animationObj.dx,animationObj.dy);
+				//this.moveWithStoredVelocity();
+				this.updatePosition();
+			}
+
+		if(this.isHumanControlled()){
+		 		fill(this.uniqueColor);
+		 		
+			}
+		
+		
 		this.morale=animationObj.morale;
 		ellipse(this.xPos,this.yPos,this._length,this._length);
 		fill((this.morale-1)*-255,this.morale*255,0);
@@ -452,9 +452,10 @@ class Player extends Moveable{
 		player.chaseBall();
 	};
 	if(player.hasBall()){
+		player.setState("n/a");
 		this.ball.dx=player.dx;
 		this.ball.dy=player.dy;
-		player.setState("n/a");
+		
 
 	}
 
@@ -493,49 +494,58 @@ shoot(){
 }
 
 dribbleForward(){
-	//if (this.hasBall()) {
+	this.ball.stop();
 	this.messageTeammates("n/a");
 	this.ball.dx=this.dx;
 	this.ball.dy=this.dy;
 	this.moveForward();
 	this.setState("dribbling");
+	//this.ball.stop();
 	//}
 
 }
 
 dribbleBackward(){
+	this.ball.stop();
 	this.messageTeammates("n/a");
 	this.ball.dx=this.dx;
 	this.ball.dy=this.dy;
 	this.moveBackward();
 	this.setState("dribbling");
+	//this.ball.stop();
 }
 
 dribbleRight(){
+	this.ball.stop();
 	this.messageTeammates("n/a");
 	this.ball.dx=this.dx;
 	this.ball.dy=this.dy;
 	this.moveRight();
 	this.setState("dribbling");
+	//this.ball.stop();
 
 }
 dribbleLeft(){
+	this.ball.stop();
 	this.messageTeammates("n/a");
 	this.ball.dx=this.dx;
 	this.ball.dy=this.dy;
 	this.moveLeft();
 	this.setState("dribbling");
+	//this.ball.stop();
 }
 
 
 dribble(){
 	if (this.hasBall()) {
 		//sort out orientation
+		this.ball.stop();
 		this.messageTeammates("n/a");
 		this.ball.dx=this.dx;
 		this.ball.dy=this.dy;
 		this.moveForward();
 		this.setState("dribbling");
+		//this.ball.stop();
 	}
 	else{
 		this.messageTeammates("n/a");
@@ -1127,20 +1137,47 @@ humanControl(instruction){
 	 switch(instruction) {
         case "forward": // left
         if (this.hasBall()) {
-        	this.dribbleForward();
+        	if (this.side=="left") {
+        		this.dribbleForward();
+        	}
+        	else{
+        		this.dribbleBackward();
+        	}
+        	
         }
         else{
-        	this.moveForward();
+        	if (this.side=="left") {
+        		this.moveForward();
+
+        	}
+        	else{
+        		this.moveBackward();
+        	}
+        	
          }
         
         break;
 
         case "backward": // up
         if (this.hasBall()) {
-        	this.dribbleBackward();
+        	if (this.side=="left") {
+        		this.dribbleBackward();
+
+        	}
+        	else{
+        		this.dribbleForward();
+        	}
+        	
         }
         else{
-        	this.moveBackward();
+        	if (this.side=="left") {
+        		this.moveBackward();
+        	}
+        	else{
+        		this.moveForward();
+
+        	}
+        	
          }
         
         break;
@@ -1187,10 +1224,10 @@ humanControl(instruction){
         break;
 
         case "none":
-        if (this.side=="left") {
+        //if (this.side=="left") {
         	this.stop();
         	this.uniqueColor=255;
-        };
+        //};
         break;
 
         default: return; // exit this handler for other keys
@@ -1201,6 +1238,10 @@ humanControl(instruction){
 isHumanControlled(){
 	return this==this.team.humanControlledPlayer;
 
+}
+
+isRemoteControlled(){
+	
 }
 
 callForBall(){

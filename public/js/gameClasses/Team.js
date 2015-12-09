@@ -19,6 +19,7 @@ class Team{
 		this.callers=[];
 
 		//this.computerControlledPlayers=[];
+		this.remotePlayers=[];
 
 		this.opposition;
 		this.posRatings=[];
@@ -134,11 +135,15 @@ class Team{
 	receiveHumanInstructions(instructions){
 		if (this.hasHumanController) {
 			this.humanControlledPlayer.humanControl(instructions);
-
 		};
 		
 
 	}
+
+	// receiveRemoteInstructions(instructions){
+	// 	if (true) {};
+
+	// }
 		
 	nearestPlayerToBall(){
 		var nearestPlayer=this.players[0];
@@ -433,6 +438,22 @@ class Team{
    clearTeamMessages(){
    	//list of players who call for the ball is emptied
    this.callers=[];
+   }
+
+   addRemotePlayer(playerIndex){
+   	//need to put error check here to see if user is already a remote player
+   	//console.log(this.players.length);
+   	console.log(playerIndex);
+   	//var y=playerIndex;
+   
+ 
+   	//console.log(this.players);
+   	var remote=this.players[playerIndex];
+   	console.log("remote is", remote);
+
+   	this.remotePlayers.push(remote);
+
+
    }
 
  

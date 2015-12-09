@@ -558,5 +558,19 @@ class Game{
 		this.ball.updateSpeedFactor(speedFactor);
 	}
 
+	addRemotePlayer(playerID){
+		if (playerID[0]=="A") {
+			this.teamA.addRemotePlayer(playerID.split(" ")[1]);
+			//console.log(this.teamA.remotePlayers.length);
+			//console.log(this.teamA.remotePlayers);
+		}
+		else if (playerID[0]=="B") {
+			this.teamB.addRemotePlayer(playerID.split(" ")[1]);
+			//console.log(this.teamB.remotePlayers);
+
+		}
+
+	}
+
 }
 

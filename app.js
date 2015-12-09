@@ -91,8 +91,13 @@ app.get("/allgames", function(request,response){
 });
 
 app.get("/:playerID", function(req, res){
-	console.log("req param is ", req.params.playerID);
+
+	
 	playerID=req.params.playerID[0]+" "+req.params.playerID.slice(1);
+	if (playerID.length>3) {
+		return;
+	};
+	console.log("req param is ", req.params.playerID);
 	//openSocket();	
 	//console.log('Express started on port ' + port);
 	res.render('game');
@@ -187,6 +192,12 @@ io = require('socket.io')(server);
 			console.log("latest player has been given the go to join as guest");
 			//console.log(data);
 			socket.broadcast.emit("joinAsGuest",data);
+		});
+
+		socket.on("guestInput",function(data){
+			//console.log("input from ",data);
+			//console.log(data);
+			socket.broadcast.emit("guestInput",data);
 		});
 
 		 socket.on('disconnect', function() {

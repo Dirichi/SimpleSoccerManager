@@ -80,8 +80,16 @@ class Field {
  		this.createFieldMargin();
  		this.createPosts(); 
  		this.createBoxes();
- 		this.teamA.animate(gameInstructions);
- 		this.teamB.animate("");
+ 		var teamAInstructions="";
+ 		var teamBInstructions="";
+ 		if (this.teamA.hasHumanController) {
+ 			teamAInstructions=gameInstructions;
+ 		};
+ 		if (this.teamB.hasHumanController) {
+ 			teamBInstructions=gameInstructions;
+ 		};
+ 		this.teamA.animate(teamAInstructions);
+ 		this.teamB.animate(teamBInstructions);
  		this.ball.animate();
  		this.setLastPlayerInPossession(this.getLastPlayerInPossession());
 

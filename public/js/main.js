@@ -18,11 +18,12 @@ var joined=false;
 var gameSpeedFactor=1;
 var augmentedGameSpeed;
 var initialized=false;
+var ID;
 
 /*------------------------------------------------------------------------------------------------------------------------------*/
 
 var globalGameCounter=0;
-var humanInstruction="";
+var humanInstruction="none";
 var allowedCommands=["attack","defend"];
 var mySound;
 var game;
@@ -182,7 +183,6 @@ function createGameBallObj(ball){
 }
 
 function createGameData(){
-  //var allPlayers=[];
   var teamAPlayers=[];
   var teamBPlayers=[];
   var gameBall=createGameBallObj(game.ball);
@@ -205,10 +205,20 @@ function createGameData(){
     teamAState: game.teamA.state,
     teamBState: game.teamB.state
   };
-
   return theData;
+}
+
+function grabAndSendGuestInput(){
+  var data={
+    ID: ID,
+    instruction: humanInstruction
+  }
+
+  socket.emit("guestInput",data);
 
 }
+
+
 
 function grabDataAndSend(){
   var theData=createGameData();
@@ -224,6 +234,7 @@ function computeGameSpeed(){
     oldCount=globalGameCounter;
   }; 
 }
+
 
 
 socket.on('news', function (data) {
@@ -250,12 +261,9 @@ socket.on('joinAsGuest', function (data) {
   if(!joined){
     createCanvas(windowWidth,windowHeight);
      var playerID=data.playerID;
+     ID=playerID;
      console.log(playerID);
-     game=new Game(0,0,width,height,false,playerID);
-    for (var i = game.allPlayers.length - 1; i >= 0; i--) {
-    game.allPlayers[i].passSound=passSound;
-    game.allPlayers[i].shootSound=shootSound;
-    };
+     game=new Game(0,0,width,height,false,playerID,passSound,shootSound);
      tempAnimationObjs=data;
      animationObjs=correctAnimationObjs(tempAnimationObjs);
   }
@@ -263,9 +271,17 @@ socket.on('joinAsGuest', function (data) {
      //joined=true;
 });
 
+socket.on('guestInput', function (data) {
+  if (game.isHost) {
+    console.log("guestInput from ", data.ID);
+  }; 
+     //joined=true;
+});
+
 socket.on("newPlayerJoined", function(data){
    var playerID=data;
-   game.remotePlayers.push(playerID);
+   //game.remotePlayers.push(playerID);
+   game.addRemotePlayer(playerID);
 
   if (game.isHost) {
    
@@ -282,11 +298,16 @@ function sendInputDataToHost(){
 
 
 
+
 function gameChanged(){
   if (globalGameCounter%2==0) {
     return true;
   };
   return false;
+}
+
+function onGuestInput(){
+  return !game.isHost&&joined&&readyToStart&&humanInstruction!="none";
 }
 
 
@@ -324,6 +345,7 @@ $(document).keydown(function(e) {
 
         default: return; // exit this handler for other keys
     }
+    console.log(humanInstruction);
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });
 
@@ -331,9 +353,6 @@ $(document).keyup( function(e){
     humanInstruction="none";
 });
 
-function resetInstructions(){
-  humanInstruction="none";
-}
 
 
 /---------------------------------------------------------------------------------------------------------------------------/ 
@@ -378,6 +397,9 @@ function setup() {
       if (gameChanged()) {
         grabDataAndSend();
       }; 
+      if (onGuestInput()) {
+        grabAndSendGuestInput();
+      };
     }
     if (!joined&&animationObjs.init) {
       console.log("changing joined from ",joined," to ",animationObjs.init);
