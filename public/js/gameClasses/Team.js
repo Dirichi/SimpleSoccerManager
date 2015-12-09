@@ -135,11 +135,6 @@ class Team{
 
 	}
 		
-
-		
-	
-		
-
 	nearestPlayerToBall(){
 		var nearestPlayer=this.players[0];
 		for (var i = this.players.length - 1; i >= 0; i--) {
