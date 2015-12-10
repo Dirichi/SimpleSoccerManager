@@ -63,11 +63,15 @@ class Team{
 		}
 		
 		}
-	animate(instructions){
+	animate(instructions,remoteInstructions){
 		for (var i = this.players.length - 1; i >= 0; i--) {
 			this.players[i].animate(this.colors);
 		};
 		this.executeObjective(instructions);
+		if (remoteInstructions.length>0&&remoteInstructions[0].instruction!="none") {
+			console.log(remoteInstructions);
+		};
+		this.processRemoteInput(remoteInstructions);
 
 	}
 
@@ -118,11 +122,11 @@ class Team{
 				this.defend();
 		}
 
-		else if (this.focusPlayer()!=1&&this.focusPlayer()!=this.humanControlledPlayer) {
+		else if (this.focusPlayer()!=1&&this.focusPlayer()!=this.humanControlledPlayer&&!this.focusPlayer().isRemoteControlled()) {
 		
 			this.focusPlayer().choiceInPossession();
 			for (var i = this.players.length - 1; i >= 0; i--) {
-				if(this.players[i]!=this.focusPlayer()&&this.players[i]!=this.humanControlledPlayer){
+				if(this.players[i]!=this.focusPlayer()&&this.players[i]!=this.humanControlledPlayer&&!this.players[i].isRemoteControlled()){
 					this.players[i].moveToAttackingPosition();
 				}
 			};
@@ -140,10 +144,30 @@ class Team{
 
 	}
 
-	// receiveRemoteInstructions(instructions){
-	// 	if (true) {};
+	processRemoteInput(instructionObj){
+		//console.log(instructionObj);
+		if (instructionObj.length>0) {
+			console.log("at team level we have instructions");
+			//console.log(remoteInstructions);
+			for (var i = instructionObj.length - 1; i >= 0; i--) {
+				console.log(instructionObj[i].ID.split(" ")[1]);
+			var ID=instructionObj[i].ID.split(" ")[1];
+			var instructions=instructionObj[i].instruction;
 
-	// }
+			//console.log("At Team level ",ID, "instructed to ", instructions);
+			if (this.players[ID].isRemoteControlled()) {
+				console.log(ID, "is remote controlled");
+				this.players[ID].humanControl(instructions);
+
+			};
+		
+		};
+
+		};
+		
+		
+
+	}
 		
 	nearestPlayerToBall(){
 		var nearestPlayer=this.players[0];
@@ -443,18 +467,20 @@ class Team{
    addRemotePlayer(playerIndex){
    	//need to put error check here to see if user is already a remote player
    	//console.log(this.players.length);
-   	console.log(playerIndex);
+   	//console.log(playerIndex);
    	//var y=playerIndex;
    
  
    	//console.log(this.players);
    	var remote=this.players[playerIndex];
-   	console.log("remote is", remote);
-
    	this.remotePlayers.push(remote);
 
 
    }
+
+   //processRemoteInput(playerIndex, instructions){
+   	
+   //}
 
  
 }

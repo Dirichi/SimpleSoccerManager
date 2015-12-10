@@ -72,7 +72,7 @@ class Field {
  	
 
 
- 	animate(gameInstructions){
+ 	animate(gameInstructions,remoteInstructions){
 
  		this.createField();
  		this.createCenterLine();
@@ -82,14 +82,38 @@ class Field {
  		this.createBoxes();
  		var teamAInstructions="";
  		var teamBInstructions="";
+
  		if (this.teamA.hasHumanController) {
  			teamAInstructions=gameInstructions;
  		};
  		if (this.teamB.hasHumanController) {
  			teamBInstructions=gameInstructions;
  		};
- 		this.teamA.animate(teamAInstructions);
- 		this.teamB.animate(teamBInstructions);
+ 		var teamARemoteInstructions=[];
+ 		var teamBRemoteInstructions=[];
+
+ 		if (!remoteInstructions.length<1) {
+ 			//console.log("At field level we have input");
+ 			for (var i = remoteInstructions.length - 1; i >= 0; i--) {
+
+ 			if (remoteInstructions[i].ID[0]=="A") {
+ 				//console.log("inputs for A");
+ 				teamARemoteInstructions.push(remoteInstructions[i])
+
+ 			}
+ 			else if (remoteInstructions[i].ID[0]=="B") {
+ 				console.log("inputs for B");
+ 				teamBRemoteInstructions.push(remoteInstructions[i]);
+
+ 			};
+ 			
+ 		};
+
+ 		};
+
+ 		
+ 		this.teamA.animate(teamAInstructions,teamARemoteInstructions);
+ 		this.teamB.animate(teamBInstructions, teamBRemoteInstructions);
  		this.ball.animate();
  		this.setLastPlayerInPossession(this.getLastPlayerInPossession());
 

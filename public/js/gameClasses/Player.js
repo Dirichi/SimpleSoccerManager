@@ -347,6 +347,7 @@ class Player extends Moveable{
 
 		this.kickOffPositionY=this.defaultFieldRegion.midy;
 		this.uniqueColor=255;
+		this.remoteColor=128;
 		this.pulseColor=0;
 
 		// this.xPos=this.field.xPos;
@@ -365,6 +366,9 @@ class Player extends Moveable{
 		fill(colors[0],colors[1],colors[2]);
 		if (this.isHumanControlled()) {
 				fill(this.uniqueColor);	
+		};
+		if (this.isRemoteControlled()) {
+			fill(128);
 		};
 		ellipse(this.xPos,this.yPos,this._length,this._length);
 		fill((this.morale-1)*-255,this.morale*255,0);
@@ -1121,7 +1125,7 @@ keeperDefenseMechanism(){
 }
 
 isWaiting(){
-	return this.state=="neutral"||this.state=="shooter"||this.state=="passer"&!this.isHumanControlled();
+	return this.state=="neutral"||this.state=="shooter"||this.state=="passer"&&!this.isHumanControlled();
 }
 
 moveAwayFromPlayer(player){
@@ -1241,7 +1245,7 @@ isHumanControlled(){
 }
 
 isRemoteControlled(){
-	
+	return numOccurencesInArray(this, this.team.remotePlayers)>0;
 }
 
 callForBall(){

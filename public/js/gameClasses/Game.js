@@ -1,4 +1,3 @@
-
 "use strict";
 class Game{
 	constructor(xPos,yPos,_width,_length,isHost,humanPlayerIndex,passSound,shootSound){
@@ -31,7 +30,7 @@ class Game{
 
 
 	}
-	animate(gameInstructions){
+	animate(gameInstructions,remoteInstructions){
 		this.timeElapsed=millis();
 
 		if (this.isFullTime()) {
@@ -64,7 +63,7 @@ class Game{
 		this.getMostRecentEventTimeStart();
 		this.getMostRecentEventTimeStop();
 		
-		this.field.animate(gameInstructions);
+		this.field.animate(gameInstructions,remoteInstructions);
 		this.displayScore();
 		this.displayTime();
 		this.updateTeamMorale();
@@ -102,7 +101,6 @@ class Game{
 	displayTime(){
 		push();
 		fill(255);
-		
 		textSize(width/40);
 		var timeString=this.gameTime+":00"
 		text(timeString, 42*width/48, height/20);
@@ -111,11 +109,18 @@ class Game{
 	}
 
 
-	stateMachine(gameInstructions, animationObjs){
+	stateMachine(gameInstructions, animationObjs,remoteInstructions){
 		
 
 		if (this.isHost) {
-			this.animate(gameInstructions);
+			if (remoteInstructions.length>0) {
+				if (remoteInstructions[0].instruction!="none") {
+					console.log(remoteInstructions);
+
+				};
+				
+			};
+			this.animate(gameInstructions,remoteInstructions);
 			this.updateState();
 			this.updateScores();
 
@@ -569,6 +574,23 @@ class Game{
 			//console.log(this.teamB.remotePlayers);
 
 		}
+
+	}
+
+	processRemoteInput(playerID, instruction){
+		//console.log("At Game level ", playerID, "instructed to ", instruction);
+			if (playerID[0]=="A") {
+			this.teamA.processRemoteInput(playerID.split(" ")[1],instruction);
+			//console.log(this.teamA.remotePlayers.length);
+			//console.log(this.teamA.remotePlayers);
+		}
+		else if (playerID[0]=="B") {
+			this.teamB.processRemoteInput(playerID.split(" ")[1],instruction);
+			//console.log(this.teamB.remotePlayers);
+
+		}
+
+
 
 	}
 

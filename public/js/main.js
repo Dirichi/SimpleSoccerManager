@@ -20,6 +20,8 @@ var augmentedGameSpeed;
 var initialized=false;
 var ID;
 
+var remoteInstructions=[];
+
 /*------------------------------------------------------------------------------------------------------------------------------*/
 
 var globalGameCounter=0;
@@ -273,17 +275,31 @@ socket.on('joinAsGuest', function (data) {
 
 socket.on('guestInput', function (data) {
   if (game.isHost) {
-    console.log("guestInput from ", data.ID);
+    //console.log(data);
+    for (var i = remoteInstructions.length - 1; i >= 0; i--) {
+      if(remoteInstructions[i].ID==data.ID){
+        remoteInstructions[i].instruction=data.instruction;
+      }
+    };
+    // remoteID=data.ID;
+    // remoteInstruction=data.instruction;
   }; 
      //joined=true;
 });
 
 socket.on("newPlayerJoined", function(data){
-   var playerID=data;
-   //game.remotePlayers.push(playerID);
-   game.addRemotePlayer(playerID);
+  
 
   if (game.isHost) {
+    var playerID=data;
+   //game.remotePlayers.push(playerID);
+    var remoteInstructionObj={
+      ID: data,
+      instruction: "none"
+    }
+    remoteInstructions.push(remoteInstructionObj);
+    console.log(remoteInstructionObj);
+    game.addRemotePlayer(playerID);
    
     var theData=createGameData();
     theData.init=true;
@@ -308,6 +324,11 @@ function gameChanged(){
 
 function onGuestInput(){
   return !game.isHost&&joined&&readyToStart&&humanInstruction!="none";
+}
+
+function onReceivedGuestInput(){
+  return game.isHost&&joined&&readyToStart&&remoteInstruction!="none"&&remoteID!="none";
+
 }
 
 
@@ -390,20 +411,26 @@ function setup() {
     if(readyToStart){
       time=millis();
       background(255);
-      game.stateMachine(humanInstruction,animationObjs);
+      game.stateMachine(humanInstruction,animationObjs,remoteInstructions);
       displayLatestCommand();
       computeGameSpeed();
       game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
       if (gameChanged()) {
         grabDataAndSend();
       }; 
-      if (onGuestInput()) {
+      if (!game.isHost) {
         grabAndSendGuestInput();
       };
+      // if (onReceivedGuestInput()) {
+      //   game.processRemoteInput(remoteID,remoteInstruction);
+      //   remoteID="none";
+      //   remoteInstruction="none";
+      // };
+      //game.processRemoteInput();
     }
     if (!joined&&animationObjs.init) {
       console.log("changing joined from ",joined," to ",animationObjs.init);
-      game.stateMachine(humanInstruction,animationObjs);
+      game.stateMachine(humanInstruction,animationObjs,remoteInstructions);
       joined=true;
     };
    }
