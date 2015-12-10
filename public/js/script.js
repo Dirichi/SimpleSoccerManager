@@ -79,6 +79,10 @@ function joinGame(gameCode){
 
 }
 
+function MakeExistingGameDivs(){
+
+}
+
 
 
 function generateUniqueKey(){

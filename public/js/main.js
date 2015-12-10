@@ -27,7 +27,6 @@ var remoteInstructions=[];
 var globalGameCounter=0;
 var humanInstruction="none";
 var allowedCommands=["attack","defend"];
-var mySound;
 var game;
 var latestCommand="Say 'team [x]'; x='attack','defend','you're awesome'... etc";
 
@@ -89,7 +88,7 @@ function preload(){
     push();
     fill(255,255,255,0);
     rect(width/2-width/6,height/20-height/40,width/3,height/20);
-    fill(0,0,0);
+    fill(255,255,255);
     textSize(width/80);
     textAlign(CENTER);
     text(latestCommand, width/2, height/20);
@@ -415,7 +414,7 @@ function setup() {
       displayLatestCommand();
       computeGameSpeed();
       game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
-      if (gameChanged()) {
+      if (gameChanged()&&this.isHost) {
         grabDataAndSend();
       }; 
       if (!game.isHost) {

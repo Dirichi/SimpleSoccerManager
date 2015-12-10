@@ -1,7 +1,6 @@
 "use strict";
 class Team{
 	constructor(formation,field,name,side,colors,post,humanPlayerIndex,game){
-		//this.formation=formation;
 		this.field=field;
 		this.ball=this.field.ball;
 		this.nm=name;
@@ -17,8 +16,6 @@ class Team{
 		this.game=game;
 
 		this.callers=[];
-
-		//this.computerControlledPlayers=[];
 		this.remotePlayers=[];
 
 		this.opposition;
@@ -68,9 +65,6 @@ class Team{
 			this.players[i].animate(this.colors);
 		};
 		this.executeObjective(instructions);
-		if (remoteInstructions.length>0&&remoteInstructions[0].instruction!="none") {
-			console.log(remoteInstructions);
-		};
 		this.processRemoteInput(remoteInstructions);
 
 	}
@@ -465,22 +459,11 @@ class Team{
    }
 
    addRemotePlayer(playerIndex){
-   	//need to put error check here to see if user is already a remote player
-   	//console.log(this.players.length);
-   	//console.log(playerIndex);
-   	//var y=playerIndex;
-   
- 
-   	//console.log(this.players);
    	var remote=this.players[playerIndex];
    	this.remotePlayers.push(remote);
 
 
    }
-
-   //processRemoteInput(playerIndex, instructions){
-   	
-   //}
 
  
 }

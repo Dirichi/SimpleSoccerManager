@@ -1,29 +1,17 @@
-/*#playerNameDiv, #executeSpace{
-	display: block;
-	padding: 10%;
-	/*width: 100%;
-	position: absolute;
-
-
-}*/
 
 #playerNameDiv{
 	/*z-index: 10;*/
+
 	background: white;
 	padding: 5%;
 	margin: 0 auto;
-	width: 60%;
+	/*margin-left: -5%;*/
 	display: block;
 
 
-}
 
-#executeSpace{
-	width: 50%;
-	margin: 0 auto;
 }
-
- button{
+button{
     margin: 0 auto;
     width: 20%;
     padding: 1%;
@@ -35,51 +23,70 @@
 	margin-top: 2%;
 	width: 80%;
 	margin: 0 auto;
-
-
 }
 
 #playerNameInput{
-	width: 50%;
 	margin: 0 auto;
-	display: block;
-	
-	
-
+	display: block;	
+	width: 20%;
+    background-color: white;
+    padding: 2%;
+    color: #29B6F6;
+    font-size: 20px;
+    text-align: center;   
 }
 
-
-/*#container{
-  width: 100%;
-  display: block;
-  position: relative;
-}*/
-
-.p5space{
-	display: block;
+#Enter{
 	margin: 0 auto;
-	width: 50%;
+	margin-top: 2%;
+	width: 10%;
+	color: #29B6F6;
+	padding: 1%;
+	font-size: 15px;
+	background: #FFFFFF;
+	border: 3px solid #29B6F6;
+	text-align: center;
+	cursor: pointer;
 }
 
-input {
+#menu{
 	display: block;
-    background-color: transparent;
-    border: 0px solid;
-    color: #CCC;
-    font-size: 40px;
-    text-align: center;
-    border-width: 0;
-    margin: 0 auto;
+	color: white;
+	margin: 0 auto;
+	background: #29B6F6;
+	padding: 1%;
 }
 
+#bottom{
+	display: block;
+	color: white;
+	background: #29B6F6;
+	margin-top: 5%;
+	padding: 3%;
+	text-align: center;
+}
 
+.menu-item{
+	color: white;
+	margin: 10%;
+	margin-top: 2%;
+	margin-bottom: 2%;
+	width: 10%;
+	display: inline-block;
+	font-size: 15px;
+	padding: 1%;
+	border: 3px solid #FFFFFF;
+	text-align: center;
+	cursor: pointer;
 
-
+}
 
 
 #titleDiv{
 	display: block;
 	color: #000;
+	background: #29B6F6;
+	padding: 1%;
 
 	/*width: 100%;*/
 	/*background: #F44336;*/
@@ -87,123 +94,28 @@ input {
 	}
 
 #title{
-	display: block;
 	width: 50%;
 	margin: 0 auto;
+	display: block;
 	font-size: 40px;
+	color: white;
+	display: block;
 	text-align: center;
-	color: #29B6F6;
+	cursor: pointer;
 
 
 }
 
-#actionDiv{
-	display: block;
-	color: #000;
-	margin-top: 3%;
-	margin-bottom: 5%;
-	/*border: 3px solid #000000;
-	padding: 1%;*/
 
-}
-
-#actionDiv2{
-	display: block;
-	color: #000;
-	margin-top: 3%;
-	margin-bottom: 5%;
-}
-
-.action{
-	display: inline;
-	width: 50%;
-	margin: 0 auto;
-	font-size: 30px;
-	margin-left: 10%;
-	text-align: center;
-	/*border: 1px solid #000;
-	padding: 1%;*/
-
-
-}
-
-.action2{
-	display: block;
-	width: 70%;
-	margin: 0 auto;
-	font-size: 30px;
-	text-align: center;
-	background: #4CAF50;
-	color: white;
-	padding: 1%;
-	border: 3px solid #888;
-	padding: 1%;
-
-
-}
-
-#selectTeam{
-	background: #4CAF50;
-	color: white;
-	padding: 1%;
-	margin-left: 15%;
-
-}
-
-#selectFormation{
-	background: #F44336;
-	color: white;
-	padding: 1%;
-	margin-left: 5%;
-
-}
-
-#learnCommands{
-	background: #29B6F6;
-	color: white;
-	padding: 1%;
-	margin-left: 5%;
-
-}
-#activityAreaDiv{
-	display: block;
-	width: 70%;
-	margin:0 auto;
-	overflow: auto;
-	background: #FFEB3B;
-
-}
 
 body{
 	font-family: 'Open Sans', serif;
 	color: black;
-	/*background: #00FF00;*/
+	/*background: #F44336;*/
 	
 
 }
 
-.teamButton{
-	background: none;
-	float: left;
-	border: none;
-}
-
-.teamDiv{
-	width: 20%;
-	float: left;
-
-
-}
-
-.teamName{
-	
-
-
-}
-
-.teamCrest{
-
-}
 
 #bottomButtonDiv{
 	display: block;
@@ -339,13 +251,7 @@ body{
 }
 
 
-body{
-	font-family: 'Open Sans', serif;
-	background: #F44336;
-	background: white;
-	color: black;
-	/*background: #29B6F6;
-}
+
 
 
 
