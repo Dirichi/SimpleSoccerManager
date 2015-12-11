@@ -1,16 +1,29 @@
 
 #playerNameDiv{
 	/*z-index: 10;*/
-
+	width: 100%;
 	background: white;
-	padding: 5%;
+	/*padding: 5%;*/
 	margin: 0 auto;
 	/*margin-left: -5%;*/
 	display: block;
+	/*float: right;*/
+}
 
-
+#controls{
+ display: block;
+ width: 100%;
+ 
 
 }
+
+#controls h3{
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
+	color: #29B6F6;
+}
+
 button{
     margin: 0 auto;
     width: 20%;
@@ -31,7 +44,7 @@ button{
 	width: 20%;
     background-color: white;
     padding: 2%;
-    color: #29B6F6;
+    color: #29B6F6; 
     font-size: 20px;
     text-align: center;   
 }
@@ -106,11 +119,19 @@ button{
 
 }
 
+#p5Space{
+	width: 100%;
+	display: block;
+	/*float: left;*/
+}
+
 
 
 body{
 	font-family: 'Open Sans', serif;
 	color: black;
+	padding: 0; margin: 0;
+
 	/*background: #F44336;*/
 	
 

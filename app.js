@@ -59,6 +59,32 @@ app.get("/", function(req, res){
 	res.render('index');
 });
 
+app.post("/create", function (request, response) {
+	console.log("Creating a Game!");
+	console.log(request);
+	// Use the Request lib to POST the data to the CouchDB on Cloudant
+	Request.post({
+		url: CLOUDANT_URL,
+		auth: {
+			user: CLOUDANT_KEY,
+			pass: CLOUDANT_PASSWORD
+		},
+		json: true,
+		body: request.body
+	},
+	function (err, res, body) {
+		if (res.statusCode == 201){
+			console.log('Doc was saved!');
+			//response.json(body);
+		}
+		else{
+			console.log('Error: '+ res.statusCode);
+			console.log(body);
+		}
+	});
+});
+
+
 app.get("/allgames", function(request,response){
 		console.log("getting all games");
 
@@ -90,6 +116,23 @@ app.get("/allgames", function(request,response){
 
 });
 
+app.get("/select", function(req, res){
+	// var dataForThePage = {
+	// 	message: "Try adding a forward slash plus a word to the url",
+	// 	search: false
+	// };
+	res.render('select');
+});
+
+app.get("/start", function(req, res){
+	// var dataForThePage = {
+	// 	message: "Try adding a forward slash plus a word to the url",
+	// 	search: false
+	// };
+	res.render('start');
+});
+
+
 app.get("/:playerID", function(req, res){
 
 	
@@ -103,13 +146,6 @@ app.get("/:playerID", function(req, res){
 	res.render('game');
 	});
 
-app.get("/select", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
-	res.render('select');
-});
 
 
 app.get("game/:code", function(request, response){
@@ -121,30 +157,6 @@ app.get("game/:code", function(request, response){
 
 
 
-app.post("/create", function (request, response) {
-	console.log("Creating a Game!");
-	console.log(request);
-	// Use the Request lib to POST the data to the CouchDB on Cloudant
-	Request.post({
-		url: CLOUDANT_URL,
-		auth: {
-			user: CLOUDANT_KEY,
-			pass: CLOUDANT_PASSWORD
-		},
-		json: true,
-		body: request.body
-	},
-	function (err, res, body) {
-		if (res.statusCode == 201){
-			console.log('Doc was saved!');
-			//response.json(body);
-		}
-		else{
-			console.log('Error: '+ res.statusCode);
-			console.log(body);
-		}
-	});
-});
 
 
 function generateGameCode(){
