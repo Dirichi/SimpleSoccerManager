@@ -20,7 +20,7 @@ determined to be negative will reduce team morale and performance as well.
    -  get crackalacking!
    -  **NB: this game currently only works on chrome, and is not really enabled for mobile**
    
--  Current prototype here: https://simplesoccermanagers.herokuapp.com/10
+-  Current prototype here: https://simplesoccermanagers.herokuapp.com/A10
 
 
 
