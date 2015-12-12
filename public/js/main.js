@@ -1,6 +1,6 @@
 
-const DESIRED_SPEED=2.7;
-const DELTA_TIME=100;
+const DESIRED_SPEED=1.35;
+const DELTA_TIME=10;
 var teamName;
 var playerObjs=[];
 var formation;
@@ -21,7 +21,8 @@ var augmentedGameSpeed;
 var initialized=false;
 var socketID;
 
-var gameID;
+var gameID='';
+var gameTimeUpdatedInDB=false;
 
 var remoteInstructions=[];
 var availablePlayers=[];
@@ -427,6 +428,14 @@ function setup() {
       background(255);
       game.stateMachine(humanInstruction,animationObjs,remoteInstructions);
       displayLatestCommand();
+      if(gameUpdateIntervalElapsed()){
+        console.log("preeeeeach");
+        updateGameEntryInDB();
+        gameTimeUpdatedInDB=true;
+      }
+      if (game.gameTime%10>0 && gameTimeUpdatedInDB) {
+        gameTimeUpdatedInDB=false;
+      };
       
       
       if (gameChanged()) {
@@ -465,7 +474,7 @@ function setup() {
 
 function createGameEntryInDB(gameData){
   console.log("storing game in db");
-  theData=generateGameData();
+  var theData=generateGameData();
   $.ajax({
     url: "/create",
     contentType: "application/json",
@@ -484,7 +493,26 @@ function createGameEntryInDB(gameData){
 
 }
 
-function updateGameEntryInDB(gameID){
+function updateGameEntryInDB(){
+  var gameData=generateGameData();
+
+
+  
+  var theData=gameData;
+    $.ajax({
+    url: "/update",
+    contentType: "application/json",
+    type: "PUT",
+    data: JSON.stringify(gameData),
+    error: function (resp) {
+      console.log(resp);
+      // Add an error message before the new note form.
+    },
+    success: function (resp) {
+      console.log(resp);
+      // Render the note
+    }
+  });
 
 }
 
@@ -496,15 +524,28 @@ function generateUniqueKey(){
 }
 
 function generateGameData(){
-  gameID=generateUniqueKey();
-  data={
-    key: gameID,
-    teamAScore: 0,
-    teamBScore: 0,
-    time: 0,
-    availablePlayers: availablePlayers
+  if (gameID=="") {
+    gameID=generateUniqueKey()+socketID;
+    var Ascore=0;
+    var Bscore=0;
+    var elapsedTime=0;
 
   }
+  else{
+    var Ascore=game.teamA.score;
+    var Bscore=game.teamB.score;
+    var elapsedTime=game.gameTime;
+
+  }
+  
+  var data={
+    _id: gameID,
+    teamAScore: Ascore,
+    teamBScore: Bscore,
+    time: elapsedTime,
+    availablePlayers: availablePlayers
+  };
+
   return data;
 }
 
@@ -513,11 +554,19 @@ function updateAvailablePlayersInDB(gameID,availablePlayers){
 
 }
 
-function updateGameTimeInDB(gameID,newtime){
+
+
+function updateGameRecordInDB(gameID,newtime){
+ 
 
 
 }
 
 function updateScoresInDB(){
 
+}
+
+function gameUpdateIntervalElapsed(){
+  //console.log("game interval elapsed");
+  return game.gameTime%10==0&&!gameTimeUpdatedInDB&&game.gameTime!=0;
 }

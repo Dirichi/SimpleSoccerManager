@@ -5,6 +5,7 @@ var io;
 var playerID="";
 var humanControlledPlayers=[];
 
+var dbRev; //database reversion value
 
 var express = require("express");
 var logger = require('morgan');
@@ -61,7 +62,7 @@ app.get("/", function(req, res){
 
 app.post("/create", function (request, response) {
 	console.log("Creating a Game!");
-	console.log(request);
+	//console.log(request.body);
 	// Use the Request lib to POST the data to the CouchDB on Cloudant
 	Request.post({
 		url: CLOUDANT_URL,
@@ -75,6 +76,8 @@ app.post("/create", function (request, response) {
 	function (err, res, body) {
 		if (res.statusCode == 201){
 			console.log('Doc was saved!');
+			console.log(res.body.rev);
+			dbRev=res.body.rev;
 			//response.json(body);
 		}
 		else{
@@ -82,6 +85,35 @@ app.post("/create", function (request, response) {
 			console.log(body);
 		}
 	});
+});
+
+app.put('/update', function (request, response) {
+  //res.send('Got a PUT request at /user');
+  console.log("received put request");
+  request.body.rev=dbRev;
+  console.log(request.body);
+  Request.put({
+		url: CLOUDANT_URL,
+		auth: {
+			user: CLOUDANT_KEY,
+			pass: CLOUDANT_PASSWORD
+		},
+		json: true,
+		body: request.body
+	},
+		function (err, res, body) {
+		if (res.statusCode == 201){
+			console.log('Doc was saved!');
+			console.log(res.body.rev);
+			dbRev=res.body.rev;
+			//response.json(body);
+		}
+		else{
+			console.log('Error: '+ res.statusCode);
+			console.log(body);
+		}
+	});
+
 });
 
 
@@ -132,6 +164,9 @@ app.get("/start", function(req, res){
 	res.render('start');
 });
 
+app.get("/favicon.ico", function(req,res){
+	console.log("favicon requested");
+});
 
 app.get("/:playerID", function(req, res){
 
