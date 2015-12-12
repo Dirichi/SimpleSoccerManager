@@ -27,18 +27,19 @@ var playerCanShoot=false;
 
 var chaseBallText="Use direction buttons to move to the ball or Z to chase after it";
 var passBallText= "Use A to pass the ball";
-var callForBallText= "Also Use A to call for the ball";
+var callForBallText= "Also Use A to ask your teammate for the ball";
 var saySthNiceText="Say something nice to your teammate to boost his morale and make him move faster. Say 'teammate', x ";
 var shootText= "Use S to shoot the ball";
 
-var allInstructions=[chaseBallText,passBallText,callForBallText,shootText];
+var allInstructions=[chaseBallText,passBallText,callForBallText,shootText,saySthNiceText];
 
 var InchaseStage=false;
 var InpassStage=false;
 var IncallStage=false;
 var InshootStage=false;
+var saySthNiceText=false;
 
-var allStages=[InchaseStage,InpassStage,IncallStage,InshootStage];
+var allStages=[InchaseStage,InpassStage,IncallStage,InshootStage,saySthNiceText];
 
 
 
@@ -119,27 +120,27 @@ function loadExistingGames(){
 
 }
 
-function joinGame(gameCode){
-	console.log("joining game "+gameCode);
-	$.ajax({
-		url: "/allgames",
-		type: "GET",
-		data: JSON,
-		error: function (resp) {
-			console.log(resp);
-			// Add an error message before the new note form.
-		},
-		success: function (resp) {
-			console.log(resp);
-			// Render the note
-			var sorted = _.sortBy(resp, function (row) { return row.doc.created_at;});
-			sorted.forEach(function (row) {
-				console.log(row.doc);
-			});
-		}
-	});
+// function joinGame(gameCode){
+// 	console.log("joining game "+gameCode);
+// 	$.ajax({
+// 		url: "/allgames",
+// 		type: "GET",
+// 		data: JSON,
+// 		error: function (resp) {
+// 			console.log(resp);
+// 			// Add an error message before the new note form.
+// 		},
+// 		success: function (resp) {
+// 			console.log(resp);
+// 			// Render the note
+// 			var sorted = _.sortBy(resp, function (row) { return row.doc.created_at;});
+// 			sorted.forEach(function (row) {
+// 				console.log(row.doc);
+// 			});
+// 		}
+// 	});
 
-}
+// }
 
 function MakeExistingGameDivs(){
 
@@ -156,10 +157,10 @@ function generateUniqueKey(){
 
 $(document).ready(function(){
 	//loadExistingGames();
-})
+});
 
 
-
+/-----------------TUTORIAL SECTION-------------------------------------------------------------------------------------------------/
 function setup(){
 	var myCanvas=createCanvas(0.9875*windowWidth,windowWidth/8);
 	myCanvas.parent('p5Space');

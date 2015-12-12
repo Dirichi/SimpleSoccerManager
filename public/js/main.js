@@ -1,3 +1,4 @@
+
 const DESIRED_SPEED=2.7;
 const DELTA_TIME=100;
 var teamName;
@@ -18,9 +19,17 @@ var joined=false;
 var gameSpeedFactor=1;
 var augmentedGameSpeed;
 var initialized=false;
-var ID;
+var socketID;
+
+var gameID;
 
 var remoteInstructions=[];
+var availablePlayers=[];
+
+for (var i = 10; i >= 0; i--) {
+  availablePlayers.push("A"+" "+i);
+  
+};
 
 /*------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -211,7 +220,7 @@ function createGameData(){
 
 function grabAndSendGuestInput(){
   var data={
-    ID: ID,
+    ID: socketID,
     instruction: humanInstruction
   }
 
@@ -250,6 +259,10 @@ socket.on('news', function (data) {
 socket.on('startAsHost', function (data) {
   createCanvas(windowWidth,windowHeight);
   var playerID= data;
+  socketID= playerID;
+  var i= availablePlayers.indexOf(socketID);
+  availablePlayers.splice(i,1);
+  createGameEntryInDB();
   game=new Game(0,0,width,height,true,playerID,passSound,shootSound);
     //for (var i = game.allPlayers.length - 1; i >= 0; i--) {
       
@@ -262,7 +275,7 @@ socket.on('joinAsGuest', function (data) {
   if(!joined){
     createCanvas(windowWidth,windowHeight);
      var playerID=data.playerID;
-     ID=playerID;
+     socketID=playerID;
      console.log(playerID);
      game=new Game(0,0,width,height,false,playerID,passSound,shootSound);
      tempAnimationObjs=data;
@@ -303,6 +316,8 @@ socket.on("newPlayerJoined", function(data){
     var theData=createGameData();
     theData.init=true;
     theData.playerID=playerID;
+     var i= availablePlayers.indexOf(playerID);
+    availablePlayers.splice(i,1);
     socket.emit('joinAsGuest',theData);
   };
 });
@@ -412,14 +427,16 @@ function setup() {
       background(255);
       game.stateMachine(humanInstruction,animationObjs,remoteInstructions);
       displayLatestCommand();
-      computeGameSpeed();
-      game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
+      
+      
       if (gameChanged()) {
         grabDataAndSend();
       }; 
       if (!game.isHost) {
         grabAndSendGuestInput();
       };
+      computeGameSpeed();
+      game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
       // if (onReceivedGuestInput()) {
       //   game.processRemoteInput(remoteID,remoteInstruction);
       //   remoteID="none";
@@ -444,4 +461,63 @@ function setup() {
   
 
 
+/--------------------------------------DATABASE STUFF----------------------------------------------------/
 
+function createGameEntryInDB(gameData){
+  console.log("storing game in db");
+  theData=generateGameData();
+  $.ajax({
+    url: "/create",
+    contentType: "application/json",
+    type: "POST",
+    data: JSON.stringify(theData),
+    error: function (resp) {
+      console.log(resp);
+      // Add an error message before the new note form.
+    },
+    success: function (resp) {
+      console.log(resp);
+      // Render the note
+    }
+  });
+
+
+}
+
+function updateGameEntryInDB(gameID){
+
+}
+
+function generateUniqueKey(){
+  var d= new Date();
+  var time=d.getTime();
+  return time;
+
+}
+
+function generateGameData(){
+  gameID=generateUniqueKey();
+  data={
+    key: gameID,
+    teamAScore: 0,
+    teamBScore: 0,
+    time: 0,
+    availablePlayers: availablePlayers
+
+  }
+  return data;
+}
+
+function updateAvailablePlayersInDB(gameID,availablePlayers){
+
+
+}
+
+function updateGameTimeInDB(gameID,newtime){
+
+
+}
+
+function updateScoresInDB(){
+
+}
