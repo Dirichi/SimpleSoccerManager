@@ -45,9 +45,9 @@ class Team{
 
 		
 
-		for (var i = this.subs.length - 1; i >= 0; i--) {
-			this.subs[i]=new Player(field.xPos,field.yPos,field._width/50,field._width/50, field,this.subs[i],side,this);
-		}
+		// for (var i = this.subs.length - 1; i >= 0; i--) {
+		// 	this.subs[i]=new Player(field.xPos,field.yPos,field._width/50,field._width/50, field,this.subs[i],side,this);
+		// }
 
 		this.outfieldplayers=this.getOutFieldPlayers();
 		if (humanPlayerIndex!="none") {
@@ -112,7 +112,7 @@ class Team{
 	
 	attack(){
 		this.mindset="attacking";
-		if (!this.inPossession()) {
+		if (this.oppositionInPossesion()&&!this.inPossession()) {
 				this.defend();
 		}
 

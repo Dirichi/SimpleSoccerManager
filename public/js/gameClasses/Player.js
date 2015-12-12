@@ -381,7 +381,7 @@ class Player extends Moveable{
 		if (this.isOutOfBounds()) {
 			this.moveToDefaultPosition();
 		};
-
+		//quick fix for making ball stop when player is passed to
 		if (this.isRemoteControlled()||this.isHumanControlled()) {
 			if (this.hasBall()&&this.state=="neutral") {
 				
@@ -389,6 +389,10 @@ class Player extends Moveable{
 
 				
 				
+			}
+			//quick fix for making ball stop when player stops and player is in dribbling phase
+			else if (this.hasBall()&&this.state=="dribbling"&&this.dx==0&&this.dy==0) {
+				this.ball.stop();
 			};
 		};
 
