@@ -5,7 +5,7 @@ var io;
 var playerID="";
 var humanControlledPlayers=[];
 
-var dbRev; //database reversion value
+var dbRev; //database reversion version
 
 var express = require("express");
 var logger = require('morgan');
@@ -78,7 +78,7 @@ app.post("/create", function (request, response) {
 			console.log('Doc was saved!');
 			console.log(res.body.rev);
 			dbRev=res.body.rev;
-			//response.json(body);
+			console.log("on create ", dbRev)
 		}
 		else{
 			console.log('Error: '+ res.statusCode);
@@ -90,10 +90,11 @@ app.post("/create", function (request, response) {
 app.put('/update', function (request, response) {
   //res.send('Got a PUT request at /user');
   console.log("received put request");
-  request.body.rev=dbRev;
-  console.log(request.body);
+  var docID=request.body._id;
+  request.body._rev=dbRev;
+  console.log("on put ", request.body);
   Request.put({
-		url: CLOUDANT_URL,
+		url: CLOUDANT_URL+'/'+docID,
 		auth: {
 			user: CLOUDANT_KEY,
 			pass: CLOUDANT_PASSWORD

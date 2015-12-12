@@ -505,7 +505,7 @@ function updateGameEntryInDB(){
     type: "PUT",
     data: JSON.stringify(gameData),
     error: function (resp) {
-      console.log(resp);
+      //console.log(resp);
       // Add an error message before the new note form.
     },
     success: function (resp) {
