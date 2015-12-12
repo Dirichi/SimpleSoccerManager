@@ -26,6 +26,11 @@ inContactWith(moveableObject){
 
 }
 
+inContactWithCircularObj(circularObj){
+
+
+}
+
 moveTo(xval,yval){ 
   if(this.xPos!=xval||this.yPos!=yval){
     var angle=this.angleTo(xval,yval);
@@ -37,6 +42,9 @@ moveTo(xval,yval){
   else{
     this.stop();
   }
+  //this.xPos=lerp(this.xPos,xval,0.05);
+  //this.yPos=lerp(this.yPos,yval,0.05);
+
   
 
 

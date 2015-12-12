@@ -36,6 +36,11 @@ class Ball extends Moveable{
 
 	}
 
+	// moveTo(xval,yval){
+	// 	this.xPos=lerp(this.xPos,xval,0.5);
+ // 		this.yPos=lerp(this.yPos,yval,0.5);
+	// }
+
 	
 
 

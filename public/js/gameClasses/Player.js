@@ -381,6 +381,20 @@ class Player extends Moveable{
 		if (this.isOutOfBounds()) {
 			this.moveToDefaultPosition();
 		};
+
+		if (this.isRemoteControlled()||this.isHumanControlled()) {
+			if (this.hasBall()&&this.state=="neutral") {
+				
+					this.ball.stop();
+
+				
+				
+			};
+		};
+
+		if (this.state=="neutral"&&!this.isHumanControlled()&&!this.isRemoteControlled()) {
+			this.stop();
+		};
 	}
 
 	dumbAnimate(animationObj,init){
@@ -613,10 +627,7 @@ moveToDefensivePosition(){
 	if (this.position=="K") {
 		this.keeperDefenseMechanism();		
 	}
-	else if (this.isWaiting()){
-		this.stop();
-		//this.setState("neutral");
-	}
+
 	else{
 		if (!this.isBehindBall()&&(this.isOutOfDefensivePosition()||this.isDefender())) {
 			this.moveBackward();
@@ -632,10 +643,7 @@ moveToAttackingPosition(){
 	if (this.position=="K") {
 		this.stopAtDefaultRegion();
 	}
-	else if (this.isWaiting()) {
-		this.stop();
-		//this.setState("neutral")
-	}
+
 	else {
 			if (this.isBehindBall()) {
 				this.stopAtAttackingPosition();	
@@ -675,20 +683,18 @@ processMessages(){
 
 
 moveTo(xval,yval){
-	if (this.isWaiting()) {
-		this.stop();
+	
+	
+	if(this.distanceTo(xval,yval)>this._width){
+
+		super.moveTo(xval,yval);		
+
 	}
 	else{
-		if(this.distanceTo(xval,yval)>this._width){
-
-			super.moveTo(xval,yval);		
-
-		}
-		else{
 			this.stop();
 		}
 
-	}
+	
 
 	
 
@@ -801,6 +807,11 @@ getAttackingPositionRating(){
 
 			};
 			
+		};
+
+		if (this.isHumanControlled()||this.isRemoteControlled()) {
+			rating+=10;
+
 		};
 
 		return rating;
@@ -1074,10 +1085,6 @@ probabilityShoot(){
 		}
 		else{
 			this.stop();
-			if (!this.isWaiting()) {
-				this.setState("neutral");
-
-			};
 			
 
 		}
@@ -1094,10 +1101,7 @@ probabilityShoot(){
 		}
 		else{
 			this.stop();
-			if (!this.isWaiting()) {
-				this.setState("neutral");
-
-			};
+			
 		}
 		}
 

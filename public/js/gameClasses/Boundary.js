@@ -15,6 +15,7 @@ class Boundary{
 		
 
 	}
+
 	animate(fillBool, strokeVal){
 		push();
 		if(fillBool){

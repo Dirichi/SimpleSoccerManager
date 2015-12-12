@@ -365,7 +365,7 @@ $(document).keydown(function(e) {
 
         default: return; // exit this handler for other keys
     }
-    console.log(humanInstruction);
+    //console.log(humanInstruction);
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });
 
