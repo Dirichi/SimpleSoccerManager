@@ -405,7 +405,7 @@ class Player extends Moveable{
 				 this.yPos=animationObj.yPos;
 				//this.storeGivenVelocity(animationObj.dx,animationObj.dy);
 				//this.moveWithStoredVelocity();
-				this.updatePosition();
+				//this.updatePosition();
 			}
 
 		if(this.isHumanControlled()){

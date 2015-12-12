@@ -64,8 +64,8 @@ class Team{
 		for (var i = this.players.length - 1; i >= 0; i--) {
 			this.players[i].animate(this.colors);
 		};
-		this.executeObjective(instructions);
-		this.processRemoteInput(remoteInstructions);
+		this.executeObjective(instructions, remoteInstructions);
+		
 
 	}
 
@@ -141,16 +141,16 @@ class Team{
 	processRemoteInput(instructionObj){
 		//console.log(instructionObj);
 		if (instructionObj.length>0) {
-			console.log("at team level we have instructions");
+			//console.log("at team level we have instructions");
 			//console.log(remoteInstructions);
 			for (var i = instructionObj.length - 1; i >= 0; i--) {
-				console.log(instructionObj[i].ID.split(" ")[1]);
+				//console.log(instructionObj[i].ID.split(" ")[1]);
 			var ID=instructionObj[i].ID.split(" ")[1];
 			var instructions=instructionObj[i].instruction;
 
 			//console.log("At Team level ",ID, "instructed to ", instructions);
 			if (this.players[ID].isRemoteControlled()) {
-				console.log(ID, "is remote controlled");
+				//console.log(ID, "is remote controlled");
 				this.players[ID].humanControl(instructions);
 
 			};
@@ -187,7 +187,7 @@ class Team{
 		return nearestOutFieldPlayerToBall;
 	}
 
-	executeObjective(instructions){
+	executeObjective(instructions, remoteInstructions){
 
 		if (this.game.isHost) {
 			if (this.state=="play") {
@@ -195,12 +195,14 @@ class Team{
 			if(this.objectives.indexOf("attack")!==-1){
 				this.attack();
 				this.receiveHumanInstructions(instructions);
+				this.processRemoteInput(remoteInstructions);
 
 			}
 
 			else if(this.objectives.indexOf("defend")!==-1){
 				this.defend();
 				this.receiveHumanInstructions(instructions);
+				this.processRemoteInput(remoteInstructions);
 
 			}
 

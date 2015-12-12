@@ -414,7 +414,7 @@ function setup() {
       displayLatestCommand();
       computeGameSpeed();
       game.updateSpeedFactor(DESIRED_SPEED/gameSpeed); 
-      if (gameChanged()&&this.isHost) {
+      if (gameChanged()) {
         grabDataAndSend();
       }; 
       if (!game.isHost) {
