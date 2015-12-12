@@ -192,7 +192,7 @@ function animate(){
 	fill(0,255,0);
 	ellipse(xPos,yPos,windowWidth/64,windowWidth/64);
 	updatePos();
-	fill(41,182,246);
+	fill(244,67,54);
 	textAlign(CENTER);
 	textFont("Helvetica");
 	text(name, xPos,yPos-windowWidth/32);
@@ -359,7 +359,7 @@ function showTeamMateAt(x,y){
 	ellipse(xPos2, yPos2, windowWidth/32, windowWidth/32);
 	fill(10,255,0);
 	ellipse(xPos2, yPos2, windowWidth/64, windowWidth/64);
-	fill(41,182,246);
+	fill(244,67,54);
 	textAlign(CENTER);
 	textFont("Helvetica");
 	text(otherPlayerName,xPos2, yPos2-windowWidth/32);

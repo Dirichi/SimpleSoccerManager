@@ -21,7 +21,8 @@
 	width: 50%;
 	margin: 0 auto;
 	text-align: center;
-	color: #29B6F6;
+	/*color: #29B6F6;*/
+	color: #F44336;
 }
 
 button{
@@ -53,11 +54,13 @@ button{
 	margin: 0 auto;
 	margin-top: 2%;
 	width: 10%;
-	color: #29B6F6;
+	/*color: #29B6F6;*/
+	color: #F44336;
 	padding: 1%;
 	font-size: 15px;
 	background: #FFFFFF;
-	border: 3px solid #29B6F6;
+	/*border: 3px solid #29B6F6;*/
+	border: 3px solid #F44336;
 	text-align: center;
 	cursor: pointer;
 }
@@ -66,14 +69,16 @@ button{
 	display: block;
 	color: white;
 	margin: 0 auto;
-	background: #29B6F6;
+	/*background: #29B6F6;*/
+	background: #F44336;
 	padding: 1%;
 }
 
 #bottom{
 	display: block;
 	color: white;
-	background: #29B6F6;
+	/*background: #29B6F6;*/
+	background: #F44336;
 	margin-top: 5%;
 	padding: 3%;
 	text-align: center;
@@ -98,7 +103,8 @@ button{
 #titleDiv{
 	display: block;
 	color: #000;
-	background: #29B6F6;
+	/*background: #29B6F6;*/
+	background: #F44336;
 	padding: 1%;
 
 	/*width: 100%;*/

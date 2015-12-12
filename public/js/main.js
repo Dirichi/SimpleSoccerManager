@@ -429,9 +429,13 @@ function setup() {
       game.stateMachine(humanInstruction,animationObjs,remoteInstructions);
       displayLatestCommand();
       if(gameUpdateIntervalElapsed()){
-        console.log("preeeeeach");
-        updateGameEntryInDB();
-        gameTimeUpdatedInDB=true;
+        if (game.isHost) {
+          //console.log("preeeeeach");
+          updateGameEntryInDB();
+          gameTimeUpdatedInDB=true;
+
+        };
+        
       }
       if (game.gameTime%10>0 && gameTimeUpdatedInDB) {
         gameTimeUpdatedInDB=false;
