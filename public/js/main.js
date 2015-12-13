@@ -40,7 +40,7 @@ var globalGameCounter=0;
 var humanInstruction="none";
 var allowedCommands=["attack","defend"];
 var game;
-var latestCommand="Say 'team [x]'; x='attack','defend','you're awesome'... etc";
+var latestCommand="Say something nice to your team";
 
 function preload(){
   passSound = loadSound('data/kick.wav');
@@ -411,8 +411,8 @@ function setup() {
   annyang.addCommands(commands);
   annyang.addCallback('result',function(userSaid){
 
-    console.log(userSaid);
-    //latestCommand=userSaid[0];
+    //console.log(userSaid);
+    latestCommand=userSaid[0];
     //console.log(commandText);
     //console.log(phrases);
 

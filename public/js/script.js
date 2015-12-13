@@ -26,6 +26,8 @@ var name="player name";
 
 var otherPlayerName="teammate";
 var otherPlayerColor=[255,255,0];
+var otherPlayerMorale=[10,255,0];
+var otherPlayerMoraleLow=[255,0,0];
 var tutorialOn=false;
 var playerCalling=false;
 
@@ -37,7 +39,7 @@ var playerCanShoot=false;
 var chaseBallText="Use direction buttons to move to the ball or Z to chase after it";
 var passBallText= "Use A to pass the ball";
 var callForBallText= "Also Use A to ask your teammate for the ball";
-var saySthNiceText="Say something nice to your teammate to boost his morale and make him move faster. Say 'teammate', x ";
+var saySthNiceText="Say something nice about your team to boost your teammate's morale and make him move faster. Say 'team', x ";
 var shootText= "Use S to shoot the ball";
 
 var allInstructions=[chaseBallText,passBallText,callForBallText,shootText,saySthNiceText];
@@ -348,6 +350,26 @@ $(document).ready(function(){
 
 /-----------------TUTORIAL SECTION-------------------------------------------------------------------------------------------------/
 function setup(){
+	      if (annyang) {
+      //i can totally add the team and player names here
+     var commands = {
+      'team *command': parseResult,
+      
+      };
+    }
+    else{
+      console.log("no annyang");
+    }
+
+ 
+  annyang.addCommands(commands);
+  annyang.addCallback('result',function(userSaid){
+
+    console.log(userSaid);
+    annyang.start();
+
+  });
+  
 	var myCanvas=createCanvas(0.9875*windowWidth,windowWidth/8);
 	myCanvas.parent('p5Space');
 	xPos=windowWidth/2;
@@ -361,6 +383,7 @@ function setup(){
 	dx=1;
 	dy=0;
 	dy2=1;
+	dy2slow=0.1;
 }
 
 function draw(){
@@ -369,6 +392,38 @@ function draw(){
 	
 
 }
+
+  function parseResult(term){
+    var latestCommand='team '+term;
+  
+   getAlchemySentiment(latestCommand);
+    
+
+  }
+
+    function getAlchemySentiment (phrase) {
+    $.ajax({
+    url: 'https://gateway-a.watsonplatform.net/calls/text/TextGetTargetedSentiment',
+    dataType: 'json',
+    type: 'POST',
+    data: {
+      apikey: "aecc0ecac7927df0133924a891a4d05072af19dd",
+      text: phrase,
+      targets: "team",
+      outputMode: 'json'
+
+    },
+    error: function (data) {
+      console.log("error");
+    },
+    success: function (data) {
+      var sentimentScore=data.results[0].sentiment.score;
+      dy2slow+=sentimentScore*0.2;
+      //otherPlayerMoraleLow[0]
+    }
+  })
+}
+
 
 function animate(){
 
@@ -445,7 +500,20 @@ function animate(){
 
 
 			};
+			if (teammatehasBall()||ballBehindTeammate()) {
+				startStage(4);
+
+			};
 			
+		};
+
+		if (allStages[4]) {
+			otherPlayerColor=[255,255,0];
+			otherPlayerMorale=otherPlayerMoraleLow;
+			otherPlayerName="teammate";
+			showTeamMateAt(0.75*windowWidth,yPos2);
+			updatePos2Slow();
+			keeperMovement();
 		};
 
 
@@ -457,6 +525,10 @@ function animate(){
 function updatePos2(){
 
 	yPos2+=dy2*direction2;
+}
+
+function updatePos2Slow(){
+	yPos2+=dy2slow*direction2;
 }
 
 function keeperMovement(){
@@ -472,6 +544,10 @@ function showPost(){
 	fill(128,128,128);
 	rect(0.8*windowWidth,windowWidth/64,0.005*windowWidth,3*windowWidth/32);
 	pop();
+
+}
+function ballBehindTeammate(){
+	return ballXPos>xPos2+windowWidth/32;
 
 }
 
@@ -546,7 +622,7 @@ function showTeamMateAt(x,y){
 	push();
 	fill(otherPlayerColor);
 	ellipse(xPos2, yPos2, windowWidth/32, windowWidth/32);
-	fill(10,255,0);
+	fill(otherPlayerMorale);
 	ellipse(xPos2, yPos2, windowWidth/64, windowWidth/64);
 	fill(244,67,54);
 	textAlign(CENTER);
