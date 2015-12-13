@@ -110,8 +110,6 @@ class Game{
 
 
 	stateMachine(gameInstructions, animationObjs,remoteInstructions){
-		
-
 		if (this.isHost) {
 			if (remoteInstructions.length>0) {
 				if (remoteInstructions[0].instruction!="none") {
@@ -304,13 +302,7 @@ class Game{
 			
 		}
 
-		if (this.ball.yPos<this.field.midy){
-			this.ball.yPos=this.field.yPos;
-		}
-		else{
-			this.ball.yPos=this.field.yPos+this.field._length;
-
-		}
+		
 
 
 
@@ -353,12 +345,8 @@ class Game{
 
 	}
 	restartGameFromCorner(){
-		if (this.isleftCorner()) {
-
-		}
-		else{
-
-		}
+		//quick fix
+		restartGameFromGoalKick();
 
 	}
 	restartGameFromKickOff(){
@@ -435,7 +423,8 @@ class Game{
 			this.state="GOAL";
 		};
 			if (this.isCorner()) {
-				this.state="CORNER";
+				//quick fix
+				this.state="GOALKICK";
 			};
 			if (this.isGoalKick()) {
 				this.state="GOALKICK";
@@ -545,9 +534,16 @@ class Game{
 	}
 
 	getTeamARatings(){
+		var ratingResults=[];
 		if (this.gameTime<=88) {
 			this.yval=this.teamA.posRatings;
 			this.xval=this.teamA.posFrequencies;
+			for (var i = this.yval.length - 1; i >= 0; i--) {
+				ratingResults.push([this.yval[i],this.xval[i]]);
+			};
+		};
+		if (gameTime==88) {
+			console.log(ratingResults);
 		};
 	}
 

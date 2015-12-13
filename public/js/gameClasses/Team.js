@@ -61,7 +61,9 @@ class Team{
 		
 		}
 	animate(instructions,remoteInstructions){
+		
 		for (var i = this.players.length - 1; i >= 0; i--) {
+			//thisgetAllPositionRatings();
 			this.players[i].animate(this.colors);
 		};
 		this.executeObjective(instructions, remoteInstructions);
@@ -124,6 +126,9 @@ class Team{
 					this.players[i].moveToAttackingPosition();
 				}
 			};
+			if (this.focusPlayer()!=1&&this.focusPlayer().state=="passing"||this.focusPlayer().state=="shooting") {
+				this.focusPlayer().moveToAttackingPosition();
+			};
 
 			
 		}
@@ -173,6 +178,19 @@ class Team{
 			
 		};
 		
+		return nearestPlayer;
+	}
+
+	nearestPlayerToGoal(){
+		var nearestPlayer=this.players[0];
+		for (var i = this.players.length - 1; i >= 0; i--) {
+			if (this.players[i].distanceToGoal()<nearestPlayer.distanceToGoal()){
+				nearestPlayer=this.players[i];
+
+
+			}
+
+		};
 		return nearestPlayer;
 	}
 
@@ -352,7 +370,12 @@ class Team{
    	}
   
    	this.nearestPlayerToBall().chaseBall();
+   	if (this.nearestPlayerToBall().distanceToBall()<2*this.nearestPlayerToBall()._length) {
+   		this.ball.xPos=this.nearestPlayerToBall().xPos;
+   		this.ball.yPos=this.nearestPlayerToBall().yPos;
+   	};
    	if (this.focusPlayer()!=1) {
+   		console.log("THROW");
    		this.focusPlayer().passToBestOption();
    	};   	
    	
@@ -452,6 +475,7 @@ class Team{
 
    		}
    	};
+
 
    }
 

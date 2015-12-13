@@ -66,17 +66,25 @@ $("#playerNameInput").on("input", function(){
 });
 
 $("#Enter").click(function(){
-	var playerName=$("#playerNameInput").val();
-	console.log(playerName);
-	name=playerName;
-	dx=0;
-	dy=0;
-	$("#playerNameInput").hide();
+	if (!tutorialOn) {
+		var playerName=$("#playerNameInput").val();
+		console.log(playerName);
+		name=playerName;
+		dx=0;
+		dy=0;
+		$("#playerNameInput").hide();
+		
+		tutorialOn=true;
+		direction=1;
+		startStage(0);
+		$("#Enter").text("SKIP TUTORIAL");
+
+	}
+	else{
+		
+	}
 	
-	tutorialOn=true;
-	direction=1;
-	startStage(0);
-	// $("Enter").text("PROCEED");
+
 })
 
 function createGame (theData) {

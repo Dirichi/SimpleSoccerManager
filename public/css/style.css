@@ -77,10 +77,13 @@ button{
 #bottom{
 	display: block;
 	color: white;
-	/*background: #29B6F6;*/
-	background: #F44336;
+	position: fixed;
+	bottom: 0;
 	margin-top: 5%;
-	padding: 3%;
+	/*background: #29B6F6;*/
+	width: 100%;
+	background: #F44336;
+	padding: 2%;
 	text-align: center;
 }
 

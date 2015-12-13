@@ -4,8 +4,7 @@ class Player extends Moveable{
 		super(xPos,yPos,_width,_length,field);
 		this.initialized=false;		
 		this.field=field;
-		this.leftlegLength;
-		this.rightLegLength;
+		this.nm;
 
 		this.keeperDirection=0; //create separate keeper class and move this there
 
@@ -18,9 +17,7 @@ class Player extends Moveable{
 		this.state="n/a";
 		this.teammates=[];
 
-		this.attackTendency;
-		this.defendTendency;
-		this.attackingRunAngle;
+		
 		this.oldPositionRating=0;
 		this.attackingRunChoice=0;
 
@@ -50,8 +47,6 @@ class Player extends Moveable{
 		this.position=position;
 		switch(position){
 			case "K": //keeper
-			this.attackTendency=0;
-			this.defendTendency=1;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=0;
 
@@ -70,8 +65,6 @@ class Player extends Moveable{
 			case "LCB": //left center back
 			var fieldRegionYindex_left=3;
 			var fieldRegionXindex_left=2;
-			this.attackTendency=0.1;
-			this.defendTendency=0.95;
 			if(side=="left"){
 				this.defaultFieldRegionYIndex=fieldRegionYindex_left;
 				this.defaultFieldRegionXIndex=fieldRegionXindex_left
@@ -83,8 +76,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "CB": //center back
-			this.attackTendency=0.1;
-			this.defendTendency=0.95;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=2;
 			if(side=="left"){
@@ -98,8 +89,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RCB": //right center back
-			this.attackTendency=0.1;
-			this.defendTendency=0.95;
 			var fieldRegionYindex_left=5;
 			var fieldRegionXindex_left=2;
 			if(side=="left"){
@@ -113,8 +102,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RB": //right back
-			this.attackTendency=0.3;
-			this.defendTendency=0.95;
 			var fieldRegionYindex_left=7;
 			var fieldRegionXindex_left=2;
 			if(side=="left"){
@@ -128,8 +115,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "LB": //left back
-			this.attackTendency=0.3;
-			this.defendTendency=0.95;
 			var fieldRegionYindex_left=1;
 			var fieldRegionXindex_left=2;
 			if(side=="left"){
@@ -143,8 +128,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "DM": //defensive midfield
-			this.attackTendency=0.6;
-			this.defendTendency=0.7;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=3;
 			if(side=="left"){
@@ -158,8 +141,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "CM": //center midfield
-			this.attackTendency=0.7;
-			this.defendTendency=0.5;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=4;
 			if(side=="left"){
@@ -173,8 +154,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "LCM": //left center midfield
-			this.attackTendency=0.7;
-			this.defendTendency=0.5;
 			var fieldRegionYindex_left=3;
 			var fieldRegionXindex_left=4;
 			if(side=="left"){
@@ -188,8 +167,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RCM": //right center midfield
-			this.attackTendency=0.7;
-			this.defendTendency=0.5;
 			var fieldRegionYindex_left=5;
 			var fieldRegionXindex_left=4;
 			if(side=="left"){
@@ -203,8 +180,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "LM": //left midfield
-			this.attackTendency=0.75;
-			this.defendTendency=0.35;
 			var fieldRegionYindex_left=1;
 			var fieldRegionXindex_left=4;
 			if(side=="left"){
@@ -218,8 +193,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RM": //right midfield
-			this.attackTendency=0.75;
-			this.defendTendency=0.35;
 			var fieldRegionYindex_left=7;
 			var fieldRegionXindex_left=4;
 			if(side=="left"){
@@ -233,8 +206,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "AM": //right midfield
-			this.attackTendency=0.9;
-			this.defendTendency=0.3;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=5;
 			if(side=="left"){
@@ -248,8 +219,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "LCF": //left center forward
-			this.attackTendency=0.95;
-			this.defendTendency=0.1;
 			var fieldRegionYindex_left=3;
 			var fieldRegionXindex_left=6;
 			if(side=="left"){
@@ -263,8 +232,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RCF": //right center forward
-			this.attackTendency=0.95;
-			this.defendTendency=0.1;
 			var fieldRegionYindex_left=5;
 			var fieldRegionXindex_left=6;
 			if(side=="left"){
@@ -278,8 +245,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "CF": //center forward
-			this.attackTendency=0.95;
-			this.defendTendency=0.1;
 			var fieldRegionYindex_left=4;
 			var fieldRegionXindex_left=6;
 			if(side=="left"){
@@ -293,8 +258,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "LF": //left forward
-			this.attackTendency=0.95;
-			this.defendTendency=0.1;
 			var fieldRegionYindex_left=3;
 			var fieldRegionXindex_left=6;
 			if(side=="left"){
@@ -308,8 +271,6 @@ class Player extends Moveable{
 			}
 			break;
 			case "RF": //left forward
-			this.attackTendency=0.95;
-			this.defendTendency=0.1;
 			var fieldRegionYindex_left=5;
 			var fieldRegionXindex_left=6;
 			if(side=="left"){
@@ -627,7 +588,7 @@ setInDefaultPosition(){
 }
 
 moveToDefensivePosition(){
-	var defendProbability=random(0,1);
+	
 	if (this.position=="K") {
 		this.keeperDefenseMechanism();		
 	}
@@ -643,7 +604,7 @@ moveToDefensivePosition(){
 		}	
 	}
 moveToAttackingPosition(){
-	var attackProbability=random(0,1);
+	
 	if (this.position=="K") {
 		this.stopAtDefaultRegion();
 	}
@@ -887,6 +848,14 @@ distanceToRegion(region){
 
 }
 
+isNearestToGoal(){
+	return this==this.team.nearestPlayerToGoal();
+}
+
+isInShootingRange(){
+	return this.distanceToGoal()<this.field._width/4;
+}
+
 choiceInPossession(){
 
 	if (this.probabilityPass()>=max(this.probabilityDribble(),this.probabilityShoot())) {
@@ -906,7 +875,10 @@ choiceInPossession(){
 probabilityShoot(){
 	var distanceToGoal=this.distanceToGoal();
 	var obstruction=this.numOpponentsObstruction();
-	if ((distanceToGoal<this.field._width/5)||(this.team.opposition.ballIsInTeamThird()&&this.isStriker())) {
+	if (this.isInShootingRange()&&this.isNearestToGoal()) {
+		return 1;
+	}
+	if ((distanceToGoal<this.field._width/4)||(this.team.opposition.ballIsInTeamThird()&&this.isStriker())) {
 		return 0.9;
 	};
 	var maxDistance=(this.field._width*this.field._width)+(this.field._length*this.field._length);
@@ -916,10 +888,20 @@ probabilityShoot(){
 		probability+=0.2;
 	};
 	
-	return (1-probability);}
+	return (1-probability);
+}
 	probabilityPass(){
+		if (this.isInShootingRange()&&this.isNearestToGoal()) {
+			return 0;
+		};
 		var bestChoiceRating=this.findBestPositionedPlayer().getAttackingPositionRating();
-		bestChoiceRating=map(bestChoiceRating,-70,50,0,1);
+		bestChoiceRating=map(bestChoiceRating,-260,40,0,0.8);
+		if (bestChoiceRating>1) {
+			//shitty quickfix
+			console.log("DUMB");
+			return 0.9;
+		};
+
 		return bestChoiceRating;
 	}
 	probabilityDribble(){
@@ -1279,6 +1261,11 @@ pulse(){
 
 clearMessages(){
 	this.messages=[];
+}
+
+setName(name){
+	this.nm=name;
+
 }
 
 }

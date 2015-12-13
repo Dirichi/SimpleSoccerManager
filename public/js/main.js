@@ -504,9 +504,9 @@ function updateGameEntryInDB(){
   
   var theData=gameData;
     $.ajax({
-    url: "/update",
+    url: "/create",
     contentType: "application/json",
-    type: "PUT",
+    type: "POST",
     data: JSON.stringify(gameData),
     error: function (resp) {
       //console.log(resp);
@@ -543,7 +543,7 @@ function generateGameData(){
   }
   
   var data={
-    _id: gameID,
+    key: gameID,
     teamAScore: Ascore,
     teamBScore: Bscore,
     time: elapsedTime,
@@ -572,5 +572,5 @@ function updateScoresInDB(){
 
 function gameUpdateIntervalElapsed(){
   //console.log("game interval elapsed");
-  return game.gameTime%10==0&&!gameTimeUpdatedInDB&&game.gameTime!=0;
+  return game.gameTime%10==0&&!gameTimeUpdatedInDB&&game.gameTime!=0&&game.gameTime!=90;
 }

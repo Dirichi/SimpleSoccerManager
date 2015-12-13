@@ -87,35 +87,33 @@ app.post("/create", function (request, response) {
 	});
 });
 
-app.put('/update', function (request, response) {
-  //res.send('Got a PUT request at /user');
-  console.log("received put request");
-  var docID=request.body._id;
-  request.body._rev=dbRev;
-  console.log("on put ", request.body);
-  Request.put({
-		url: CLOUDANT_URL+'/'+docID,
-		auth: {
-			user: CLOUDANT_KEY,
-			pass: CLOUDANT_PASSWORD
-		},
-		json: true,
-		body: request.body
-	},
-		function (err, res, body) {
-		if (res.statusCode == 201){
-			console.log('Doc was saved!');
-			console.log(res.body.rev);
-			dbRev=res.body.rev;
-			//response.json(body);
-		}
-		else{
-			console.log('Error: '+ res.statusCode);
-			console.log(body);
-		}
-	});
+// app.post('/update', function (request, response) {
+//   //res.send('Got a PUT request at /user');
+//   console.log("received put request");
+//   console.log("on put ", request.body);
+//   Request.put({
+// 		url: CLOUDANT_URL,
+// 		auth: {
+// 			user: CLOUDANT_KEY,
+// 			pass: CLOUDANT_PASSWORD
+// 		},
+// 		json: true,
+// 		body: request.body
+// 	},
+// 		function (err, res, body) {
+// 		if (res.statusCode == 201){
+// 			console.log('Doc was saved!');
+// 			//console.log(res.body.rev);
+// 			//dbRev=res.body.rev;
+// 			//response.json(body);
+// 		}
+// 		else{
+// 			console.log('Error: '+ res.statusCode);
+// 			console.log(body);
+// 		}
+// 	});
 
-});
+//});
 
 
 app.get("/allgames", function(request,response){
