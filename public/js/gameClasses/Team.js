@@ -375,7 +375,7 @@ class Team{
    		this.ball.yPos=this.nearestPlayerToBall().yPos;
    	};
    	if (this.focusPlayer()!=1) {
-   		console.log("THROW");
+   		//console.log("THROW");
    		this.focusPlayer().passToBestOption();
    	};   	
    	

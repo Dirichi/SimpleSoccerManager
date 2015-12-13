@@ -134,11 +134,12 @@ app.get("/allgames", function(request,response){
 
 		if (theData){
 			// And then filter the results to match the desired key.
-			var filteredData = theData.filter(function (d) {
-				return d.doc.status == "playing";
-			});
+			// var filteredData = theData.filter(function (d) {
+			// 	return d.doc.status == "playing";
+			// });
 			// Now use Express to render the JSON.
-			response.json(filteredData);
+
+			response.json(theData);
 		}
 		else{
 			response.json({noData:true});
@@ -152,7 +153,7 @@ app.get("/select", function(req, res){
 	// 	message: "Try adding a forward slash plus a word to the url",
 	// 	search: false
 	// };
-	res.render('select');
+	res.render('selectPlayer');
 });
 
 app.get("/start", function(req, res){

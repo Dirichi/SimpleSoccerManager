@@ -1,3 +1,12 @@
+
+
+var gameCurrentlyRunning=false;
+var uniqueGameIDs=[];
+
+var uniqueGameObjs=[];
+
+var availablePlayers=[];
+
 var action="";
 var xPos;
 var yPos;
@@ -43,24 +52,9 @@ var allStages=[InchaseStage,InpassStage,IncallStage,InshootStage,saySthNiceText]
 
 
 
-$("#startGame").click(	function(){
-		var key=generateUniqueKey();
-		var game={
-			id: key,
-			status: "playing",
-			teamA: "ARG",
-			teamB: "BRA",
-			scoreA: 0,
-			scoreB: 0, 
-			time: 0
-		};
-		console.log(game);
-		createGame(game);
-	});
-
 $("#playerNameInput").on("input", function(){
 	name=$("#playerNameInput").val();
-	console.log(name);
+	//console.log(name);
 	dx=0;
 	dy=0;
 });
@@ -68,7 +62,7 @@ $("#playerNameInput").on("input", function(){
 $("#Enter").click(function(){
 	if (!tutorialOn) {
 		var playerName=$("#playerNameInput").val();
-		console.log(playerName);
+		//console.log(playerName);
 		name=playerName;
 		dx=0;
 		dy=0;
@@ -77,15 +71,125 @@ $("#Enter").click(function(){
 		tutorialOn=true;
 		direction=1;
 		startStage(0);
-		$("#Enter").text("SKIP TUTORIAL");
+		$("#Enter").hide();
+
+		$("#skip").show();
+		//$("#Enter").text("SKIP TUTORIAL");
 
 	}
-	else{
-		
-	}
+	
 	
 
 })
+
+$("#skip").click(function(){
+	if (tutorialOn) {
+		for (var i = allStages.length - 1; i >= 0; i--) {
+			if(allStages[i]&&i+1<allStages.length){
+				startStage(i+1);
+				return;
+			}
+		};
+		$("#skip").hide();
+		loadExistingGames();
+	};
+	
+	
+	
+});
+
+$("#start").click(function(){
+	$("#p5Space").empty();
+	$("#start").hide();
+	$("#controlsText").text("Select a position");
+	if (uniqueGameObjs.length>0) {
+		for (var i = uniqueGameObjs[0].availablePlayers.length - 1; i >= 0; i--) {
+			console.log("unique bih");
+
+			makePlayerPositionHTML(makePositionDescription(uniqueGameObjs[0].availablePlayers[i]));
+			
+		};
+		
+	}
+	else{
+		for (var i = 10; i >= 0; i--) {
+			var word="A"+" "+i;
+			//console.log(word);
+			var indexAndPosition=makePositionDescription(word)
+
+			makePlayerPositionHTML(indexAndPosition[0],indexAndPosition[1]);
+		};
+		
+	}
+
+	
+	
+});
+
+function makePlayerPositionHTML(index,position){
+	var divID="A"+index;
+	var html="";
+	html+="<a class='position' href='/";
+	html+=divID+"'>";
+	html+="<h4>"+position+"</h4>";
+	//html+="<h4>"+responsibility+"</h4>";
+	html+="</a>";
+	
+	$("#availablePositions").append(html);
+	var divIDval="#"+divID;
+	$(divIDval).click(function(){
+		//console.log(divID);
+
+	});
+
+
+}
+
+function makePositionDescription(playerAddress){
+	
+	
+	var index=playerAddress.split(" ")[1];
+		position0="Keeper";
+	
+		 position1="Right center back";
+		
+		 position2="Left center back";
+		 
+		 position3="Right back";
+		 
+		 position4="Left back";
+		 
+		 position5="Right center midfield";
+		 
+		 position6="Attacking midfield";
+		 
+		 position7="Left center midfield";
+		
+		 position8="Left midfield";
+		
+		 position9="Right midfield";
+		
+		 position10="Center Forward";
+		
+	var positionArray=[position0,position1,position2,position3,position4,position5,position6,position7,position8,position9,position10];
+	return[index, positionArray[index]];
+
+
+	//switch(index){
+		
+		//case 0:
+
+		
+		
+
+		
+
+	
+	
+		
+
+}
+
 
 function createGame (theData) {
 	console.log("Trying to Post");
@@ -118,13 +222,84 @@ function loadExistingGames(){
 		},
 		success: function (resp) {
 			console.log(resp);
-			// Render the note
-			var sorted = _.sortBy(resp, function (row) { return row.doc.created_at;});
-			sorted.forEach(function (row) {
-				console.log(row.doc);
-			});
+				for (var i = resp.length - 1; i >= 0; i--) {
+				//console.log(resp[i])
+
+				//console.log(numOccurencesInArray(resp[i].doc.key,uniqueGameIDs), " at ", i);
+				if (numOccurencesInArray(resp[i].doc.key,uniqueGameIDs)<1) {
+					//console.log('not unique at ', i )
+					uniqueGameIDs.push(resp[i].doc.key);
+					//console.log(uniqueGameIDs)
+					uniqueGameObjs.push(resp[i].doc);
+					//console.log(uniqueGameObjs);
+
+				}
+				else{
+
+					var index=uniqueGameIDs.indexOf(resp[i].doc.key);
+					//console.log(uniqueGameObjs[index]);
+
+					if (resp[i].doc.time>uniqueGameObjs[index].time) {
+						uniqueGameObjs[index].availablePlayers=resp[i].doc.availablePlayers;
+						uniqueGameObjs[index].teamAScore=resp[i].doc.teamAScore;
+						uniqueGameObjs[index].teamBScore=resp[i].doc.teamBScore;
+						uniqueGameObjs[index].time=resp[i].doc.time;
+
+					}
+					
+				}
+
+
+				
+		
 		}
-	});
+		for (var i = uniqueGameObjs.length - 1; i >= 0; i--) {
+			if (uniqueGameObjs[i].time>80) {
+				var index=uniqueGameObjs.indexOf(uniqueGameObjs[i]);
+				uniqueGameObjs.splice(index,1);
+			};
+			
+		};
+
+		makeGameInfoHTML(uniqueGameObjs.length>0);
+
+		
+
+		
+
+		
+	}
+
+});
+}
+
+function makeGameInfoHTML(bool){
+	if (!bool) {
+		$("#controlsText").text("There are no currently running games. Start a new one");
+		//$("#Enter").text("START");
+		$("#skip").hide();
+		$("#start").show();
+
+
+	}
+	else{
+		$("#controlsText").text("There are spaces available in the current game");
+		//$("#Enter").text("JOIN");
+		$("#skip").hide();
+		$("#Enter").show();
+
+
+
+	}
+
+
+}
+
+function determineAvailableGames(resp){
+			console.log(uniqueGameIDs);
+			console.log(uniqueGameObjs);
+		
+		
 
 }
 
@@ -165,6 +340,9 @@ function generateUniqueKey(){
 
 $(document).ready(function(){
 	//loadExistingGames();
+	$("#start").hide();
+	$("#skip").hide();
+	$("#join").hide();
 });
 
 
@@ -263,10 +441,13 @@ function animate(){
 			if (playerCanShoot) {
 				ballXPos=lerp(ballXPos,0.8*windowWidth,0.05);
         		ballYPos=lerp(ballYPos,windowWidth/16, 0.05);
+        		//$("#Enter").show();
+
 
 			};
 			
 		};
+
 
 	};
 	
@@ -444,3 +625,16 @@ $(document).keyup( function(e){
     };
     
 });
+
+/----------------------------SHOULD MAKE A SEPARATE FILE FOR THIS--------------------------------------------------------/
+
+function numOccurencesInArray(val, array){
+	var count=0;
+	for (var i = array.length - 1; i >= 0; i--) {
+		if(array[i]==val){
+			count++;
+		}
+	};
+	return count;
+
+}

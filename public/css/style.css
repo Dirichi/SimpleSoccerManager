@@ -24,6 +24,9 @@
 	/*color: #29B6F6;*/
 	color: #F44336;
 }
+#controlsText{
+	text-align: center;
+}
 
 button{
     margin: 0 auto;
@@ -50,7 +53,7 @@ button{
     text-align: center;   
 }
 
-#Enter{
+.reg-button{
 	margin: 0 auto;
 	margin-top: 2%;
 	width: 10%;
@@ -64,6 +67,11 @@ button{
 	text-align: center;
 	cursor: pointer;
 }
+
+/*#skip, #start, #join {
+	visibility: hidden;
+}*/
+
 
 #menu{
 	display: block;
@@ -100,6 +108,10 @@ button{
 	text-align: center;
 	cursor: pointer;
 
+}
+
+a{
+	text-decoration: none;
 }
 
 
@@ -168,6 +180,28 @@ body{
 #back{
 	margin-left: 15%;
 	background: #29B6F6;
+}
+
+.position{
+	display: block;
+	width: 20%;
+	float: left;
+	padding: 1%;
+	text-align: center;
+	margin: 0 auto;
+	color: #F44336;
+	border: 3px solid #F44336;
+	margin-right: 1%;
+	margin-top: 1%;
+	cursor: pointer;
+
+}
+#positionsContainer{
+	display: block;
+	width: 80%;
+	margin: 0 auto;
+	padding: 2%;
+	margin-bottom: 10%;
 }
 
 

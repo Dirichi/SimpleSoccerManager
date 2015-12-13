@@ -21,6 +21,8 @@ var augmentedGameSpeed;
 var initialized=false;
 var socketID;
 
+var gameEnded=false;
+
 var gameID='';
 var gameTimeUpdatedInDB=false;
 
@@ -553,24 +555,12 @@ function generateGameData(){
   return data;
 }
 
-function updateAvailablePlayersInDB(gameID,availablePlayers){
-
-
-}
-
-
-
-function updateGameRecordInDB(gameID,newtime){
- 
-
-
-}
-
-function updateScoresInDB(){
-
-}
-
 function gameUpdateIntervalElapsed(){
   //console.log("game interval elapsed");
-  return game.gameTime%10==0&&!gameTimeUpdatedInDB&&game.gameTime!=0&&game.gameTime!=90;
+   if (game.gameTime==90&&gameTimeUpdatedInDB) {
+    gameEnded=true;
+  }
+  return game.gameTime%10==0&&!gameTimeUpdatedInDB&&game.gameTime!=0&&!gameEnded;
+ 
+  
 }
