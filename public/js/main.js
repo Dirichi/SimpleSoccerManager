@@ -107,6 +107,10 @@ function preload(){
     pop();
   }
 
+  function displayTeamMorale(){
+
+  }
+
 
   function getAlchemySentiment (phrase) {
     $.ajax({

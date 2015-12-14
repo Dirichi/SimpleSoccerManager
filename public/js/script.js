@@ -106,9 +106,11 @@ $("#start").click(function(){
 	$("#controlsText").text("Select a position");
 	if (uniqueGameObjs.length>0) {
 		for (var i = uniqueGameObjs[0].availablePlayers.length - 1; i >= 0; i--) {
-			console.log("unique bih");
+			console.log(uniqueGameObjs[0].availablePlayers[i]);
+			var indexAndPosition=makePositionDescription(uniqueGameObjs[0].availablePlayers[i]);
+			console.log(indexAndPosition);
 
-			makePlayerPositionHTML(makePositionDescription(uniqueGameObjs[0].availablePlayers[i]));
+			makePlayerPositionHTML(indexAndPosition[0],indexAndPosition[1]);
 			
 		};
 		
@@ -117,7 +119,7 @@ $("#start").click(function(){
 		for (var i = 10; i >= 0; i--) {
 			var word="A"+" "+i;
 			//console.log(word);
-			var indexAndPosition=makePositionDescription(word)
+			var indexAndPosition=makePositionDescription(word);
 
 			makePlayerPositionHTML(indexAndPosition[0],indexAndPosition[1]);
 		};
@@ -288,7 +290,7 @@ function makeGameInfoHTML(bool){
 		$("#controlsText").text("There are spaces available in the current game");
 		//$("#Enter").text("JOIN");
 		$("#skip").hide();
-		$("#Enter").show();
+		$("#start").show();
 
 
 
@@ -350,11 +352,10 @@ $(document).ready(function(){
 
 /-----------------TUTORIAL SECTION-------------------------------------------------------------------------------------------------/
 function setup(){
-	      if (annyang) {
-      //i can totally add the team and player names here
+	 if (annyang) {
+      console.log("annyang bih");
      var commands = {
-      'team *command': parseResult,
-      
+      'team *command': parseResult,  
       };
     }
     else{
@@ -395,8 +396,9 @@ function draw(){
 
   function parseResult(term){
     var latestCommand='team '+term;
+    console.log(latestCommand);
   
-   getAlchemySentiment(latestCommand);
+  // getAlchemySentiment(latestCommand);
     
 
   }
