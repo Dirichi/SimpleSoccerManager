@@ -460,7 +460,7 @@ class Game{
 	}
 	updateTeamMorale(){
 		//var teamMoraleDepletion=map(this.gameTime,0,90,0,0.2/this.gameTime);
-		var constantMoraleDepletion=0.2/900;
+		var constantMoraleDepletion=0.05/900;
 
 		if (!this.teamA.getTeamMorale()<constantMoraleDepletion) {
 			this.teamA.incrementTeamMorale(-constantMoraleDepletion);
