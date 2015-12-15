@@ -62,38 +62,6 @@ function preload(){
 
   }
 
-  function parsePlayerCommand(term){
-    latestCommand='play '+term;
-    if (term=="forward") {
-      game.teamA.players[0].setState("n/a");
-      game.teamA.players[0].moveForward();
-    }
-    if (term=="backward") {
-      game.teamA.players[0].setState("n/a");
-      game.teamA.players[0].moveBackward();
-    }
-    if (term=="left") {
-      game.teamA.players[0].setState("n/a");
-      game.teamA.players[0].moveLeft();
-    }
-    if (term=="right") {
-      game.teamA.players[0].setState("n/a");
-      game.teamA.players[0].moveRight();
-    }
-    if (term=="chase") {
-      game.teamA.players[0].setState("n/a");
-      game.teamA.players[0].chaseBall();
-    }
-
-  }
-
-  function parseGameCommand(term){
-    latestCommand='game '+term;
-    if (term=="pause") {
-      game.pause();
-    };
-
-  }
 
 
   function displayLatestCommand(){
@@ -317,7 +285,7 @@ socket.on("newPlayerJoined", function(data){
       instruction: "none"
     }
     remoteInstructions.push(remoteInstructionObj);
-    console.log(remoteInstructionObj);
+    //console.log(remoteInstructionObj);
     game.addRemotePlayer(playerID);
    
     var theData=createGameData();
@@ -402,10 +370,8 @@ function setup() {
       if (annyang) {
       //i can totally add the team and player names here
      var commands = {
-      'team *command': parseResult,
-      'game *command': parseGameCommand,
-      'play *command': parsePlayerCommand
-      };
+      'team *command': parseResult
+          };
     }
     else{
       console.log("no annyang");

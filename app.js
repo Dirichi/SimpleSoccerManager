@@ -172,7 +172,7 @@ app.get("/:playerID", function(req, res){
 
 	
 	playerID=req.params.playerID[0]+" "+req.params.playerID.slice(1);
-	if (playerID.length>3) {
+	if (playerID.length>4) {
 		return;
 	};
 	console.log("req param is ", req.params.playerID);

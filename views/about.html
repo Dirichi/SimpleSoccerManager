@@ -1,0 +1,12 @@
+Soccer Multiverse or [Insert yet to be decided cool name here] is a project I worked on over the course of the semester 
+for the Mashups class. It's an online multiplayer  football video game that is quasi-voice control enabled and employs 
+sentiment analysis. 
+
+
+I started off with the desire to make a soccer game with a twist; I didn't know what the twist would be
+On introduction to P5.js and finding out about it's speech library I was like YAAAAS that's what I should do, make a voice 
+controlled football game (I ended up using annyang for speech to text anyway). As soon as I started prototyping, I realized that complete voice control would be a bad idea
+because of latency and inaccuracies associated with speech recognition
+
+Thus I decided to try out sth different. Users of the game would control single players with regular keyboard controls
+But could also motiavte the rest of the computer controlled team with positive words (positivity determined thanks to alchemyAPI). I started off making a single player ie (human vs computer) game, and tried to get that to work. I think figuring this out is as close as I've gotten so far to writing AI (as much as I have doubts about whether what I wrote was AI, at least one computer engineer at NYUAD thinks I did so, so there). It helped at least that I know and play football (pretty well). I employed objected oriented design to ease the process of development for myself. So for example I have a Boundary class, that defines a stationary, unmoving object, that has properties like size and position in cartesian coordinates, and a method with which to ascertain whether it is colliding with another boundary, or the number of boundaries encased within it. Classes that inherit from this class are a Moveable class which has additional properties like speed, and a Field class 

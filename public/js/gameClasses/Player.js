@@ -363,6 +363,7 @@ class Player extends Moveable{
 	}
 
 	dumbAnimate(animationObj,init){
+	
 		this.updateMid();
 		//console.log(animationObj.position, " is being drawn");
 		this.setState(animationObj.state);
