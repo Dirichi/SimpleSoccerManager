@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Soccer Multiverse</title> 
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+<body>
+<div id="titleDiv">
+  <h1 id="title"> SOCCER MULTIVERSE</h1>
+</div>
+
+
+<div id="menu">
+  <a href="/" class="menu-item" id="homeNav">HOME</a>
+  <a href="/about" class="menu-item" id="aboutNav">ABOUT</a>
+  <a href="/api" class="menu-item" id="apiNav">API</a>
+</div>
+
+<p class="main">This API provides free access to data about all the games played on the soccer multiverse.
+The major end point is <div class="endpoint">https://simplesoccermanagers.herokuapp.com/api</div></p>
+
+<h1 class="headings">ALL GAMES</h1>
+<p class="main">Data about all games can be accessed from the url <div class="endpoint">/api/allgames</div></p>
+<p class="main">Note that the data returned contains information about the status about a game at ten minute intervals, ie at time 0, 10, 20, 30, etc. A useful unique identifier for aggregating data pertaining to the same game accross different times, is the key attribute</p>
+
+<h1 class="headings">A SPECIFIC GAME</h1>
+<p class="main">Data about a single game <div class="endpoint">/api/allgames/gameKey/GAME_KEY</div></p>
+<p class="main"> where GAME_KEY referes to the value of that game's key attribute. Note that the data returned contains information about the status of said game at ten minute intervals, ie at time 0, 10, 20, 30, etc.</p>
+
+<h1 class="headings">FINIHED GAMES</h1>
+<p class="main">Data about all completed games can be accessed from the url <div class="endpoint">/api/allgames/ended/</div> </p>
+
+<h1 class="headings">GAMES WON BY TEAM X</h1>
+<p class="main">Data about finished games won by a particular team can be accessed from the url <div class="endpoint">/api/allgames/wonBy/TEAM_CODE</div></p>
+ <p class="main">Since there are currently only two teams in soccer multiverse, the TEAM_CODE parameter can be either "A" or "B"</p>
+
+
+
+
+
+
+
+
+
+
+ 
+
+</body>
+</html>

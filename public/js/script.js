@@ -217,7 +217,7 @@ function createGame (theData) {
 function loadExistingGames(){
 	console.log("Loading Existing Games");
 	$.ajax({
-		url: "/allgames",
+		url: "/api/allgames",
 		type: "GET",
 		data: JSON,
 		error: function (resp) {

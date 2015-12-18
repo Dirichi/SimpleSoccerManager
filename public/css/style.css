@@ -16,6 +16,9 @@
  
 
 }
+#availablePositions{
+	display: block;
+}
 
 #controls h3{
 	width: 50%;
@@ -80,18 +83,19 @@ button{
 	/*background: #29B6F6;*/
 	background: #F44336;
 	padding: 1%;
+	/*width: 100%;*/
 }
 
 #bottom{
 	display: block;
-	color: white;
+	color: #FFF;
 	position: fixed;
 	bottom: 0;
 	margin-top: 5%;
 	/*background: #29B6F6;*/
 	width: 100%;
 	background: #F44336;
-	padding: 2%;
+	padding:1%;
 	text-align: center;
 }
 
@@ -152,6 +156,8 @@ body{
 	font-family: 'Open Sans', serif;
 	color: black;
 	padding: 0; margin: 0;
+	line-height: 2;
+  	color: #606c71;
 
 	/*background: #F44336;*/
 	
@@ -203,6 +209,34 @@ body{
 	padding: 2%;
 	margin-bottom: 10%;
 }
+
+.endpoint{
+	background: #F8F8F8;
+	color: #29B6F6;
+	display: inline-block;
+	margin-left: 5%;
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+.headings{
+	display: block;
+	margin-left: 5%;
+	margin-bottom: 2%;
+	margin-top: 2%;
+	color: #F44336;
+}
+
+.main{
+	display: block;
+	margin-left: 5%;
+	margin-right: 5%;
+	
+
+
+}
+
+
 
 
 

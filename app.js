@@ -53,12 +53,15 @@ var CLOUDANT_URL = "https://" + CLOUDANT_USERNAME + ".cloudant.com/" + CLOUDANT_
 // });
 
 app.get("/", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
+
 	res.render('index');
 });
+
+app.get("/about", function(req, res){
+
+	res.render('about');
+});
+
 
 app.post("/create", function (request, response) {
 	console.log("Creating a Game!");
@@ -87,36 +90,8 @@ app.post("/create", function (request, response) {
 	});
 });
 
-// app.post('/update', function (request, response) {
-//   //res.send('Got a PUT request at /user');
-//   console.log("received put request");
-//   console.log("on put ", request.body);
-//   Request.put({
-// 		url: CLOUDANT_URL,
-// 		auth: {
-// 			user: CLOUDANT_KEY,
-// 			pass: CLOUDANT_PASSWORD
-// 		},
-// 		json: true,
-// 		body: request.body
-// 	},
-// 		function (err, res, body) {
-// 		if (res.statusCode == 201){
-// 			console.log('Doc was saved!');
-// 			//console.log(res.body.rev);
-// 			//dbRev=res.body.rev;
-// 			//response.json(body);
-// 		}
-// 		else{
-// 			console.log('Error: '+ res.statusCode);
-// 			console.log(body);
-// 		}
-// 	});
 
-//});
-
-
-app.get("/allgames", function(request,response){
+app.get("/api/allgames", function(request,response){
 		console.log("getting all games");
 
 		Request.get({
@@ -133,11 +108,6 @@ app.get("/allgames", function(request,response){
 
 
 		if (theData){
-			// And then filter the results to match the desired key.
-			// var filteredData = theData.filter(function (d) {
-			// 	return d.doc.status == "playing";
-			// });
-			// Now use Express to render the JSON.
 
 			response.json(theData);
 		}
@@ -148,21 +118,104 @@ app.get("/allgames", function(request,response){
 
 });
 
-app.get("/select", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
-	res.render('selectPlayer');
+app.get("/api/allgames/ended/", function(request,response){
+	
+		Request.get({
+		url: CLOUDANT_URL+"/_all_docs?include_docs=true",
+		auth: {
+			user: CLOUDANT_KEY,
+			pass: CLOUDANT_PASSWORD
+		},
+		json: true
+	}, function (err, res, body){
+		var theData = body.rows;
+		console.log(theData);
+		if (theData){
+			var filteredData = theData.filter(function (d) {
+				//if (gameEnded) {
+					return d.doc.time == 90;
+			});
+
+			response.json(filteredData);
+		}
+		else{
+			response.json({noData:true});
+		}
+	});
+
 });
 
-app.get("/start", function(req, res){
-	// var dataForThePage = {
-	// 	message: "Try adding a forward slash plus a word to the url",
-	// 	search: false
-	// };
-	res.render('start');
+app.get("/api/allgames/wonBy/:team", function(request,response){
+	var teamName= request.params.team;
+		
+
+		Request.get({
+		url: CLOUDANT_URL+"/_all_docs?include_docs=true",
+		auth: {
+			user: CLOUDANT_KEY,
+			pass: CLOUDANT_PASSWORD
+		},
+		json: true
+	}, function (err, res, body){
+		var theData = body.rows;
+		console.log(theData);
+		if (theData){
+			var filteredData = theData.filter(function (d) {
+				if (teamName=="A") {
+					return d.doc.time == 90 && d.doc.teamAScore>d.doc.teamBScore;
+				}
+				if(teamName=="B"){
+					return d.doc.time==90 && d.doc.teamBScore>d.doc.teamAScore;
+				}
+			});
+
+			response.json(filteredData);
+		}
+		else{
+			response.json({noData:true});
+		}
+	});
+
 });
+
+app.get("/api/allgames/gameKey/:key", function(request,response){
+	var gameKey= request.params.key;
+		
+
+		Request.get({
+		url: CLOUDANT_URL+"/_all_docs?include_docs=true",
+		auth: {
+			user: CLOUDANT_KEY,
+			pass: CLOUDANT_PASSWORD
+		},
+		json: true
+	}, function (err, res, body){
+		var theData = body.rows;
+		//console.log(theData);
+		if (theData){
+			var filteredData = theData.filter(function (d) {
+					return d.doc.key == gameKey;
+				
+			
+			});
+
+			response.json(filteredData);
+		}
+		else{
+			response.json({noData:true});
+		}
+	});
+
+});
+
+app.get("/api", function(request,response){
+	response.render('api');
+
+});
+
+
+
+
 
 app.get("/favicon.ico", function(req,res){
 	console.log("favicon requested");

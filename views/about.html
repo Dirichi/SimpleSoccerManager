@@ -1,12 +1,56 @@
-Soccer Multiverse or [Insert yet to be decided cool name here] is a project I worked on over the course of the semester 
-for the Mashups class. It's an online multiplayer  football video game that is quasi-voice control enabled and employs 
-sentiment analysis. 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Soccer Multiverse</title> 
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+<body>
+<div id="titleDiv">
+  <h1 id="title"> SOCCER MULTIVERSE</h1>
+</div>
 
 
-I started off with the desire to make a soccer game with a twist; I didn't know what the twist would be
-On introduction to P5.js and finding out about it's speech library I was like YAAAAS that's what I should do, make a voice 
-controlled football game (I ended up using annyang for speech to text anyway). As soon as I started prototyping, I realized that complete voice control would be a bad idea
-because of latency and inaccuracies associated with speech recognition
+<div id="menu">
+  <a href="/" class="menu-item" id="homeNav">HOME</a>
+  <a href="/about" class="menu-item" id="aboutNav">ABOUT</a>
+  <a href="/api" class="menu-item" id="apiNav">API</a>
+</div>
 
-Thus I decided to try out sth different. Users of the game would control single players with regular keyboard controls
-But could also motiavte the rest of the computer controlled team with positive words (positivity determined thanks to alchemyAPI). I started off making a single player ie (human vs computer) game, and tried to get that to work. I think figuring this out is as close as I've gotten so far to writing AI (as much as I have doubts about whether what I wrote was AI, at least one computer engineer at NYUAD thinks I did so, so there). It helped at least that I know and play football (pretty well). I employed objected oriented design to ease the process of development for myself. So for example I have a Boundary class, that defines a stationary, unmoving object, that has properties like size and position in cartesian coordinates, and a method with which to ascertain whether it is colliding with another boundary, or the number of boundaries encased within it. Classes that inherit from this class are a Moveable class which has additional properties like speed, and a Field class 
+<h1 class="headings">INTRO</h1>
+<p class="main">Soccer Multiverse or [Insert yet to be decided cooler name here] is a project I worked on over the course of the semester for the Mashups class. It's an online multiplayer  football video game that is quasi-voice controlled and employs 
+text sentiment analysis. The prompt for the final project was to design some web application that used an API, put user data on a NoSQL database, and also served up an API based on this data. In my case, I use the AlchemyAPI for sentiment analysis and push data from each instance of the game launched by a user to a cloudant database, and then serve an api using the data collated from this database. I used P5.js for animation, Node.js and Express for server side control, AJAX for asynchronously sending and receiving data to and from my database, socket.io for server-supported communication between users, and heroku for hosting</p>
+
+
+<h1 class="headings">HOW THE GAME IS PLAYED</h1>
+<p class="main">Users can either start a new game or join a game that is already in session, and control a
+single player in any of the two teams using keyboard controls. If the user is the chooses to start a game, he/she will control only a single player while the "computer" controls all other twenty one. As more users join the game, they replace the "computer" and control their player of choice. If playing for the "yellow team", users will notice that their team becomes slower as the game progresses, to mirror fatigue in real life football games. But users can compensate for this by encouraging their computer/human-controlled teammates by saying positive words to the team. This will restore some of the team's lost speed. Any words deemed to be negative will slow down the team. Users on the blue team will experience no such fatigue, and will not need to increase their team morales with positive words</p>
+
+<h1 class="headings">IMPLEMENTATION PHASE A: IDEATION</h1>
+<p class="main">I started off with the desire to make a soccer game with a twist.On introduction to P5.js and finding out about it's speech library I immediately thought to go with a voice 
+controlled football game (I ended up using annyang for speech to text anyway). As soon as I started prototyping, I realized that complete voice control would be a bad idea, because of latency and inaccuracies associated with speech recognition. I flirted (very seriously) with the idea of making the game a "manager game", where users used fewer and more powerful/abstract voice commands to give direction to the team as a whole. Yet again for issues with inaccuracy and speech recognition, and because, for my demo, I didn't want users to have to memorize technical football vocabulary (which I'm not completely familiar with anyway), I decided to limit the voice commands to unstructured motivational words that could impact the performance of the team.
+ </p>
+
+ <h1 class="headings">IMPLEMENTATION PHASE B: GAME DESIGN</h1>
+<p class="main">I had already tried my hands on designing a football game in processing in the past, but hadn't really finished that project. Borrowing some of the ideas (and code), I had developed beforehand, I went with object oriented design for methodology and created "Game", "Field", "Team", "Ball", and "Player" classes which I used extensively in the game. The Game class represents a session of a game, and has properties like a field, teams, the time elapsed in the game, the status of the game (eg throw-in, goal kick, in play). It also has methods that let it control the "behaviour" of the teams, usually depending on the status of the game (will address this behaviour-control thing in a little). The "Field" class has properties like teams, players on the field, a ball, dimensions, field regions within which players can move, etc. The "Player" class represents a regular football player and has properties like size and position, a default attacking/defensive position on the field, morale, speed etc. It also has methods you'd expect that help it pass, shoot, seek the best player to pass to, call for the ball (if user controlled), control the "behaviour" of the other teammates, chase the ball, make a choice when with the ball, etc. The Team class represents all players in a team and has methods that let it control the behavior of these players based on its own "behaviour".   
+ </p>
+
+ <p class="main">What I mean by behaviour control, for lack of better phrasing, is state machine design. I used the position of the ball in the field (i.e. in a goal post, past the throw-in line, at the corner flag) to determine the state of the game (goal, throw-in, corner etc). Based on the state of the game, the game object would give instructions to the team or more aptly set the states of the team to "own throw-in" or "opposition throw-in" or "own goal kick" etc. The states would in turn affect the behaviour of the players. When the ball was in play, if a team had the ball, it would change its state to "attacking", and in turn its players would enter a state where they moved to their default attacking positions and tried to score. If not with the ball, they would fall back to their defensive positions and designate a single player to chase the ball.  
+ </p>
+
+ <p class="main">  I think figuring all these moving parts out and getting them to work is as close as I've gotten so far to writing actual AI (as much as I have doubts about whether what I wrote was AI, at least one computer engineer at NYUAD thinks I did so, so there). It helped at least that I know and play football (pretty well)</p>
+
+<h1 class="headings">IMPLEMENTATION PHASE C: GAME NETWORKING</h1>
+<p class="main">Having designed the game to work for a single player I started to think about making multiplayer work. from the onset, my biggest concern was ensuring some degree of synchronicity between all connected players. This concern played out initially as the seemingly related concern that computers with different processing powers would render the game at different speeds, ie if one user's compuer rendered at say x frames per second, and another's at 2x, the same animated player would dart across user 2's screen at twice the speed that he does at user 1's. That turned out to be trivial eventually (solved by setting a fixed spped at which I wanted the game to run, and then continuously adjusting the actual (measured) speed of the game to match the desired speed). What proved more difficult to think around was designing a communication protocol between the server and all the users playing the same game, so that they all had a relatively synchronous experience. A little bit of research yielded that a common practice in modern online multiplayer games, was to have the server run an instance of the real game, and then broadcast "dumb" versions of the real game to the connected users. Connected users would provide input to their "dumb" versions of the game and notice immediate change on their versions, but their input would also be sent to the server, which would then alter the state of the real instance of the game, and then broadcast the change of state to all connected players.</p>
+ <p class="main">So I (sort of) went with that. The key difference in my implementation is that the real instance of the game is run on the first user's machine and not on the server. This first user, christened the "host", broadcasts information about the staus of the game, position of all players, position of the ball, scores, etc to all the other connected users which then render dumb versions of the game with that information. The "guests" also provide input that is received and processed in the "host's" game instance. An obvious criticism of this protocol is that the host is given unfair advantages over other players. He/She experiences the game in real time, whereas guests experience a delayed version of the game (if the server was the host, all users would experience the same delay, so that would be a lot fairer). The host can also cheat and change the scores for example, and there would be no means to correct that. But what this implementation saves me is better performance on the server. If I delegate all the game processing to a single player, I can free up more resources for teh server to allocate towards receiving and sending data to and from connected users and the database</p>
+
+
+  <h1 class="headings">FURTHER DEVELOPMENT</h1>
+<p class="main">I may yet revert to the initial plan to make the game a football manager game, or at least provide a manager mode in the game. I'm also yet to extensively employ state machines in the player class, and there are so many bits of the code that could benefit from refactoring. I also need to fix a few glitches in the game, and to incorporate probabilistic models in the decision making process for my Player class so that players make mistakes like humans. Other fancy things to be added could include crowd cheering sounds, football commentary (delivered by RitaJs, a natural language processing library), in-game messaging between connected players in the not-so-manager-mode, career modes (eg playing an entire season of football), enabling the creation og human teams, multiverse stats to reveal the best rated human players/teams over a span of time etc. Networking may also eventually follow the model of regular computer games, and maybe if I find the time, I could make the game mobile-compatible.  
+ </p>
+
+ 
+
+</body>
+</html>
